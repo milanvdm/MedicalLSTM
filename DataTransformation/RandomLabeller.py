@@ -4,7 +4,7 @@ from random import randint
 
 def addRandomLabels():
 
-    labels = ["Cured", "Cured after 1 year", "Dead", "Dead after 1 year"]
+    labels = ["Cured", "CuredAfterOneYear", "Dead", "DeadAfterOneYear"]
 
     input = open('../TestData/diabetes-input.csv', "r")
     reader = csv.reader(input)

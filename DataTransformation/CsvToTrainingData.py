@@ -3,7 +3,7 @@ import csv
 
 def toTrainingData():
 
-    input = open('../TestData/diabetes-labeled.csv', "r")
+    input = open('../TestData/diabetes-input.csv', "r")
     reader = csv.reader(input)
 
     output = open('../TestData/diabetes-trainingdata.txt', "w")

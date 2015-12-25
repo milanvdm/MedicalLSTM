@@ -4,6 +4,9 @@
 # PyCharm
 .idea/
 
+# TensorFlow Models
+TestData/state2vec-results/*
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
