@@ -38,6 +38,7 @@ def writeSequence(sequence, output):
     skipGramWindowSize = 5
 
     beforePadding = "START"
+    betweenPadding = "BETWEEN"
     afterPadding = "END"
 
     for i in range(1, skipGramWindowSize):
@@ -50,6 +51,10 @@ def writeSequence(sequence, output):
     output.write(" " + afterPadding)
     for i in range(1, skipGramWindowSize):
         output.write(" " + afterPadding)
+
+    output.write(" " + betweenPadding)
+    for i in range(1, skipGramWindowSize):
+        output.write(" " + betweenPadding)
     output.write(" ")
 
 

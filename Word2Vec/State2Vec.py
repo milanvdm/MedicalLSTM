@@ -40,9 +40,14 @@ import tensorflow as tf
 
 from tensorflow.models.embedding import gen_word2vec as word2vec
 
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
+
 flags = tf.app.flags
 
 flags.DEFINE_string("save_path", "../TestData/state2vec-results/", "Directory to write the model.")
+flags.DEFINE_string("checkpoint_dir", "../TestData/state2vec-results/", "Directory to get the model.")
 flags.DEFINE_string(
     "train_data", "../TestData/diabetes-trainingdata.txt",
     "Training data.")
@@ -116,6 +121,8 @@ class Options(object):
     # Where to write out summaries.
     self.save_path = FLAGS.save_path
 
+    self.checkpoint_dir = FLAGS.checkpoint_dir
+
 
 class Word2Vec(object):
   """Word2Vec model (Skipgram)."""
@@ -127,6 +134,8 @@ class Word2Vec(object):
     self._id2word = []
     self.build_graph()
     self.save_vocab()
+    self.visualiseEmbedding()
+    self.restoreSession()
 
   def build_graph(self):
     """Build the model graph."""
@@ -195,6 +204,14 @@ class Word2Vec(object):
 
     self.saver = tf.train.Saver()
 
+  def restoreSession(self):
+    ckpt = tf.train.get_checkpoint_state(self._options.checkpoint_dir)
+    if ckpt and ckpt.model_checkpoint_path:
+        print("Found an existing model")
+        self.saver.restore(self._session, ckpt.model_checkpoint_path)
+    else:
+        print("Making a new model")
+
   def save_vocab(self):
     """Save the vocabulary to a file so the model can be reloaded."""
     opts = self._options
@@ -239,6 +256,28 @@ class Word2Vec(object):
     for t in workers:
       t.join()
 
+  def visualiseEmbedding(self):
+    norm = tf.sqrt(tf.reduce_sum(tf.square(self._w_in), 1, keep_dims=True))
+    normalized_embeddings = self._w_in / norm
+    final_embeddings = normalized_embeddings.eval()
+
+    tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
+    plot_only = 500
+    low_dim_embs = tsne.fit_transform(final_embeddings[:plot_only,:])
+
+    labels = [self._id2word[i] for i in xrange(plot_only)]
+    assert low_dim_embs.shape[0] >= len(labels), "More labels than embeddings"
+    plt.figure(figsize=(18, 18))  #in inches
+    for i, label in enumerate(labels):
+        x, y = low_dim_embs[i,:]
+        plt.scatter(x, y)
+        plt.annotate(label,
+                     xy=(x, y),
+                     xytext=(5, 2),
+                     textcoords='offset points',
+                     ha='right',
+                     va='bottom')
+    plt.savefig("../TestData/state2vec-results/visualisation.png")
 
 
 def main(_):
@@ -247,10 +286,16 @@ def main(_):
     print("--train_data and --save_path must be specified.")
     sys.exit(1)
   opts = Options()
+
+
   with tf.Graph().as_default(), tf.Session() as session:
     model = Word2Vec(opts, session)
+    model.restoreSession()
+
     for _ in xrange(opts.epochs_to_train):
       model.train()  # Process one epoch
+
+    model.visualiseEmbedding()
     # Perform a final save.
     model.saver.save(session, os.path.join(opts.save_path, "model.ckpt"),
                      global_step=model.step)

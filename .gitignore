@@ -5,7 +5,8 @@
 .idea/
 
 # TensorFlow Models
-TestData/state2vec-results/*
+TestData/state2vec-results/checkpoint
+TestData/state2vec-results/model.ckpt*
 
 
 # Byte-compiled / optimized / DLL files
