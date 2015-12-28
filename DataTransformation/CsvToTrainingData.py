@@ -3,18 +3,16 @@ import csv
 
 def toTrainingData():
 
-    input = open('../TestData/diabetes-input.csv', "r")
+    input = open('../TestData/diabetes-sequences.csv', "r")
     reader = csv.reader(input)
 
     output = open('../TestData/diabetes-trainingdata.txt', "w")
 
     patientColumn = 2
 
-    reader.next()
-
     sequenceBuffer = []
 
-    previousPatientNumber = 344
+    previousPatientNumber = 1
     for row in reader:
 
         currentPatientNumber = row[patientColumn]
@@ -52,9 +50,9 @@ def writeSequence(sequence, output):
     for i in range(1, skipGramWindowSize):
         output.write(" " + afterPadding)
 
-    output.write(" " + betweenPadding)
-    for i in range(1, skipGramWindowSize):
-        output.write(" " + betweenPadding)
+    #output.write(" " + betweenPadding)
+    #for i in range(1, skipGramWindowSize):
+    #    output.write(" " + betweenPadding)
     output.write(" ")
 
 
