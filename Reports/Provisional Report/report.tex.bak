@@ -516,7 +516,6 @@ Irregular intervals are a form of missing data. Our method has to handle the irr
 A well known problem is the Curse of Dimensionality. It causes the data to be sparse and implies the need for more data. Also the effects and importance of attributes is unclear because of the large amount of attributes. \\
 
 Our method should handle all above problems and be able to build a model to label a given sequence. The label is an indicator on what the outcome will be of the patients disease trajectory. \\
-% Een pak dieper gaan op de prediction en vertellen waarom ik de embedding wil doen.
 The method described in \ref{sec:Method} tries to handle the preprocessing needed for the prediction problem.
 
 \section{Methods}
