@@ -459,6 +459,10 @@ IEEEtran, journal, \LaTeX, paper, template.
 
 
 \section{Motivation}
+
+General motivation
+
+
 % The very first letter is a 2 line initial drop letter followed
 % by the rest of the first word in caps.
 % 
@@ -507,23 +511,34 @@ The medical history of a patient is a time series with each medical status a dat
 A high dimensional numerical vector represents a medical status where a value can express for example the bloodpressure of a patient. Between data points, there can be long time periods and also irregular intervals. The numerical values of the vectors need to be standarized. Typical for large datasets, are missing values which have to be taken into account. \\
 
 \subsubsection{Time Series}
-Each patient is an independent time series. But in the time series, several indepedent disease periods can occur. In medical data, there are a large amount of unique events because of the high dimensional data points. Each possible combination of the vectorspace represents an unique event. Machine learning techniques are harder to apply when there are a large amount of different events, especially when rare events are possibly important which is the case in medical data.
+Each patient is an independent time series. But in the time series, several indepedent disease periods can occur. In medical data, there are a large amount of unique events because of the high dimensional data points. Each possible combination of the vectorspace represents an unique event. Machine learning techniques are harder to apply when there are a large amount of different events, especially when rare events are possibly important which is the case in medical data. \\
 \subsubsection{Long Time Periods}
-Between the events are a long range of dependencies possible. When machine learning techniques try to model those dependencies, adecay or blow up of events can happen, this is called the vanishing gradient problem.
-\subsubsection{Irregular Invervals}
-Irregular intervals are a form of missing data. Our method has to handle the irregular intervals or transform them accordingly to regular intervals
+\label{sec:LongTimePeriods}
+Between the events are a long range of dependencies possible. When machine learning techniques try to model those dependencies, adecay or blow up of events can happen, this is called the vanishing gradient problem. \\
+\subsubsection{Irregular Intervals}
+\label{sec:IrregularIntervals}
+Irregular intervals are a form of missing data. Our method has to handle the irregular intervals or transform them accordingly to regular intervals \\
 \subsubsection{High Dimensionality}
+\label{sec:HighDimensionality}
 A well known problem is the Curse of Dimensionality. It causes the data to be sparse and implies the need for more data. Also the effects and importance of attributes is unclear because of the large amount of attributes. \\
+\subsubsection{Sequence Labeling}
+Our prediction method should handle all above problems and be able to build a model to label a given sequence. The label is an indicator on what the outcome will be of the patients disease trajectory. The labeling proces gives the prediction of the disease trajectory. \\
+Sequence labeling can be done with Recurrent Neural Networks (RNN). A RNN which handles problems like \ref{sec:LongTimePeriods}, \ref{sec:IrregularIntervals}, and \ref{sec:HighDimensionality} is Long Short Term Memory (LSTM). \\
+\subsubsection{Embedding} 
+DESCRIBE EMBEDDING PROBLEM \\
 
-Our method should handle all above problems and be able to build a model to label a given sequence. The label is an indicator on what the outcome will be of the patients disease trajectory. \\
-The method described in \ref{sec:Method} tries to handle the preprocessing needed for the prediction problem.
+The method described in \ref{sec:Methods} tries to handle the preprocessing needed for the LSTM network.
 
 \section{Methods}
+\label{sec:Methods}
+We first describe our approach on the problems as irregular intervals, standarization, and the high dimensionality. Secondly, we describe our method to make the embedding matrix. Lastly, we introduce a method to generalize our events to get a more general embedding matrix but still keep outliers.
+
+\subsection{Preprocessing}
 
 
 
 \section{Future Work}
-Untill now we described and implemented a method to generalize our dataset and find connections between events. Those results can be used to feed into a Recurrent Neural Network to label the sequences. With the learned model and the embedding matrix, we can also handle unseen events by looking for the k-nearest neighbours of this unseen event and base our results on the findings of those neighbours.
+Untill now we described and implemented a method to generalize our dataset and find connections between events. Those results can be used to feed into the LSTM network to label the sequences. With the learned model and the embedding matrix, we can also handle unseen events by looking for the k-nearest neighbours of this unseen event and base our results on the findings of those neighbours.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
