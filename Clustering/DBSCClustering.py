@@ -159,6 +159,6 @@ def writeSequence(sequence, output):
 
 
 if __name__ == "__main__":
-    #findEps()
-    toTrainingData()
+    findEps()
+    #toTrainingData()
 
