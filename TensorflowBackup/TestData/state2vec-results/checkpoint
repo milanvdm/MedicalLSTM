@@ -1,2 +1,0 @@
-model_checkpoint_path: "../TestData/state2vec-results/model.ckpt-466"
-all_model_checkpoint_paths: "../TestData/state2vec-results/model.ckpt-466"
