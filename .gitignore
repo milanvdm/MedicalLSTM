@@ -4,6 +4,10 @@
 # PyCharm
 .idea/
 
+# Eclipse
+DL4J/.metadata/*
+.metadata/*
+
 # TensorFlow Models
 TestData/state2vec-results/checkpoint
 TestData/state2vec-results/model.ckpt*
