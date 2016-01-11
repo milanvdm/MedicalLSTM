@@ -7,6 +7,10 @@
 # Eclipse
 DL4J/.metadata/*
 .metadata/*
+target/
+.project
+.settings/
+.classpath
 
 # TensorFlow Models
 TestData/state2vec-results/checkpoint
