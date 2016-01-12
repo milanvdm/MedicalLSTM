@@ -13,6 +13,7 @@
         <canova.version>0.0.0.14</canova.version>
         <jackson.version>2.5.1</jackson.version>
         <elki.version>0.7.0</elki.version>
+        <opencsv.version>3.6</opencsv.version>
     </properties>
 
 
@@ -81,6 +82,12 @@
 			<artifactId>elki</artifactId>
 			<version>${elki.version}</version>
 		</dependency>
+		
+		<dependency>
+		     <groupId>com.opencsv</groupId>
+		     <artifactId>opencsv</artifactId>
+		     <version>${opencsv.version}</version>
+		  </dependency>
 
     </dependencies>
 

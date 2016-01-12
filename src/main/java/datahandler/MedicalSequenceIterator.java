@@ -6,7 +6,6 @@ import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 
-
 public class MedicalSequenceIterator<T extends SequenceElement> implements SequenceIterator<T> {
 
 	 private Iterable<Sequence<T>> underlyingIterable;
@@ -32,5 +31,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 		this.currentIterator = underlyingIterable.iterator();
 		
 	}
+	
+	
 
 }

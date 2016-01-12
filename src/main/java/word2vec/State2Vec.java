@@ -11,6 +11,7 @@ import data.StateImpl;
 import datahandler.DataStreamer;
 import datahandler.DataStreamerImpl;
 import datahandler.MedicalSequenceIterator;
+import util.Constants;
 
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
@@ -23,7 +24,7 @@ public class State2Vec {
 
     public static void main(String[] args) throws Exception {
 
-        ClassPathResource resource = new ClassPathResource("raw_sentences.txt");
+        ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
         File file = resource.getFile();
 
         /*
