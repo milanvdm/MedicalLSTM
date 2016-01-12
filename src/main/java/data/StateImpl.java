@@ -17,6 +17,7 @@ public class StateImpl extends SequenceElement implements State  {
 	
 	public StateImpl(List<Double> input) {
 		this.medicalVector = input;
+		this.setElementFrequency(1); //Workaround of bug in DL4J
 	}
 	
 	@Override

@@ -131,7 +131,7 @@ public class State2Vec {
          */
         
         logger.info("Plotting State2Vec");
-        vectors.getLookupTable().plotVocab();
+        vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
 
     }
 	
