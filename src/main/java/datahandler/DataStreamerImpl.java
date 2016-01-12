@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.opencsv.CSVReader;
 
@@ -14,6 +16,8 @@ import data.StateImpl;
 import util.Constants;
 
 public class DataStreamerImpl implements DataStreamer {
+	
+	protected static final Logger logger = LoggerFactory.getLogger(DataStreamerImpl.class);
 	
 	private SequenceParser sequenceParser;
 	
@@ -23,7 +27,10 @@ public class DataStreamerImpl implements DataStreamer {
 	
 	@Override
 	public MedicalSequenceIterator<StateImpl> getMedicalIterator(File file) throws IOException {
+		logger.info("Getting data from " + file.getName());
+		
 		CSVReader reader = new CSVReader(new FileReader(file), ';');
+		reader.readNext(); //ignore first line
 		
 		List<Sequence<StateImpl>> sequences = new ArrayList<Sequence<StateImpl>>();
 		
@@ -48,6 +55,13 @@ public class DataStreamerImpl implements DataStreamer {
 		}
 		
 		reader.close();
+		
+		logger.info("Some results:");
+		
+		for(int i = 0; i < 20; i++) {
+			Sequence<StateImpl> sequence = sequences.get(i);
+			logger.info(sequence.toString());
+		}
 		
 		return new MedicalSequenceIterator<>(sequences);
 	}

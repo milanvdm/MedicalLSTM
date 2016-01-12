@@ -5,7 +5,7 @@ import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
 import org.deeplearning4j.models.embeddings.learning.impl.elements.SkipGram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
+//import org.springframework.core.io.ClassPathResource;
 
 import data.StateImpl;
 import datahandler.DataStreamer;
@@ -14,6 +14,7 @@ import datahandler.MedicalSequenceIterator;
 import util.Constants;
 
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
+import org.deeplearning4j.models.word2vec.wordstore.VocabConstructor;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
 
 import java.io.File;
@@ -23,9 +24,13 @@ public class State2Vec {
 	protected static final Logger logger = LoggerFactory.getLogger(State2Vec.class);
 
     public static void main(String[] args) throws Exception {
+    	
+    	logger.info("Started State2Vec");
 
-        ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
-        File file = resource.getFile();
+        //ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
+        //File file = resource.getFile();
+    	
+    	File file = new File(Constants.FILENAME);
 
         /*
         	Make a cache for the states
@@ -39,6 +44,17 @@ public class State2Vec {
         DataStreamer dataStreamer = new DataStreamerImpl();
         MedicalSequenceIterator<StateImpl> sequenceIterator = dataStreamer.getMedicalIterator(file);
 
+        /*
+        Now we should build vocabulary out of sequence iterator.
+        We can skip this phase, and just set AbstractVectors.resetModel(TRUE), and vocabulary will be mastered internally
+	    */
+	    VocabConstructor<StateImpl> constructor = new VocabConstructor.Builder<StateImpl>()
+	            .addSource(sequenceIterator, 1)
+	            .setTargetVocabCache(stateCache)
+	            .build();
+	
+	    constructor.buildJointVocabulary(false, true);
+        
         /*
             Time to build WeightLookupTable instance for our new model
         */
@@ -62,7 +78,7 @@ public class State2Vec {
         SequenceVectors<StateImpl> vectors = new SequenceVectors.Builder<StateImpl>(new VectorsConfiguration())
                 // minimum number of occurencies for each element in training corpus. All elements below this value will be ignored
                 // Please note: this value has effect only if resetModel() set to TRUE, for internal model building. Otherwise it'll be ignored, and actual vocabulary content will be used
-                .minWordFrequency(5)
+                .minWordFrequency(1)
 
                 // WeightLookupTable
                 .lookupTable(lookupTable)
@@ -104,6 +120,8 @@ public class State2Vec {
         /*
             Now, after all options are set, we just call fit()
          */
+        
+        logger.info("Fitting State2Vec");
         vectors.fit();
 
         /*
@@ -112,6 +130,7 @@ public class State2Vec {
             objects/relations please take care of Labels uniqueness and meaning for yourself.
          */
         
+        logger.info("Plotting State2Vec");
         vectors.getLookupTable().plotVocab();
 
     }

@@ -10,7 +10,7 @@ public class Constants {
 	
 	public static List<Integer> COLUMS_TO_IGNORE = Arrays.asList(new Integer[]{0,2});
 	
-	public static String FILENAME = "../Dataset/diabetes.csv";
+	public static String FILENAME = "/home/milan/workspace/MedicalLSTM/Dataset/diabetes2.csv";
 	
 	
 	

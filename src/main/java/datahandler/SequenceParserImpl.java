@@ -37,6 +37,7 @@ public class SequenceParserImpl implements SequenceParser {
 			}
 			
 			sequence.addElement(state);
+			i++;
 		}
 		
 		return sequence;
