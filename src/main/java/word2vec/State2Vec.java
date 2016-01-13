@@ -16,6 +16,7 @@ import util.Constants;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.word2vec.wordstore.VocabConstructor;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 
 import java.io.File;
 
@@ -30,7 +31,7 @@ public class State2Vec {
         //ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
         //File file = resource.getFile();
     	
-    	File file = new File(Constants.FILENAME);
+    	File file = new File(Constants.INPUT_CSV);
 
         /*
         	Make a cache for the states
@@ -62,7 +63,7 @@ public class State2Vec {
         WeightLookupTable<StateImpl> lookupTable = new InMemoryLookupTable.Builder<StateImpl>()
                 .lr(0.025)
                 .vectorLength(150)
-                .useAdaGrad(false)
+                .useAdaGrad(true) // In short: prevents overfitting
                 .cache(stateCache)
                 .build();
 
@@ -88,6 +89,9 @@ public class State2Vec {
 
                 // vocabulary built prior to modelling
                 .vocabCache(stateCache)
+                
+                // default value is 5 (for SkipGram)
+                .windowSize(5)
 
                 // batchSize is the number of sequences being processed by 1 thread at once
                 // this value actually matters if you have iterations > 1
@@ -97,7 +101,7 @@ public class State2Vec {
                 .iterations(1)
 
                 // number of iterations over whole training corpus
-                .epochs(1)
+                .epochs(3)
 
                 // if set to true, vocabulary will be built from scratches internally
                 // otherwise externally provided vocab will be used
@@ -110,10 +114,6 @@ public class State2Vec {
                 .trainElementsRepresentation(true)
                 .trainSequencesRepresentation(false)
 
-                /*
-                    Specifies elements learning algorithms. SkipGram, for example.
-                 */
-                .elementsLearningAlgorithm(new SkipGram<StateImpl>())
 
                 .build();
 
@@ -123,6 +123,12 @@ public class State2Vec {
         
         logger.info("Fitting State2Vec");
         vectors.fit();
+        
+        
+        
+        // Save our state2vec model --> WILL WORK IN NEXT DL4J VERSION!
+        WordVectorSerializer.writeWordVectors(vectors.getLookupTable(), Constants.OUTPUT_WORD2VEC);
+        
 
         /*
             As soon as fit() exits, model considered built, and we can test it.

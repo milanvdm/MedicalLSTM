@@ -39,17 +39,9 @@ public class MedicalLstm {
 	public static void main(String[] args) throws Exception {
 
 		int miniBatchSize = 10;
-		boolean generateData = true;
 
 		String tempDir = System.getProperty("java.io.tmpdir");
 		String dataDirectory = FilenameUtils.concat(tempDir, "DL4JVideoShapesExample/");   //Location to store generated data set
-
-		//Generate data: number of .mp4 videos for input, plus .txt files for the labels
-		if (generateData) {
-			System.out.println("Starting data generation...");
-			generateData(dataDirectory);
-			System.out.println("Data generation complete");
-		}
 
 		//Set up network architecture:
 		Updater updater = Updater.ADAGRAD;
