@@ -1,4 +1,4 @@
-package datahandler;
+package datahandler.word2vec;
 
 import java.util.ArrayList;
 import java.util.List;

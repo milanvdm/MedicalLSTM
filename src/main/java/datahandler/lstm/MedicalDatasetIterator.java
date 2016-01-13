@@ -1,10 +1,11 @@
-package datahandler;
+package datahandler.lstm;
 
 
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.canova.api.io.WritableConverter;
+import org.canova.api.io.converters.SelfWritableConverter;
 import org.canova.api.io.converters.WritableConverterException;
 import org.canova.api.records.reader.RecordReader;
 import org.canova.api.records.reader.SequenceRecordReader;
@@ -13,6 +14,7 @@ import org.deeplearning4j.datasets.iterator.DataSetIterator;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.embeddings.wordvectors.WordVectors;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
+import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.deeplearning4j.models.word2vec.wordstore.VocabCache;
 import org.deeplearning4j.text.tokenization.tokenizer.Tokenizer;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
@@ -36,20 +38,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/** This is a DataSetIterator that is specialized for the IMDB review dataset used in the Word2VecSentimentRNN example
- * It takes either the train or test set data from this data set, plus a WordVectors object (typically the Google News
- * 300 pretrained vectors from https://code.google.com/p/word2vec/) and generates training data sets.<br>
- * Inputs/features: variable-length time series, where each word (with unknown words removed) is represented by
- * its Word2Vec vector representation.<br>
- * Labels/target: a single class (negative or positive), predicted at the final time step (word) of each review
- *
- * @author Alex Black
- */
-public class MedicalDatasetIterator implements DataSetIterator {
+public class MedicalDatasetIterator<T extends SequenceElement> implements DataSetIterator {
+	
+
+	private static final long serialVersionUID = -806426663785696307L;
 	
 	protected RecordReader recordReader;
     protected WritableConverter converter;
-    protected int batchSize = 10;
+    protected int batchSize = 1000;
     protected int labelIndex = -1;
     protected int numPossibleLabels = -1;
     protected boolean overshot = false;
@@ -59,16 +55,8 @@ public class MedicalDatasetIterator implements DataSetIterator {
     protected boolean regression = false;
     protected DataSetPreProcessor preProcessor;
     
-    private final SequenceVectors sequenceVectors;
+    private final SequenceVectors<T> sequenceVectors;
 
-    /**
-     * Use the record reader and batch size; no labels
-     * @param recordReader the record reader to use
-     * @param batchSize the batch size of the data
-     */
-    public RecordReaderDataSetIterator(RecordReader recordReader, int batchSize) {
-        this(recordReader, new SelfWritableConverter(), batchSize, -1, -1);
-    }
 
     /**
      * Main constructor
@@ -76,29 +64,10 @@ public class MedicalDatasetIterator implements DataSetIterator {
      * @param batchSize the batch size
      * @param labelIndex the index of the label to use
      * @param numPossibleLabels the number of posible
+     * @param sequenceVectors
      */
-    public RecordReaderDataSetIterator(RecordReader recordReader, int batchSize, int labelIndex, int numPossibleLabels) {
-        this(recordReader, new SelfWritableConverter(), batchSize, labelIndex, numPossibleLabels);
-    }
-
-    /**
-     *
-     * @param recordReader
-     */
-    public RecordReaderDataSetIterator(RecordReader recordReader) {
-        this(recordReader, new SelfWritableConverter());
-    }
-
-
-    /**
-     * Invoke the recordreaderdatasetiterator with a batch size of 10
-     * @param recordReader the recordreader to use
-     * @param labelIndex the index of the label
-     * @param numPossibleLabels the number of possible labels for classification
-     *
-     */
-    public RecordReaderDataSetIterator(RecordReader recordReader, int labelIndex, int numPossibleLabels) {
-        this(recordReader, new SelfWritableConverter(), 10, labelIndex, numPossibleLabels);
+    public MedicalDatasetIterator(RecordReader recordReader, SequenceVectors<T> sequenceVectors, int batchSize, int labelIndex, int numPossibleLabels) {
+        this(recordReader, sequenceVectors, new SelfWritableConverter(), batchSize, labelIndex, numPossibleLabels, false);
     }
 
 
@@ -111,26 +80,16 @@ public class MedicalDatasetIterator implements DataSetIterator {
      * @param numPossibleLabels
      * @param regression
      */
-    public RecordReaderDataSetIterator(RecordReader recordReader, WritableConverter converter, int batchSize, int labelIndex, int numPossibleLabels,boolean regression) {
+    public MedicalDatasetIterator(RecordReader recordReader, SequenceVectors<T> sequenceVectors, WritableConverter converter, int batchSize, int labelIndex, int numPossibleLabels, boolean regression) {
         this.recordReader = recordReader;
         this.converter = converter;
         this.batchSize = batchSize;
         this.labelIndex = labelIndex;
         this.numPossibleLabels = numPossibleLabels;
         this.regression = regression;
-    }
-    public RecordReaderDataSetIterator(RecordReader recordReader, WritableConverter converter, int batchSize, int labelIndex, int numPossibleLabels) {
-        this(recordReader,converter,batchSize,labelIndex,numPossibleLabels,false);
+        this.sequenceVectors = sequenceVectors;
     }
 
-    public RecordReaderDataSetIterator(RecordReader recordReader, WritableConverter converter) {
-        this(recordReader, converter, 10, -1, -1);
-    }
-
-
-    public RecordReaderDataSetIterator(RecordReader recordReader, WritableConverter converter, int labelIndex, int numPossibleLabels) {
-        this(recordReader, converter, 10, labelIndex, numPossibleLabels);
-    }
 
     
     // COMBINE WITH:

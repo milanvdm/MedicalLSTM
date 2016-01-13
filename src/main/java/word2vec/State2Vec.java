@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 //import org.springframework.core.io.ClassPathResource;
 
 import data.StateImpl;
-import datahandler.DataStreamer;
-import datahandler.DataStreamerImpl;
-import datahandler.MedicalSequenceIterator;
+import datahandler.word2vec.DataStreamer;
+import datahandler.word2vec.DataStreamerImpl;
+import datahandler.word2vec.MedicalSequenceIterator;
 import util.Constants;
 
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
