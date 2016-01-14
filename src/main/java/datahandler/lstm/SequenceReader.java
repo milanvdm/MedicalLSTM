@@ -1,91 +1,105 @@
 package datahandler.lstm;
 
 
-import org.apache.commons.io.IOUtils;
-import org.canova.api.io.data.Text;
+import org.canova.api.conf.Configuration;
+import org.canova.api.io.data.DoubleWritable;
 import org.canova.api.records.reader.SequenceRecordReader;
-import org.canova.api.records.reader.impl.FileRecordReader;
+import org.canova.api.split.InputSplit;
 import org.canova.api.writable.Writable;
+import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
+import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+
+import data.State;
+import data.StateImpl;
+import scala.NotImplementedError;
 
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
-/**
- * CSV Sequence Record Reader
- * This reader is intended to read sequences of data in CSV format, where
- * each sequence is defined in its own file (and there are multiple files)
- * Each line in the file represents one time step
- */
-public class SequenceReader extends FileRecordReader implements SequenceRecordReader {
+
+public class SequenceReader implements SequenceRecordReader {
     
 	private static final long serialVersionUID = 2566782461516037172L;
 	
-	private int skipNumLines = 0;
-    private String delimiter = ",";
+	private SequenceIterator<StateImpl> sequenceIterator;
 
-    public SequenceReader() {
-        this(0, ";");
-    }
-
-    public SequenceReader(int skipNumLines) {
-        this(skipNumLines, ",");
-    }
-
-    public SequenceReader(int skipNumLines, String delimiter) {
-        this.skipNumLines = skipNumLines;
-        this.delimiter = delimiter;
+    public SequenceReader(SequenceIterator<StateImpl> sequenceIterator) {
+        this.sequenceIterator = sequenceIterator;
+        reset();
     }
 
     @Override
     public Collection<Collection<Writable>> sequenceRecord() {
-        File next = iter.next();
-
-        Iterator<String> lineIter;
-        try {
-            lineIter = IOUtils.lineIterator(new InputStreamReader(new FileInputStream(next)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (skipNumLines > 0) {
-            int count = 0;
-            while (count++ < skipNumLines && lineIter.hasNext()) lineIter.next();
-        }
-
-        Collection<Collection<Writable>> out = new ArrayList<>();
-        while (lineIter.hasNext()) {
-            String line = lineIter.next();
-            String[] split = line.split(delimiter);
-            ArrayList<Writable> list = new ArrayList<>();
-            for (String s : split) list.add(new Text(s));
-            out.add(list);
-        }
+    	Sequence<StateImpl> next = sequenceIterator.nextSequence();
+    	
+    	
+    	Collection<Collection<Writable>> out = new ArrayList<>();
+    	
+    	for(State state: next.getElements()) {
+    		ArrayList<Writable> writableState = new ArrayList<>();
+    		
+    		for(Double value: state.getMedicalVector()) {
+    			writableState.add(new DoubleWritable(value));
+    		}
+    		
+    		out.add(writableState);
+    	}
 
         return out;
     }
 
     
-    public Collection<Collection<Writable>> sequenceRecord(URI uri, DataInputStream dataInputStream) throws IOException {
-        Iterator<String> lineIter = IOUtils.lineIterator(new InputStreamReader(dataInputStream));
-        if (skipNumLines > 0) {
-            int count = 0;
-            while (count++ < skipNumLines && lineIter.hasNext()) lineIter.next();
-        }
 
-        Collection<Collection<Writable>> out = new ArrayList<>();
-        while (lineIter.hasNext()) {
-            String line = lineIter.next();
-            String[] split = line.split(delimiter);
-            ArrayList<Writable> list = new ArrayList<>();
-            for (String s : split) list.add(new Text(s));
-            out.add(list);
-        }
+	@Override
+	public List<String> getLabels() {
+		throw new NotImplementedError();
+	}
 
-        return out;
-    }
+	@Override
+	public boolean hasNext() {
+		return sequenceIterator.hasMoreSequences();
+	}
+
+	@Override
+	public void initialize(InputSplit arg0) throws IOException, InterruptedException {
+		throw new NotImplementedError();
+		
+	}
+
+	@Override
+	public void initialize(Configuration arg0, InputSplit arg1) throws IOException, InterruptedException {
+		throw new NotImplementedError();
+		
+	}
+
+	@Override
+	public Collection<Writable> next() {
+		throw new NotImplementedError();
+	}
+
+	@Override
+	public void reset() {
+		sequenceIterator.reset();
+		
+	}
+
+	@Override
+	public void close() throws IOException {
+		throw new NotImplementedError();
+	}
+
+	@Override
+	public Configuration getConf() {
+		throw new NotImplementedError();
+	}
+
+	@Override
+	public void setConf(Configuration arg0) {
+		throw new NotImplementedError();
+		
+	}
 
 
 }
