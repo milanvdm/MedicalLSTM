@@ -28,6 +28,7 @@ public class StateCache<T extends SequenceElement> implements VocabCache<T> {
 
     private Logger logger = LoggerFactory.getLogger(AbstractCache.class);
 
+    
     /**
      * Deserialize vocabulary from specified path
      */

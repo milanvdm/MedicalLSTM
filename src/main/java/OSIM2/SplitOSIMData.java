@@ -44,11 +44,14 @@ public class SplitOSIMData {
 		return blocksize;
 	}
 	
+	private static CSVReader drugCsvReader;
+
 	public static List<List<File>> splitConditions() throws NumberFormatException, IOException {
 		File file = new File("/media/milan/Data/Thesis/Datasets/OSIM/Sorted/condition_era_sorted.csv");
-		
+
 		List<File> conditionFiles = new ArrayList<File>();
 		List<File> drugFiles = new ArrayList<File>();
+		List<File> personFiles = new ArrayList<File>();
 		long blocksize = estimateBestSizeOfBlocks(file.length(),
 				1024, estimateAvailableMemory());// in
 
@@ -58,7 +61,11 @@ public class SplitOSIMData {
 
 		BufferedReader drugFileReader = new BufferedReader(new FileReader("/media/milan/Data/Thesis/Datasets/OSIM/Merged/drug_era_merged.csv"));
 
-		CSVReader drugCsvReader = new CSVReaderBuilder(drugFileReader).withSkipLines(1).build();
+		drugCsvReader = new CSVReaderBuilder(drugFileReader).withSkipLines(1).build();
+		
+		BufferedReader personFileReader = new BufferedReader(new FileReader("/media/milan/Data/Thesis/Datasets/OSIM/Sorted/person_sorted.csv"));
+
+		CSVReader personCsvReader = new CSVReaderBuilder(personFileReader).withSkipLines(0).build();
 
 
 		String[] nextLine;
@@ -73,11 +80,12 @@ public class SplitOSIMData {
 				write = true;
 			}
 
-			int personId = Integer.parseInt(nextLine[3]);
+			int personId = Integer.parseInt(nextLine[2]);
 			if(personId != currentId) {
 				if(write == true) {
 					conditionFiles.add(writeListToCsv(tmplist));
-					drugFiles.add(splitMergedDrugFile(currentId, drugCsvReader));
+					drugFiles.add(splitMergedDrugFile(currentId));
+					personFiles.add(splitPersonFile(currentId, personCsvReader));
 
 					write = false;
 					currentblocksize = 0;
@@ -87,7 +95,7 @@ public class SplitOSIMData {
 
 				currentId = personId;
 			}
-			
+
 			tmplist.add(nextLine);
 			currentblocksize += StringSizeEstimator
 					.estimatedSizeOf(Arrays.toString(nextLine));
@@ -97,40 +105,72 @@ public class SplitOSIMData {
 
 		conditionCsvReader.close();
 		drugCsvReader.close();
-		
+		personCsvReader.close();
+
 		List<List<File>> toReturn = new ArrayList<List<File>>();
 		toReturn.add(conditionFiles);
 		toReturn.add(drugFiles);
-		
-		return toReturn;
-		
-	}
-	
-	private static String[] savedLine;
+		toReturn.add(personFiles);
 
-	private static File splitMergedDrugFile(int id, CSVReader drugCsvReader) throws IOException {
-		
+		return toReturn;
+
+	}
+
+	private static String[] savedLine = null;
+
+	private static File splitMergedDrugFile(int id) throws IOException {
+
+
+
 		boolean write = false;
 		int currentId = -1;
 		String[] nextLine;
 		List<String[]> tmplist = new ArrayList<String[]>();
 
+		if(savedLine != null) {
+			System.out.println("Found savedLine: " + Arrays.toString(savedLine));
+			tmplist.add(savedLine);
+			savedLine = null;
+		}
+		
+		int i = 0;
+
 		while ((nextLine = drugCsvReader.readNext()) != null) {
 
-			tmplist.add(nextLine);
-			
-			int personId = Integer.parseInt(nextLine[0]);
+			int personId = Integer.parseInt(nextLine[3]);
 			if(personId != currentId) {
-				if(personId == id) {
+				
+				if(personId > id) {
+					System.out.println("No Found id: " + id);
 					write = true;
 				}
 				
+				if(write == true) {
+					savedLine = nextLine;
+					System.out.println("Reached end of DrugSplitFile");
+					break;
+				}
+
+				if(personId == id) {
+					System.out.println("Found id: " + id);
+					write = true;
+				}
+				
+				
+
 				currentId = personId;
 			}
 			
+			if(i > 200000) {
+				System.out.println("Already 200000 loops");
+				i = 0;
+			}
+			
+			tmplist.add(nextLine);
+			i++;
 
 		}
-		
+
 		File directory = new File("/media/milan/Data/Thesis/Datasets/OSIM/Splitted");
 
 		File newtmpfile = File.createTempFile("splitMergedDrug",
@@ -146,7 +186,7 @@ public class SplitOSIMData {
 		csvWriter.writeAll(tmplist);
 
 		csvWriter.close();
-		
+
 		return newtmpfile;
 
 	}
@@ -195,7 +235,7 @@ public class SplitOSIMData {
 
 				currentId = personId;
 			}
-			
+
 			tmplist.add(nextLine);
 			currentblocksize += StringSizeEstimator
 					.estimatedSizeOf(Arrays.toString(nextLine));
@@ -205,11 +245,11 @@ public class SplitOSIMData {
 
 		personCsvReader.close();
 		drugCsvReader.close();
-		
+
 		List<List<File>> toReturn = new ArrayList<List<File>>();
 		toReturn.add(drugFiles);
 		toReturn.add(personFiles);
-		
+
 		return toReturn;
 
 	}
@@ -223,15 +263,15 @@ public class SplitOSIMData {
 		while ((nextLine = personCsvReader.readNext()) != null) {
 
 			tmplist.add(nextLine);
-			
+
 			int personId = Integer.parseInt(nextLine[0]);
 			if(personId == id) {
 				break;
 			}
 
 		}
-		
-		File directory = new File("/home/milan/workspace/MedicalLSTM/Dataset/Splitted");
+
+		File directory = new File("/media/milan/Data/Thesis/Datasets/OSIM/Splitted");
 
 		File newtmpfile = File.createTempFile("splitPerson",
 				"flatfile", directory);
@@ -246,7 +286,7 @@ public class SplitOSIMData {
 		csvWriter.writeAll(tmplist);
 
 		csvWriter.close();
-		
+
 		return newtmpfile;
 
 

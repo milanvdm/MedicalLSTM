@@ -5,11 +5,8 @@ import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
 import org.deeplearning4j.models.embeddings.learning.impl.elements.SkipGram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.core.io.ClassPathResource;
 
 import data.StateImpl;
-import datahandler.word2vec.DataStreamer;
-import datahandler.word2vec.DataStreamerImpl;
 import datahandler.word2vec.MedicalSequenceIterator;
 import util.Constants;
 
@@ -42,8 +39,7 @@ public class State2Vec {
         /*
             Make a sequence iterator
          */
-        DataStreamer dataStreamer = new DataStreamerImpl();
-        MedicalSequenceIterator<StateImpl> sequenceIterator = dataStreamer.getMedicalIterator(file);
+        MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file);
 
         /*
         Now we should build vocabulary out of sequence iterator.

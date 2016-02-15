@@ -1,5 +1,6 @@
 package datahandler.word2vec;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
@@ -9,6 +10,6 @@ import data.StateImpl;
 
 public interface SequenceParser {
 	
-	public Sequence<StateImpl> getSequence(List<String []> states);
+	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException;
 
 }
