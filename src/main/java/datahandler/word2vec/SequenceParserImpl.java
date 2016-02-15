@@ -86,12 +86,15 @@ public class SequenceParserImpl implements SequenceParser {
 	private List<Drug> parseDrugList(String drugList) {
 		List<Drug> toReturn = new ArrayList<Drug>();
 		
-		String[] drugs = drugList.split("] - [");
+		if(drugList.equals("[]")) {
+			return toReturn;
+		}
+		
+		String[] drugs = drugList.split("\\] - \\[");
 		
 		for(String drug: drugs) {
-			drug.replaceAll("[", "");
-			drug.replaceAll("]", "");
-			String[] elements = drug.split(";");
+			String newString = drug.replaceAll("\\[", "").replaceAll("\\]", "");
+			String[] elements = newString.split(";");
 			
 			Drug toAdd = new Drug(Double.parseDouble(elements[0]), elements[1], Double.parseDouble(elements[2]), Double.parseDouble(elements[3]), Double.parseDouble(elements[4]));
 			toReturn.add(toAdd);
@@ -144,21 +147,21 @@ public class SequenceParserImpl implements SequenceParser {
 
 	}
 	
-	private int decideSeason(Date date) throws ParseException {
+	private Double decideSeason(Date date) throws ParseException {
 		SimpleDateFormat f=new SimpleDateFormat("MM-dd");
 		
 		if(date.after(f.parse("04-21")) && date.before(f.parse("06-21"))){
-            return 4;
+            return 4.0;
         }
         else if(date.after(f.parse("06-20")) && (date.before(f.parse("09-23"))))
         {
-            return 1;
+            return 1.0;
         }
         else if(date.after(f.parse("09-22")) && date.before(f.parse("12-22")))
         {
-            return 2;
+            return 2.0;
         }
-        else return 3;
+        else return 3.0;
 	}
 
 }

@@ -28,7 +28,7 @@ public class State2Vec {
         //ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
         //File file = resource.getFile();
     	
-    	File file = new File(Constants.INPUT_CSV);
+    	File file = new File(Constants.INPUT_CSV_TEST);
 
         /*
         	Make a cache for the states
@@ -123,7 +123,7 @@ public class State2Vec {
         
         
         // Save our state2vec model --> WILL WORK IN NEXT DL4J VERSION!
-        WordVectorSerializer.writeWordVectors(vectors.getLookupTable(), Constants.OUTPUT_WORD2VEC);
+        //WordVectorSerializer.writeWordVectors(vectors.getLookupTable(), Constants.OUTPUT_WORD2VEC);
         
 
         /*

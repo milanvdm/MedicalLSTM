@@ -26,14 +26,17 @@ public class StateImpl extends SequenceElement implements State  {
 	
 	
 	private List<Double> convertToLabel(List<Object> completeState) {
+		List<Object> trimmedList = new ArrayList<Object>();
 		
-		for(int toIgnore: Constants.COLUMS_TO_IGNORE) {
-			completeState.remove(toIgnore);
+		for(Object toCheck: completeState) {
+			if(!Constants.COLUMS_TO_IGNORE.contains(completeState.indexOf(toCheck))) {
+				trimmedList.add(toCheck);
+			}
 		}
 		
 		List<Double> castedList = new ArrayList<Double>();
 		
-		for(Object toCast: completeState) {
+		for(Object toCast: trimmedList) {
 			Double toAdd = (Double) toCast;
 			castedList.add(toAdd);
 		}

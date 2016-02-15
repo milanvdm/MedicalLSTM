@@ -24,6 +24,8 @@ public class Constants {
 																				DRUG_LIST_COLUMN});
 	
 	public static String INPUT_CSV = "/media/milan/Data/Thesis/Datasets/OSIM/Final/conditions_merged.csv";
+	public static String INPUT_CSV_TEST = "/media/milan/Data/Thesis/Datasets/OSIM/Final/test_conditions_merged.csv";
+	
 	public static String OUTPUT_WORD2VEC = "/media/milan/Data/Thesis/Results/word2vec.txt";
 	
 	

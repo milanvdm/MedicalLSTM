@@ -64,6 +64,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 				try {
 					currentSequence = sequenceParser.getSequence(patientStates);
 				} catch (ParseException e) {
+					logger.error(e.toString());
 					return null;
 				}
 
@@ -77,6 +78,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 
 		}
 		
+		logger.error("Null sequence");
 		return null;
 	}
 
