@@ -1,9 +1,7 @@
 package datahandler.word2vec;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,10 +13,10 @@ import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.opencsv.CSVReader;
 
 import data.StateImpl;
 import util.Constants;
+import util.CsvIterator;
 
 public class MedicalSequenceIterator<T extends SequenceElement> implements SequenceIterator<T> {
 
@@ -27,14 +25,14 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	private SequenceParser sequenceParser = new SequenceParserImpl();
 	private int previousId = -1;
 
-	private CSVReader underlyingIterable;
+	private File underlyingIterable;
 	private Iterator<String[]> currentIterator;
 
-	public MedicalSequenceIterator(File file) throws FileNotFoundException {
+	public MedicalSequenceIterator(File file) throws IOException {
 		logger.info("Made Sequence Iterator");
 		
-		this.underlyingIterable = new CSVReader(new BufferedReader(new FileReader(file)), ',');
-		this.currentIterator = underlyingIterable.iterator();
+		this.underlyingIterable = file;
+		this.currentIterator = CsvIterator.getIterator(underlyingIterable);
 		currentIterator.next(); //ignore first line
 	}
 
@@ -78,13 +76,24 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 
 		}
 		
-		logger.error("Null sequence");
-		return null;
+		Sequence<StateImpl> currentSequence;
+		try {
+			 currentSequence = sequenceParser.getSequence(patientStates);
+		} catch (ParseException e) {
+			logger.error(e.toString());
+			return null;
+		}
+		
+		return (Sequence<T>) currentSequence;
 	}
 
 	@Override
 	public void reset() {
-		this.currentIterator = underlyingIterable.iterator();
+		try {
+			this.currentIterator = CsvIterator.getIterator(underlyingIterable);
+		} catch (IOException e) {
+			logger.error(e.toString());
+		}
 		currentIterator.next(); //ignore first line
 		
 		this.previousId = -1;

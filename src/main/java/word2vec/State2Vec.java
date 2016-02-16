@@ -2,7 +2,6 @@ package word2vec;
 
 import org.deeplearning4j.models.embeddings.WeightLookupTable;
 import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
-import org.deeplearning4j.models.embeddings.learning.impl.elements.SkipGram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,6 @@ import util.Constants;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.word2vec.wordstore.VocabConstructor;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
-import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 
 import java.io.File;
 
@@ -45,6 +43,8 @@ public class State2Vec {
         Now we should build vocabulary out of sequence iterator.
         We can skip this phase, and just set AbstractVectors.resetModel(TRUE), and vocabulary will be mastered internally
 	    */
+        logger.info("Building Vocab");
+        
 	    VocabConstructor<StateImpl> constructor = new VocabConstructor.Builder<StateImpl>()
 	            .addSource(sequenceIterator, 1)
 	            .setTargetVocabCache(stateCache)
@@ -56,9 +56,10 @@ public class State2Vec {
             Time to build WeightLookupTable instance for our new model
         */
 
+	    logger.info("Building LookupTable");
         WeightLookupTable<StateImpl> lookupTable = new InMemoryLookupTable.Builder<StateImpl>()
                 .lr(0.025)
-                .vectorLength(150)
+                .vectorLength(150) // Equals layersize if automatically managed -> duplicated code, removed in newest version
                 .useAdaGrad(true) // In short: prevents overfitting
                 .cache(stateCache)
                 .build();
@@ -72,6 +73,7 @@ public class State2Vec {
         /*
             Now we can build AbstractVectors model, that suits our needs
          */
+        logger.info("Building SequenceVectors");
         SequenceVectors<StateImpl> vectors = new SequenceVectors.Builder<StateImpl>(new VectorsConfiguration())
                 // minimum number of occurencies for each element in training corpus. All elements below this value will be ignored
                 // Please note: this value has effect only if resetModel() set to TRUE, for internal model building. Otherwise it'll be ignored, and actual vocabulary content will be used
@@ -93,8 +95,8 @@ public class State2Vec {
                 // this value actually matters if you have iterations > 1
                 .batchSize(250)
 
-                // number of iterations over batch
-                .iterations(1)
+                // number of iterations over batch -> same as epochs if no shuffle is used!
+                .iterations(3)
 
                 // number of iterations over whole training corpus
                 .epochs(3)
@@ -132,8 +134,8 @@ public class State2Vec {
             objects/relations please take care of Labels uniqueness and meaning for yourself.
          */
         
-        logger.info("Plotting State2Vec");
-        vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
+        //logger.info("Plotting State2Vec");
+        //vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
 
     }
 	
