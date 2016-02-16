@@ -22,9 +22,6 @@ public class State2Vec {
     public static void main(String[] args) throws Exception {
     	
     	logger.info("Started State2Vec");
-
-        //ClassPathResource resource = new ClassPathResource(Constants.FILENAME);
-        //File file = resource.getFile();
     	
     	File file = new File(Constants.INPUT_CSV_TEST);
 
@@ -59,7 +56,7 @@ public class State2Vec {
 	    logger.info("Building LookupTable");
         WeightLookupTable<StateImpl> lookupTable = new InMemoryLookupTable.Builder<StateImpl>()
                 .lr(0.025)
-                .vectorLength(150) // Equals layersize if automatically managed -> duplicated code, removed in newest version
+                .vectorLength(150) // Equals layersize if automatically managed -> duplicated code, removed in next version
                 .useAdaGrad(true) // In short: prevents overfitting
                 .cache(stateCache)
                 .build();
