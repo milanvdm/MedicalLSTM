@@ -1,4 +1,4 @@
-package word2vec;
+package state2vec;
 
 import java.io.File;
 import java.io.FileInputStream;

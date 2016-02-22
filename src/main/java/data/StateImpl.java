@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,13 +17,55 @@ public class StateImpl extends SequenceElement implements State  {
 	private static final long serialVersionUID = -5953078372301913975L;
 	
 	private List<Object> completeState = new ArrayList<Object>();
-	private List<Double> medicalVector = new ArrayList<Double>();
+	private List<Double> state2vecLabel = new ArrayList<Double>();
 	
 	
 	public StateImpl(List<Object> input) {
 		this.completeState = input;
-		this.medicalVector = convertToLabel(completeState);
+		this.state2vecLabel = convertToLabel(completeState);
 		this.setElementFrequency(1); //Workaround of bug in DL4J
+	}
+	
+	@Override
+	public INDArray getCompleteVector(INDArray baseVector) {
+		
+		int length = baseVector.length();
+		
+		baseVector.
+	}
+	
+	private INDArray flattenDrugList() {
+		List<Drug> drugList = (List<Drug>) completeState.get(Constants.DRUG_LIST_COLUMN);
+
+		double[][] arr = new double[Constants.MAX_DRUG_LIST_SIZE][Constants.AMOUNT_DRUG_ATTRIBUTES];
+		
+		int i = 0;
+		while(i < drugList.size()) {
+			arr[i][0] = drugList.get(i).getDrugExposureType();
+			arr[i][1] = drugList.get(i).getDaysAgo();
+			arr[i][2] = drugList.get(i).getPersistenceWindow();
+			arr[i][3] = drugList.get(i).getDrugId();
+			
+			i++;
+			
+		}
+		while(i < Constants.MAX_DRUG_LIST_SIZE) {
+			arr[i][0] = 0;
+			arr[i][1] = 0;
+			arr[i][2] = 0;
+			arr[i][3] = 0;
+			
+			i++;
+		}
+		
+		double[] ret = new double[arr.length * arr[0].length];
+        int count = 0;
+        for (int x = 0; x < arr.length; x++)
+            for (int y = 0; y < arr[x].length; y++)
+                ret[count++] = arr[x][y];
+      
+        return Nd4j.create(ret);
+		
 	}
 	
 	
@@ -46,8 +90,8 @@ public class StateImpl extends SequenceElement implements State  {
 	}
 
 	@Override
-	public List<Double> getMedicalVector() {
-		return this.medicalVector;
+	public List<Double> getState2vecLabel() {
+		return this.state2vecLabel;
 	}
 	
 	@Override
@@ -57,7 +101,7 @@ public class StateImpl extends SequenceElement implements State  {
 	
 	@Override
 	public String getLabel() {
-		return medicalVector.toString();
+		return state2vecLabel.toString();
 	}
 
 	@Override
@@ -66,7 +110,7 @@ public class StateImpl extends SequenceElement implements State  {
 		
 	    try {
 	    	
-			return mapper.writeValueAsString(medicalVector);
+			return mapper.writeValueAsString(state2vecLabel);
 			
 		} catch (JsonProcessingException e) {
 			return null;
@@ -79,8 +123,14 @@ public class StateImpl extends SequenceElement implements State  {
         if (object == null) return false;
         if (!(object instanceof SequenceElement)) return false;
         
-        return medicalVector.equals(object);
+        return state2vecLabel.equals(object);
 	}
+
+
+	
+
+
+	
 
 	
 

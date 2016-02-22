@@ -64,6 +64,11 @@ public class SequenceParserImpl implements SequenceParser {
 		String conditionTypeDesc = state[Constants.CONDITION_TYPE_DESC_COLUMN];
 		double condition = Double.parseDouble(state[Constants.CONDITION_COLUMN]);
 		List<Drug> drugs = parseDrugList(state[Constants.DRUG_LIST_COLUMN]);
+		
+		int drugListSize = drugs.size();
+		if(drugListSize > Constants.MAX_DRUG_LIST_SIZE) {
+			Constants.MAX_DRUG_LIST_SIZE = drugListSize;
+		}
 
 		completeState.add(conditionId);
 		completeState.add(date);

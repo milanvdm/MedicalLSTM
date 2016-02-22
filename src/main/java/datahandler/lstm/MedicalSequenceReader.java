@@ -8,10 +8,12 @@ import org.canova.api.split.InputSplit;
 import org.canova.api.writable.Writable;
 import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 import data.State;
 import data.StateImpl;
 import scala.NotImplementedError;
+import state2vec.KNNLookupTable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -19,14 +21,17 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class SequenceReader implements SequenceRecordReader {
+public class MedicalSequenceReader implements SequenceRecordReader {
     
 	private static final long serialVersionUID = 2566782461516037172L;
 	
 	private SequenceIterator<StateImpl> sequenceIterator;
+	private KNNLookupTable<StateImpl> lookupTable;
+	private List<String> labels = new ArrayList<String>();
 
-    public SequenceReader(SequenceIterator<StateImpl> sequenceIterator) {
+    public MedicalSequenceReader(SequenceIterator<StateImpl> sequenceIterator, KNNLookupTable<StateImpl> knnLookupTable) {
         this.sequenceIterator = sequenceIterator;
+        this.lookupTable = knnLookupTable;
         reset();
     }
 
@@ -37,8 +42,11 @@ public class SequenceReader implements SequenceRecordReader {
     	
     	Collection<Collection<Writable>> out = new ArrayList<>();
     	
-    	for(State state: next.getElements()) {
+    	for(StateImpl state: next.getElements()) {
     		ArrayList<Writable> writableState = new ArrayList<>();
+    		
+    		INDArray baseVector = lookupTable.addSequenceElementVector(state);
+    		INDArray stateVector = state.getCompleteVector(baseVector);
     		
     		for(Double value: state.getMedicalVector()) {
     			writableState.add(new DoubleWritable(value));

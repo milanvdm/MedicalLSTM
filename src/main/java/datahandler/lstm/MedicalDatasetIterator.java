@@ -26,6 +26,13 @@ import javax.ws.rs.NotSupportedException;
 
 public class MedicalDatasetIterator<T extends SequenceElement> implements DataSetIterator {
 
+	
+	// Dont think this is needed as I only have one dataset
+	// --> Make a Dataset object to feed into the network
+	// Add labels to the Dataset object to train the network
+	// Based on KNNLookup!
+	// Label is always last timestep in serie
+	// Count amount of labels because its the amount of nodes for the last layer in our network
 
 	private static final long serialVersionUID = -806426663785696307L;
 

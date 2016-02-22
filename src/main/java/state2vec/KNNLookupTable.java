@@ -1,4 +1,4 @@
-package word2vec;
+package state2vec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,8 @@ import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 public class KNNLookupTable<T extends SequenceElement> {
+	
+	//TODO: Checken hoe precies die n closest worden bepaald -> Ik denk VPTree
 	
 	/**
 	 * Use this class to feed in the data to the RNN!
@@ -46,9 +48,10 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return toReturn;
 	}
 
-	public void addSequenceElementVector(SequenceElement sequenceElement) {
+	public INDArray addSequenceElementVector(SequenceElement sequenceElement) {
 		
 		String label = sequenceElement.getLabel();
+		INDArray result = null;
 		
 		if(!vectors.hasWord(label)) {
 			List<String> kNearestNeighbours = new ArrayList<String>(vectors.wordsNearestSum(label, nearestNeighbours)); // KNN lookup 
@@ -57,8 +60,6 @@ public class KNNLookupTable<T extends SequenceElement> {
 			for(String neighbour: kNearestNeighbours) {
 				wordVectors.add(vectors.getWordVectorMatrix(neighbour));
 			}
-			
-			INDArray result = null;
 			
 			// gewogen gemiddelde van de arrays = 0.8 * array1 + 0.2 + array2
 			int i = 0;
@@ -77,7 +78,11 @@ public class KNNLookupTable<T extends SequenceElement> {
 			vectors.lookupTable().putVector(label, result);
 			
 		}
+		else {
+			result = vectors.getLookupTable().vector(label);
+		}
 		
+		return result;
 		
 	}
 
