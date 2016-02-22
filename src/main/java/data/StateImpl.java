@@ -31,7 +31,7 @@ public class StateImpl extends SequenceElement implements State  {
 		
 		int length = baseVector.length();
 		
-		baseVector.
+		baseVector.S
 	}
 	
 	private INDArray flattenDrugList() {
