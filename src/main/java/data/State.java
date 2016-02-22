@@ -15,6 +15,6 @@ public interface State {
 	
 	public List<Object> getCompleteState();
 	
-	public INDArray getCompleteVector(INDArray baseVector);
+	public INDArray getLstmVector(INDArray baseVector);
 	
 }

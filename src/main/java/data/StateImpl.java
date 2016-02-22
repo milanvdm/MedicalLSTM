@@ -3,6 +3,7 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
@@ -26,12 +27,19 @@ public class StateImpl extends SequenceElement implements State  {
 		this.setElementFrequency(1); //Workaround of bug in DL4J
 	}
 	
+	
+	/**
+	 * At the moment only the druglist needs to be appended.
+	 * CAREFUL: If labels of word2vec is changed (more ignored, then we need to add more!)
+	 */
 	@Override
-	public INDArray getCompleteVector(INDArray baseVector) {
+	public INDArray getLstmVector(INDArray baseVector) {
 		
-		int length = baseVector.length();
+		INDArray toAppend = flattenDrugList();
 		
-		baseVector.S
+		INDArray toReturn = Nd4j.hstack(baseVector, toAppend);
+		
+		return toReturn;
 	}
 	
 	private INDArray flattenDrugList() {
@@ -102,6 +110,18 @@ public class StateImpl extends SequenceElement implements State  {
 	@Override
 	public String getLabel() {
 		return state2vecLabel.toString();
+	}
+	
+	//TODO: Check if correct!
+	public double compareTo(double[] other, INDArray mean, INDArray std) {
+		double[] arr1 = ArrayUtils.toPrimitive(state2vecLabel.toArray(new Double[0]));
+		double[] arr2 = other;
+		
+		INDArray ndarray1 = Nd4j.create(arr1).subi(mean).divi(std);
+		INDArray ndarray2 = Nd4j.create(arr2).subi(mean).divi(std);
+		
+		return ndarray1.squaredDistance(ndarray2);
+		
 	}
 
 	@Override

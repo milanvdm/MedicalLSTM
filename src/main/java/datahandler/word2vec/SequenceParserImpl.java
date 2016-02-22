@@ -82,7 +82,7 @@ public class SequenceParserImpl implements SequenceParser {
 
 		completeState.add(timeDifference);
 		completeState.add(decideSeason(date));
-
+		
 		return new StateImpl(completeState);
 
 	}

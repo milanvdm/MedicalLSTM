@@ -10,7 +10,6 @@ import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
-import data.State;
 import data.StateImpl;
 import scala.NotImplementedError;
 import state2vec.KNNLookupTable;
@@ -39,16 +38,16 @@ public class MedicalSequenceReader implements SequenceRecordReader {
     public Collection<Collection<Writable>> sequenceRecord() {
     	Sequence<StateImpl> next = sequenceIterator.nextSequence();
     	
-    	
     	Collection<Collection<Writable>> out = new ArrayList<>();
     	
     	for(StateImpl state: next.getElements()) {
     		ArrayList<Writable> writableState = new ArrayList<>();
     		
     		INDArray baseVector = lookupTable.addSequenceElementVector(state);
-    		INDArray stateVector = state.getCompleteVector(baseVector);
+    		INDArray stateVector = state.getLstmVector(baseVector);
     		
-    		for(Double value: state.getMedicalVector()) {
+    		
+    		for(double value: stateVector.data().asDouble()) {
     			writableState.add(new DoubleWritable(value));
     		}
     		

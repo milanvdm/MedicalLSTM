@@ -6,6 +6,9 @@ import java.util.List;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+
+import util.HelpFunctions;
 
 public class KNNLookupTable<T extends SequenceElement> {
 	
@@ -19,12 +22,37 @@ public class KNNLookupTable<T extends SequenceElement> {
 	private int nearestNeighbours;
 	private List<Double> weights;
 	
+	private INDArray columnMeans;
+    private INDArray columnStds;
+
+	
 	public KNNLookupTable(SequenceVectors<T> vectors, int nearestNeighbours) {
 		this.vectors = vectors;
 		this.nearestNeighbours = nearestNeighbours;
 		this.weights = calculateWeights();
+		calculateMeanStd();
 	}
 	
+	//TODO: Check if this is correct!
+	private void calculateMeanStd() {
+		INDArray wordLabels = null;
+		
+		boolean first = true;
+		for(String word: vectors.getVocab().words()) {
+			if(first) {
+				wordLabels = Nd4j.create(vectors.getVocab().numWords(), word.length());
+				first = false;
+			}
+			
+			double[] label = HelpFunctions.parse(word);
+			wordLabels = Nd4j.vstack(wordLabels, Nd4j.create(label));
+			
+		}
+		
+		this.columnMeans = wordLabels.mean(0);
+	    this.columnStds = wordLabels.std(0).addi(Nd4j.scalar(Nd4j.EPS_THRESHOLD));
+		
+	}
 	private List<Double> calculateWeights() {
 		List<Double> weights = new ArrayList<Double>();
 		
@@ -48,6 +76,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return toReturn;
 	}
 
+	//TODO: Better way to find closest words
 	public INDArray addSequenceElementVector(SequenceElement sequenceElement) {
 		
 		String label = sequenceElement.getLabel();
@@ -85,5 +114,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return result;
 		
 	}
+	
+	
 
 }
