@@ -1,6 +1,10 @@
 package data;
 
-public class Drug {
+import java.io.Serializable;
+
+public class Drug implements Serializable {
+	
+	private static final long serialVersionUID = -1117041562863567935L;
 	
 	//7;Drug Era - 30 day window;30;1549080;18
 	

@@ -28,10 +28,22 @@ public class Constants {
 																				CONDITION_TYPE_DESC_COLUMN,
 																				DRUG_LIST_COLUMN});
 	
-	public static String INPUT_CSV = "/media/milan/Data/Thesis/Datasets/OSIM/Final/conditions_merged.csv";
-	public static String INPUT_CSV_TEST = "/media/milan/Data/Thesis/Datasets/OSIM/Final/test_conditions_merged.csv";
 	
-	public static String OUTPUT_WORD2VEC = "/media/milan/Data/Thesis/Results/word2vec.txt";
+	public static String INPUT_CSV = "/media/milan/Data/Thesis/Datasets/OSIM/Final/conditions_merged.csv";
+	public static String INPUT_CSV_TEST = "/media/milan/Data/Thesis/Datasets/OSIM/Sorted/test_conditions_sorted.csv";
+	
+	public static String OUTPUT_VOCAB = "/media/milan/Data/Thesis/Results/vocab_count.txt";
+	public static String OUTPUT_WORD2VEC = "/media/milan/Data/Thesis/Results/word2vec.ser";
+	
+	
+	
+	
+	
+	public static String INPUT_CSV_EXA = "../OSIM/conditions_merged.csv";
+	public static String OUTPUT_VOCAB_EXA = "../Results/vocab_count.txt";
+	public static String INPUT_CSV_TEST_EXA = "../OSIM/test_conditions_merged.csv";
+	
+	public static String OUTPUT_WORD2VEC_EXA = "/media/milan/Data/Thesis/Results/word2vec.ser";
 	
 	
 	

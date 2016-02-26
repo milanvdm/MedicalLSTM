@@ -14,6 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import util.Constants;
 
 public class StateImpl extends SequenceElement implements State  {
+	
+	//TODO: BirthYear algemener
+	//TODO: Condition ID algemener
+	//TODO: TimeDifference algemener
 
 	private static final long serialVersionUID = -5953078372301913975L;
 	

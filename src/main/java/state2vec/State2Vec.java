@@ -27,13 +27,13 @@ public class State2Vec {
 	public static void main(String[] args) throws Exception {
 
 		logger.info("Started State2Vec");
-		
-		SequenceVectors<StateImpl> saved = loadState2VecModel();
-		
-		if(saved != null) {
-			logger.info("Loaded existing model");
-		}
-		else {
+
+		//SequenceVectors<StateImpl> saved = loadState2VecModel();
+
+		//if(saved != null) {
+		//	logger.info("Loaded existing model");
+		//}
+		//else {
 			File file = new File(Constants.INPUT_CSV_TEST);
 
 			/*
@@ -54,7 +54,7 @@ public class State2Vec {
 			logger.info("Building Vocab");
 
 			VocabConstructor<StateImpl> constructor = new VocabConstructor.Builder<StateImpl>()
-					.addSource(sequenceIterator, 1)
+					.addSource(sequenceIterator, 2)
 					.setTargetVocabCache(stateCache)
 					.build();
 
@@ -140,25 +140,32 @@ public class State2Vec {
 
 			//logger.info("Plotting State2Vec");
 			//vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
-		}
+			
+			logger.info("Started saving the model");
+			//saveState2VecModel(vectors); // Find another method to Safe
+			
+		//}
 
-		
+
 
 	}
 
+	/**
 	private static void saveState2VecModel(SequenceVectors<StateImpl> vectors) {
-		try{
+		try {
 
 			FileOutputStream fout = new FileOutputStream(Constants.OUTPUT_WORD2VEC);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);   
 			oos.writeObject(vectors);
 			oos.close();
 
-		}catch(Exception ex){
+		}
+		catch(Exception ex){
 			ex.printStackTrace();
 		}
 	}
 
+	
 	private static SequenceVectors<StateImpl> loadState2VecModel() {
 		SequenceVectors<StateImpl> vectors;
 
@@ -172,9 +179,11 @@ public class State2Vec {
 			return vectors;
 
 		}catch(Exception ex){
-			ex.printStackTrace();
+			logger.info("Didn't find a saved model");
+			
 			return null;
 		} 
 	}
+	**/
 
 }
