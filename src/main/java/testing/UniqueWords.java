@@ -69,6 +69,8 @@ public class UniqueWords {
 		{
 		    writer.write(entry.getKey() + " - " + entry.getValue() + "\n");
 		}
+		
+		writer.flush();
 		writer.close();
 		
 		

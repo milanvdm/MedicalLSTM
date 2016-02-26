@@ -12,12 +12,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import util.Constants;
+import util.HelpFunctions;
 
 public class StateImpl extends SequenceElement implements State  {
 	
-	//TODO: BirthYear algemener
 	//TODO: Condition ID algemener
-	//TODO: TimeDifference algemener
 
 	private static final long serialVersionUID = -5953078372301913975L;
 	
@@ -32,6 +31,13 @@ public class StateImpl extends SequenceElement implements State  {
 	}
 	
 	
+	public StateImpl(String word) {
+		for(double element: HelpFunctions.parse(word)) {
+			state2vecLabel.add(element);
+		}
+	}
+
+
 	/**
 	 * At the moment only the druglist needs to be appended.
 	 * CAREFUL: If labels of word2vec is changed (more ignored, then we need to add more!)
@@ -150,12 +156,5 @@ public class StateImpl extends SequenceElement implements State  {
         return state2vecLabel.equals(object);
 	}
 
-
-	
-
-
-	
-
-	
 
 }
