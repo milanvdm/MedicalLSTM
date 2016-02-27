@@ -35,7 +35,7 @@ public class State2VecSerializer {
 	 * @throws IOException
 	 * @throws NumberFormatException
 	 */
-	public SequenceVectors<StateImpl> readTextModel(File modelFile) throws IOException, NumberFormatException {
+	public static SequenceVectors<StateImpl> readTextModel(File modelFile) throws IOException, NumberFormatException {
 		
 		InMemoryLookupTable<StateImpl> lookupTable;
 		VocabCache<StateImpl> cache;
@@ -56,7 +56,7 @@ public class State2VecSerializer {
 			while ((line = reader.readLine()) != null) {
 				String[] split = line.split(" ");
 				assert split.length == layerSize + 1;
-				String word = split[0];
+				String word = split[0].replace("~", " ");
 
 				float[] vector = new float[split.length - 1];
 				for (int i = 1; i < split.length; i++) {
@@ -112,6 +112,8 @@ public class State2VecSerializer {
 		WeightLookupTable<T> lookupTable = vectors.getLookupTable();
 
 		PrintWriter writer = new PrintWriter(stream);
+		
+		writer.println(vocabCache.numWords() + " " + vectors.getLayerSize());
 
 		for (int x = 0; x < vocabCache.numWords(); x++) {
 			T element = vocabCache.elementAtIndex(x);

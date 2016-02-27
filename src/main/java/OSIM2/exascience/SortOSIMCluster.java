@@ -1,40 +1,70 @@
 package OSIM2.exascience;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.CsvListWriter;
-import org.supercsv.prefs.CsvPreference;
+import org.canova.api.records.reader.impl.CSVRecordReader;
+import org.canova.api.records.writer.impl.CSVRecordWriter;
+import org.canova.api.split.FileSplit;
+import org.canova.api.writable.Writable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class SortOSIMCluster {
 
 	public static String INPUT_CSV_EXA = "../OSIM/conditions_merged.csv";
 	public static String OUTPUT_CSV_EXA = "../OSIM/conditions_sorted.csv";
 
-	public static void main(String[] args) throws IOException {
+	protected static final Logger logger = LoggerFactory.getLogger(SortOSIMCluster.class);
+
+	public static CSVRecordReader csvReader;
+	public static CSVRecordWriter csvWriter;
+
+	public static void main(String[] args) throws IOException, InterruptedException {
 
 		sortCsvFileOnColumn();
 
 	}
 
-	public static void sortCsvFileOnColumn() throws IOException {
+	private static void makeCsvReader() throws IOException, InterruptedException {
+		csvReader = new CSVRecordReader(1, ",");
 
-		Comparator<List<String>> comparator = new Comparator<List<String>>() {
+		FileSplit split = new FileSplit(new File(INPUT_CSV_EXA));
+
+		csvReader.initialize(split);
+
+	}
+
+	public static void sortCsvFileOnColumn() throws IOException, InterruptedException {
+
+		Comparator<Collection<Writable>> comparator = new Comparator<Collection<Writable>>() {
 			@Override
-			public int compare(List<String> r1, List<String> r2) {
-				String[] line1 = r1.toArray(new String[r1.size()]);
-				String[] line2 = r2.toArray(new String[r2.size()]);
+			public int compare(Collection<Writable> r1, Collection<Writable> r2) {
+				String[] line1 = new String[r1.size()];
+				String[] line2 = new String[r2.size()];
+
+				List<Writable> r1List = new ArrayList<Writable>(r1);
+				List<Writable> r2List = new ArrayList<Writable>(r2);
+
+				int i = 0;
+				while(i < r1List.size() && i < r2List.size()) {
+
+					line1[i] = r1List.get(i).toString();
+					line2[i] = r2List.get(i).toString();
+
+					i++;
+
+				}
 
 
 				SimpleDateFormat parserSDF = new SimpleDateFormat("dd-MMM-yyyy");
@@ -58,30 +88,68 @@ public class SortOSIMCluster {
 			}
 		};
 
-		BufferedReader conditionFileReader = new BufferedReader(new FileReader(INPUT_CSV_EXA));
 
-		CsvListReader conditionCsvReader = new CsvListReader(conditionFileReader, CsvPreference.STANDARD_PREFERENCE);
+		int totalCount = 0;
 
-		List<List<String>> allLines = new ArrayList<List<String>>();
 
-		List<String> read;
-		while( (read = conditionCsvReader.read()) != null ) {
-			allLines.add(read);
+		List<Collection<Writable>> allLines = new ArrayList<Collection<Writable>>();
+
+		makeCsvReader();
+
+		logger.info("Started reading");
+		int count = 0;
+
+		while(csvReader.hasNext()) {
+
+			Collection<Writable> line = csvReader.next();
+
+			allLines.add(line);
+
+			count ++;
+			totalCount++;
+
+			if(count == 500000) {
+				logger.info("Read: " + totalCount);
+				count = 0;
+			}
+
 		}
 
-		conditionCsvReader.close();
+		csvReader.close();
 
+		logger.info("Started sorting");
 		Collections.sort(allLines, comparator);
 
-		BufferedWriter fileWriter = new BufferedWriter(new FileWriter(OUTPUT_CSV_EXA));
-		CsvListWriter csvWriter = new CsvListWriter(fileWriter, CsvPreference.STANDARD_PREFERENCE);
+		makeCsvWriter();
 
-		for(List<String> toWrite: allLines) {
+		logger.info("Started writing");
+		count = 0;
+		for(Collection<Writable> toWrite: allLines) {
 			csvWriter.write(toWrite);
+
+			count ++;
+
+			if(count == 500000) {
+				logger.info("Wrote 500.000 lines");
+				count = 0;
+			}
 		}
+
 
 
 		csvWriter.close();
+
+
+
+
+
+
+
+
+	}
+
+	private static void makeCsvWriter() throws FileNotFoundException {
+		csvWriter = new CSVRecordWriter(new File(OUTPUT_CSV_EXA));
 
 
 	}
