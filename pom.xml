@@ -13,8 +13,6 @@
         <canova.version>0.0.0.14</canova.version>
         <jackson.version>2.5.1</jackson.version>
         <elki.version>0.7.0</elki.version>
-        <opencsv.version>3.6</opencsv.version>
-        <supercsv.version>2.4.0</supercsv.version>
     </properties>
 
 
@@ -84,11 +82,6 @@
 			<version>${elki.version}</version>
 		</dependency>
 		
-		<dependency>
-		     <groupId>com.opencsv</groupId>
-		     <artifactId>opencsv</artifactId>
-		     <version>${opencsv.version}</version>
-		  </dependency>
 		  
          <dependency>
 	         <groupId>com.google.code.externalsortinginjava</groupId>
@@ -96,11 +89,6 @@
 	         <version>[0.1.9,)</version>
          </dependency>
          
-         <dependency>
-		    <groupId>net.sf.supercsv</groupId>
-		    <artifactId>super-csv</artifactId>
-		    <version>${supercsv.version}</version>
-		</dependency>
 
     </dependencies>
 
