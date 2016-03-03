@@ -1,67 +1,80 @@
 package util;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
-import org.supercsv.io.CsvListReader;
-import org.supercsv.prefs.CsvPreference;
+import org.canova.api.records.reader.impl.CSVRecordReader;
+import org.canova.api.split.FileSplit;
+import org.canova.api.writable.Writable;
 
 public class CsvIterator {
-    
-    public static Iterator<String []> getIterator(File file) throws IOException {
-    	
-    	final CsvListReader csvReader = new CsvListReader(new BufferedReader(new FileReader(file)), CsvPreference.STANDARD_PREFERENCE);
-    	
-    	return new Iterator<String []>()
-        {
-    		List<String> readData = csvReader.read();
-            String[] data = readData.toArray(new String[readData.size()]);
 
-            @Override
-            public boolean hasNext()
-            {
-            	if(data == null) {
-            		try {
+	public static Iterator<String []> getIterator(File file) throws IOException, InterruptedException {
+
+		final CSVRecordReader csvReader = new CSVRecordReader(1, ",");
+		FileSplit split = new FileSplit(file);
+
+		csvReader.initialize(split);
+
+		return new Iterator<String[]>()
+		{
+			Collection<Writable> readData = csvReader.next();
+
+			String[] data = new String[readData.size()];
+			
+
+			@Override
+			public boolean hasNext()
+			{
+				if(data == null) {
+					try {
 						csvReader.close();
 					} catch (IOException e) {
 						return false;
 					}
-            		return false;
-            	}
-            	
-                return true;
-            }
+					return false;
+				}
 
-            @Override
-            public String [] next()
-            {
-                String [] toReturn = data;
+				return true;
+			}
+			
+			private void convertCollection() {
+				int i = 0;
+				for(Writable toConvert: readData) {
+					data[i] = toConvert.toString();
+					i++;
+				}
+			}
 
-                try
-                {
-                	List<String> readData = csvReader.read();
-                    data = readData.toArray(new String[readData.size()]);
-                }
-                catch ( Exception e )
-                {
-                    data = null;
-                }
+			@Override
+			public String[] next()
+			{
+				convertCollection();
+				String[] toReturn = data;
 
-                return toReturn;
-            }
+				try
+				{
+					Collection<Writable> readData = csvReader.next();
+					data = new String[readData.size()];
+				}
+				catch ( Exception e )
+				{
+					data = null;
+				}
 
-            @Override
-            public void remove()
-            {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
+				return toReturn;
+			}
 
-    
-	
+			@Override
+			public void remove()
+			{
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
+
+
+
 }

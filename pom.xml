@@ -8,11 +8,12 @@
     <name>Medical LSTM</name>
     <description>Thesis project about LSTM</description>
     <properties>
-        <nd4j.version>0.4-rc3.8</nd4j.version>
-        <dl4j.version>	0.4-rc3.8</dl4j.version>
-        <canova.version>0.0.0.14</canova.version>
+        <nd4j.version>0.4-rc3.9-SNAPSHOT</nd4j.version>
+        <dl4j.version>0.4-rc3.9-SNAPSHOT</dl4j.version>
+        <canova.version>0.0.0.15-SNAPSHOT</canova.version>
         <jackson.version>2.5.1</jackson.version>
         <elki.version>0.7.0</elki.version>
+    
     </properties>
 
 
@@ -61,6 +62,12 @@
             <version>${nd4j.version}</version>
         </dependency>
         <dependency>
+			<groupId>org.nd4j</groupId>
+			<artifactId>canova-api</artifactId>
+			<version>${canova.version}</version>
+		</dependency>
+        
+        <dependency>
             <artifactId>canova-nd4j-image</artifactId>
             <groupId>org.nd4j</groupId>
             <version>${canova.version}</version>
@@ -91,6 +98,15 @@
          
 
     </dependencies>
+    
+    <repositories>
+	  <repository>
+	    <id>snapshots-repo</id>
+	    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+	    <releases><enabled>false</enabled></releases>
+	    <snapshots><enabled>true</enabled></snapshots>
+	  </repository>
+	</repositories>
 
     <build>
         <plugins>

@@ -35,7 +35,8 @@ public class Constants {
 	public static String OUTPUT_VOCAB = "/media/milan/Data/Thesis/Results/vocab_count.txt";
 	public static String OUTPUT_WORD2VEC = "/media/milan/Data/Thesis/Results/word2vec.ser";
 	
-	
+	public static String INPUT_CSV_SORTED_TEST = "/media/milan/Data/Thesis/Datasets/OSIM/Final/test_conditions_merged.csv";
+	public static String OUTPUT_CSV_SORTED_TEST = "/media/milan/Data/Thesis/Datasets/OSIM/Sorted/test_conditions_sorted.csv";
 	
 	
 	

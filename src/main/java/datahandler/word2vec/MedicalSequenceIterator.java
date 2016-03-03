@@ -28,7 +28,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	private File underlyingIterable;
 	private Iterator<String[]> currentIterator;
 
-	public MedicalSequenceIterator(File file) throws IOException {
+	public MedicalSequenceIterator(File file) throws IOException, InterruptedException {
 		logger.info("Made Sequence Iterator");
 		
 		this.underlyingIterable = file;
@@ -91,7 +91,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	public void reset() {
 		try {
 			this.currentIterator = CsvIterator.getIterator(underlyingIterable);
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			logger.error(e.toString());
 		}
 		currentIterator.next(); //ignore first line
