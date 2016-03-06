@@ -127,8 +127,8 @@ public class State2VecSerTest {
 		
 		SequenceVectors<StateImpl> toTest = State2VecSerializer.readTextModel(new File(Constants.OUTPUT_WORD2VEC));
 		
-		System.out.println(vectors.getVocab().elementAtIndex(10).getLabel());
-		System.out.println(toTest.getVocab().elementAtIndex(10).getLabel());
+		logger.debug(vectors.getVocab().vocabWords().toString());
+		logger.debug(toTest.getVocab().vocabWords().toString());
 		
 	}
 

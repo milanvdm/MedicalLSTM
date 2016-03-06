@@ -25,7 +25,7 @@ import java.util.zip.GZIPInputStream;
  * @author Adam Gibson
  */
 public class State2VecSerializer {
-	private static final Logger log = LoggerFactory.getLogger(State2VecSerializer.class);
+	private static final Logger logger = LoggerFactory.getLogger(State2VecSerializer.class);
 
 
 	/**
@@ -46,8 +46,11 @@ public class State2VecSerializer {
 						: new FileInputStream(modelFile)))) {
 			String line = reader.readLine();
 			String[] initial = line.split(" ");
-			int words = Integer.parseInt(initial[0]);
-			int layerSize = Integer.parseInt(initial[1]);
+			int words = Integer.parseInt(initial[0].replace("\"", ""));
+			int layerSize = Integer.parseInt(initial[1].replace("\"", ""));
+			
+			logger.debug("words: " + words + " | " + "layersize: " + layerSize);
+			
 			syn0 = Nd4j.create(words, layerSize);
 
 			cache = new StateCache<StateImpl>();
@@ -56,11 +59,13 @@ public class State2VecSerializer {
 			while ((line = reader.readLine()) != null) {
 				String[] split = line.split(" ");
 				assert split.length == layerSize + 1;
-				String word = split[0].replace("~", " ");
+				String word = split[0].replace("~", " ").replace("\"", "");
+				
+				logger.debug("length: " + split.length);
 
 				float[] vector = new float[split.length - 1];
 				for (int i = 1; i < split.length; i++) {
-					vector[i - 1] = Float.parseFloat(split[i]);
+					vector[i - 1] = Float.parseFloat(split[i].replace("\"", ""));
 				}
 
 				syn0.putRow(currLine, Transforms.unitVec(Nd4j.create(vector)));
@@ -78,6 +83,8 @@ public class State2VecSerializer {
 
 				currLine++;
 			}
+			
+			logger.debug("syn0: " + syn0.toString());
 
 			lookupTable = (InMemoryLookupTable<StateImpl>) new InMemoryLookupTable.Builder<StateImpl>()
 					.cache(cache)

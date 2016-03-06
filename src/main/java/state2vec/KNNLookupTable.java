@@ -3,30 +3,35 @@ package state2vec;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.deeplearning4j.clustering.sptree.DataPoint;
+import org.deeplearning4j.clustering.vptree.VPTree;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
+import data.StateImpl;
 import util.HelpFunctions;
 
 public class KNNLookupTable<T extends SequenceElement> {
-	
-	//TODO: Checken hoe precies die n closest worden bepaald -> Ik denk VPTree
 	
 	/**
 	 * Use this class to feed in the data to the RNN!
 	 */
 	
-	private SequenceVectors<T> vectors;
+	private final String similarityMeasure = "euclidean";
+	
+	private SequenceVectors<StateImpl> vectors;
 	private int nearestNeighbours;
 	private List<Double> weights;
 	
 	private INDArray columnMeans;
     private INDArray columnStds;
+    
+    VPTree tree = null;;
 
 	
-	public KNNLookupTable(SequenceVectors<T> vectors, int nearestNeighbours) {
+	public KNNLookupTable(SequenceVectors<StateImpl> vectors, int nearestNeighbours) {
 		this.vectors = vectors;
 		this.nearestNeighbours = nearestNeighbours;
 		this.weights = calculateWeights();
@@ -76,21 +81,22 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return toReturn;
 	}
 
-	//TODO: Better way to find closest words
-	public INDArray addSequenceElementVector(SequenceElement sequenceElement) {
+	//TODO: Check if ToString is correct from INDArray
+	public INDArray addSequenceElementVector(StateImpl sequenceElement) {
 		
 		String label = sequenceElement.getLabel();
 		INDArray result = null;
 		
 		if(!vectors.hasWord(label)) {
-			List<String> kNearestNeighbours = new ArrayList<String>(vectors.wordsNearestSum(label, nearestNeighbours)); // KNN lookup 
+			List<DataPoint> kNearestNeighbours = nearestNeighbourLookup(sequenceElement); // KNN lookup 
 			
 			List<INDArray> wordVectors = new ArrayList<INDArray>();
-			for(String neighbour: kNearestNeighbours) {
-				wordVectors.add(vectors.getWordVectorMatrix(neighbour));
+			for(DataPoint neighbour: kNearestNeighbours) {
+				
+				wordVectors.add(vectors.getWordVectorMatrix(neighbour.getPoint().toString()));
 			}
 			
-			// gewogen gemiddelde van de arrays = 0.8 * array1 + 0.2 + array2
+			// gewogen gemiddelde van de arrays = 0.8 * array1 + 0.2 * array2
 			int i = 0;
 			while(i < wordVectors.size()) {
 				if(result == null) {
@@ -112,6 +118,36 @@ public class KNNLookupTable<T extends SequenceElement> {
 		}
 		
 		return result;
+		
+	}
+
+	private List<DataPoint> nearestNeighbourLookup(StateImpl label) {
+		
+		if(tree == null) { // Tree hasn't been build yet.
+			List<DataPoint> points = new ArrayList<>();
+			
+			int index = 0;
+			for(StateImpl state: vectors.getVocab().vocabWords()) {
+				INDArray ndarray = state.getState2vecLabelNormalized(columnMeans, columnStds);
+				
+				DataPoint datapoint = new DataPoint(index, ndarray, similarityMeasure);
+				
+				points.add(datapoint);
+				
+				index++;
+			}
+			
+	        tree = new VPTree(points);
+		}
+		
+        List<DataPoint> results = new ArrayList<>();
+        List<Double> distances = new ArrayList<>();
+        
+        DataPoint toSearch = new DataPoint(0, label.getState2vecLabelNormalized(columnMeans, columnStds), similarityMeasure);
+        
+        tree.search(toSearch, nearestNeighbours, results, distances);
+        
+        return results;
 		
 	}
 	

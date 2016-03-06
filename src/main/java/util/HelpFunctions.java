@@ -1,6 +1,7 @@
 package util;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class HelpFunctions {
 
@@ -21,11 +22,22 @@ public class HelpFunctions {
 
 	public static double[] parse(String s) {
 		String[] strings = s.replace("[", "").replace("]", "").split(", ");
-	    double result[] = new double[strings.length];
-	    for (int i = 0; i < result.length; i++) {
-	      result[i] = Double.parseDouble(strings[i]);
-	    }
-	    return result;
+		double result[] = new double[strings.length];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = Double.parseDouble(strings[i]);
+		}
+		return result;
+	}
+
+	public static double[] ListToPrimitiveDouble(List<Double> doubles) {
+
+		double[] target = new double[doubles.size()];
+		for (int i = 0; i < target.length; i++) {
+		
+			target[i] = doubles.get(i);   
+		}
+		
+		return target;
 	}
 
 }

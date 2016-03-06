@@ -8,71 +8,74 @@ import java.util.Iterator;
 import org.canova.api.records.reader.impl.CSVRecordReader;
 import org.canova.api.split.FileSplit;
 import org.canova.api.writable.Writable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class CsvIterator {
-
-	public static Iterator<String []> getIterator(File file) throws IOException, InterruptedException {
-
-		final CSVRecordReader csvReader = new CSVRecordReader(1, ",");
+public class CsvIterator implements Iterator<String[]> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(CsvIterator.class);
+	
+	final private CSVRecordReader csvReader;
+	
+	private Collection<Writable> readData;
+	private String[] data;
+	
+	public CsvIterator(File file) throws IOException, InterruptedException {
+		this.csvReader = new CSVRecordReader(1, ",");
 		FileSplit split = new FileSplit(file);
 
 		csvReader.initialize(split);
+		
+		this.readData = csvReader.next();
+		this.data = new String[readData.size()];
+	}
 
-		return new Iterator<String[]>()
+	
+	
+	private void convertCollection() {
+		int i = 0;
+		for(Writable toConvert: readData) {
+			data[i] = toConvert.toString().replace("\"", "");
+			i++;
+		}
+	}
+
+	@Override
+	public boolean hasNext() {
+		if(data == null) {
+			try {
+				csvReader.close();
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public String[] next() {
+		convertCollection();
+		String[] toReturn = data;
+
+		try
 		{
 			Collection<Writable> readData = csvReader.next();
+			data = new String[readData.size()];
+		}
+		catch ( Exception e )
+		{
+			data = null;
+		}
 
-			String[] data = new String[readData.size()];
-			
+		return toReturn;
+	}
 
-			@Override
-			public boolean hasNext()
-			{
-				if(data == null) {
-					try {
-						csvReader.close();
-					} catch (IOException e) {
-						return false;
-					}
-					return false;
-				}
-
-				return true;
-			}
-			
-			private void convertCollection() {
-				int i = 0;
-				for(Writable toConvert: readData) {
-					data[i] = toConvert.toString();
-					i++;
-				}
-			}
-
-			@Override
-			public String[] next()
-			{
-				convertCollection();
-				String[] toReturn = data;
-
-				try
-				{
-					Collection<Writable> readData = csvReader.next();
-					data = new String[readData.size()];
-				}
-				catch ( Exception e )
-				{
-					data = null;
-				}
-
-				return toReturn;
-			}
-
-			@Override
-			public void remove()
-			{
-				throw new UnsupportedOperationException();
-			}
-		};
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException();
+		
 	}
 
 

@@ -21,8 +21,6 @@ import org.canova.api.writable.Writable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import util.Constants;
-
 
 public class SortOSIMCluster {
 
@@ -36,6 +34,8 @@ public class SortOSIMCluster {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
+		logger.info("Version: 0.8");
+		
 		sortCsvFileOnColumn();
 
 	}
@@ -43,7 +43,7 @@ public class SortOSIMCluster {
 	private static void makeCsvReader() throws IOException, InterruptedException {
 		csvReader = new CSVRecordReader(1, ",");
 
-		FileSplit split = new FileSplit(new File(Constants.INPUT_CSV_EXA));
+		FileSplit split = new FileSplit(new File(INPUT_CSV_EXA));
 		//FileSplit split = new FileSplit(new File(Constants.INPUT_CSV_SORTED_TEST));
 		
 		csvReader.initialize(split);
@@ -90,6 +90,9 @@ public class SortOSIMCluster {
 
 			}
 		};
+		
+		logger.info("Reading from: " + INPUT_CSV_EXA);
+		logger.info("Writing to: " + OUTPUT_CSV_EXA);
 
 
 		int totalCount = 0;
@@ -161,17 +164,10 @@ public class SortOSIMCluster {
 
 		csvWriter.close();
 
-
- 
-
-
-
-
-
 	}
 
 	private static void makeCsvWriter() throws FileNotFoundException {
-		csvWriter = new CSVRecordWriter(new File(Constants.OUTPUT_CSV_SORTED_TEST));
+		csvWriter = new CSVRecordWriter(new File(OUTPUT_CSV_EXA));
 		//csvWriter = new CSVRecordWriter(new File(Constants.OUTPUT_CSV_SORTED_TEST));
 
 	}

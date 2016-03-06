@@ -24,6 +24,7 @@ public class StateImpl extends SequenceElement implements State  {
 	private List<Double> state2vecLabel = new ArrayList<Double>();
 	
 	
+	
 	public StateImpl(List<Object> input) {
 		this.completeState = input;
 		this.state2vecLabel = convertToLabel(completeState);
@@ -122,17 +123,14 @@ public class StateImpl extends SequenceElement implements State  {
 		return state2vecLabel.toString();
 	}
 	
-	//TODO: Check if correct!
-	public double compareTo(double[] other, INDArray mean, INDArray std) {
-		double[] arr1 = ArrayUtils.toPrimitive(state2vecLabel.toArray(new Double[0]));
-		double[] arr2 = other;
+	public INDArray getState2vecLabelNormalized(INDArray mean, INDArray std) {
+		double[] primitive = HelpFunctions.ListToPrimitiveDouble(state2vecLabel);
 		
-		INDArray ndarray1 = Nd4j.create(arr1).subi(mean).divi(std);
-		INDArray ndarray2 = Nd4j.create(arr2).subi(mean).divi(std);
+		INDArray normalized = Nd4j.create(primitive).subi(mean).divi(std);
 		
-		return ndarray1.squaredDistance(ndarray2);
-		
+		return normalized;
 	}
+	
 
 	@Override
 	public String toJSON() {

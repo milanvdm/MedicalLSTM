@@ -1,4 +1,4 @@
-package testing;
+package util;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +16,6 @@ import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 
 import data.StateImpl;
 import datahandler.word2vec.MedicalSequenceIterator;
-import util.Constants;
 
 public class UniqueWords {
 	

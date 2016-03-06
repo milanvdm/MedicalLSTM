@@ -115,6 +115,8 @@ public class State2Vec {
 					 */
 					.trainElementsRepresentation(true)
 					.trainSequencesRepresentation(false)
+					
+					.learningRate(0.025)
 
 
 					.build();
@@ -146,40 +148,5 @@ public class State2Vec {
 
 	}
 
-	/**
-	private static void saveState2VecModel(SequenceVectors<StateImpl> vectors) {
-		try {
-
-			FileOutputStream fout = new FileOutputStream(Constants.OUTPUT_WORD2VEC);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);   
-			oos.writeObject(vectors);
-			oos.close();
-
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
-	}
-
-	
-	private static SequenceVectors<StateImpl> loadState2VecModel() {
-		SequenceVectors<StateImpl> vectors;
-
-		try{
-
-			FileInputStream fin = new FileInputStream(Constants.OUTPUT_WORD2VEC);
-			ObjectInputStream ois = new ObjectInputStream(fin);
-			vectors = (SequenceVectors<StateImpl>) ois.readObject();
-			ois.close();
-
-			return vectors;
-
-		}catch(Exception ex){
-			logger.info("Didn't find a saved model");
-			
-			return null;
-		} 
-	}
-	**/
 
 }
