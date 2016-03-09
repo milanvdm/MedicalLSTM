@@ -1,0 +1,18 @@
+% tex this document, then bibtex the resulting .aux file...
+% this will create .bbl and .blg files.  
+% finally, tex this document again, twice (to get refs right)
+
+\documentclass[11pt]{article}
+
+\begin{document}
+
+\pagestyle{empty}
+\bibliographystyle{amsplain}
+
+\nocite{*}
+
+\hfill \today 
+
+\bibliography{database}
+
+\end{document}

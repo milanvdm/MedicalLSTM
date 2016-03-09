@@ -1,0 +1,189 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2010 by Luc Van Eycken <Luc.VanEycken@esat.kuleuven.be>
+% ---------------------------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{kulemtx.dtx}
+%</driver>
+%<style>\NeedsTeXFormat{LaTeX2e}[2001/06/01]
+%<style>\ProvidesPackage{kulemtx}
+%<*driver|style>
+    [2010/02/28 v0.1
+%</driver|style>
+%<style>     Additions to the kulemt document class]
+%<*driver>
+     kulemtx source]
+%</driver>
+%
+%<*driver>
+\documentclass{ltxdoc}
+\begin{document}
+  \DocInput{kulemtx.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{172}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+%
+% \GetFileInfo{kulemtx.dtx}
+%
+% \let\pkg\textsf
+% \let\cls\textsf
+% \let\pstyle\textsf
+%
+% \title{Extension to the \cls{kulemt} class\thanks{This document
+%     corresponds to \pkg{kulemtx}~\fileversion, dated \filedate.}}
+% \author{Luc Van Eycken \\ \texttt{Luc.VanEycken@esat.kuleuven.be}}
+% \maketitle
+%
+% \begin{abstract}
+% \noindent The \cls{kulemt} class provides a general \LaTeX\ class to
+% typeset a KU~Leuven master thesis. This document style adds some
+% additional features. But none of these features are required by the
+% guidelines of the Faculty of Engineering.
+% \end{abstract}
+%
+% \section{Using the \pkg{kulemtx} document style}
+% The \pkg{kulemtx} document style provides currently only some commands to
+% typeset a thesis with a look similar to the \cls{kulemt} manual. The
+% chapter style \pstyle{kulemtman} and the heading style \pstyle{kulemtman}
+% are the styles used by the manual. Additionally a command
+% \cs{kulemtmanToC} is defined to typeset the table of contents similar to
+% the manual.
+%
+% \StopEventually{}
+%
+% \section{Implementation of the \pkg{kulemtx} style}
+% \iffalse
+%<*style>
+% \fi
+% The namespace |kulemtx| is claimed, so all commands are prefixed with
+% |kulemtx@| to avoid name clashes. In case you notice that other packages
+% use this prefix too, please contact the author of this class!
+%
+% \subsection{Chapter style \pstyle{kulemtman}}
+% This chapter style is based on the \pstyle{BlueBox} chapter style.
+%    \begin{macrocode}
+\newsavebox\kulemtx@chpnumbox
+\def\kulemtx@buildchpnum#1#2{\sbox\kulemtx@chpnumbox{%
+    \tabular[t]{@{}c@{}}%
+      \makebox[0pt][c]{\chapnamefont #1\strut}\\[.5ex]%
+      \colorbox[gray]{.8}{\color{black}%
+        \rule[-7em]{0pt}{0pt}%
+        {\chapnumfont \hspace{.7ex}#2\hspace{.7ex}\strut}}%
+    \endtabular}}
+\makechapterstyle{kulemtman}{%
+  \def\chapnamefont{\sffamily\large}%
+  \def\chapnumfont{\sffamily\Huge}%
+  \def\chaptitlefont{\sffamily\raggedright\huge}%
+  \setlength\beforechapskip\z@skip
+  \setlength\midchapskip{29\p@}%
+  \setlength\afterchapskip{40\p@}%
+  \def\printchaptername{}%
+  \def\chapternamenum{}%
+  \def\afterchapternum{}%
+  \def\printchapternum{%
+    \kulemtx@buildchpnum\@chapapp\thechapter}%
+  \def\printchapternonum{%
+    \kulemtx@buildchpnum{\vphantom{\@chapapp}}{\hphantom{\thechapter}}}%
+  \def\printchaptertitle##1{%
+    \usebox\kulemtx@chpnumbox \hfill
+    \@tempdima\hsize  \advance\@tempdima -1em%
+    \advance\@tempdima -\wd\kulemtx@chpnumbox
+    \parbox[t]\@tempdima{\vspace\midchapskip
+      \leavevmode \leaders\hrule\@height\p@ \hfill \kern\z@ \par
+      \chaptitlefont ##1\par}}}
+%    \end{macrocode}
+%
+% \subsection{Head style \pstyle{kulemtman}}
+%    \begin{macrocode}
+\makeheadstyles{kulemtman}{%
+%    \end{macrocode}
+% First define part title formatting.
+%    \begin{macrocode}
+  \def\partnamefont{\normalfont\huge\sffamily}%
+  \def\partnumfont{\normalfont\huge\sffamily}%
+  \def\parttitlefont{\normalfont\Huge\sffamily}%
+%    \end{macrocode}
+% Chapters are typeset using the \pkg{kulemtman} style.
+%    \begin{macrocode}
+  \chapterstyle{kulemtman}%
+%    \end{macrocode}
+% Changing the styling of sections.
+%    \begin{macrocode}
+  \setsecheadstyle{\Large\sffamily\raggedright}%
+  \setsubsecheadstyle{\large\sffamily\raggedright}%
+  \setsubsubsecheadstyle{\large\sffamily\itshape\raggedright}%
+%    \end{macrocode}
+% Paragraph headings use the small caps shape instead of bold with a medium
+% space before them.
+%    \begin{macrocode}
+  \setparaheadstyle{\normalsize\scshape}%
+  \setbeforeparaskip{\medskipamount}}
+%    \end{macrocode}
+%
+% \subsection{ToC as in the \cls{kulemt} manual}
+% The table of contents formatting is based on that of the \cls{memoir}
+% manual. 
+% \begin{macro}{\kulemtmanToC}
+% Use the command \cs{kulemtmanToC} to reinitialize the necessary
+% parameters.
+%    \begin{macrocode}
+\newcommand*\kulemtmanToC{%
+  \let\cftchapterfont\sffamily
+  \let\cftchapterdotsep\cftdotsep
+  \def\cftchapterleader{\normalfont\cftdotfill{\cftchapterdotsep}}%
+  \def\cftchapterpagefont{}%
+  \setlength\cftbeforechapterskip{\medskipamount}%
+  \setlength\cftbeforesectionskip{\smallskipamount}%
+  \settocdepth{subsection}%
+  \addtodef\cftchapterbreak{\par}{}%
+  \let\cftsubsectionfont\itshape
+  \def\l@subsection##1##2{%
+    \leftskip\cftsubsectionindent \rightskip\@tocrmarg \parfillskip\fill
+    \ifhmode ,\quad \else\noindent\fi \ignorespaces
+    {\let\numberline\@gobble \cftsubsectionfont ##1}%
+    ~~{\cftsubsectionpagefont ##2}\ignorespaces}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \iffalse
+%</style>
+% \fi
+% \Finale
+\endinput
+
+%% Local Variables:
+%% ispell-check-comments: exclusive
+%% End:

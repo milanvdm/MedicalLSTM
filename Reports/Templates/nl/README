@@ -1,0 +1,100 @@
+The KU Leuven engineering master thesis class
+=============================================
+
+The kulemt LaTeX class helps you to format your master thesis according to
+the rules of the KU Leuven Faculty of Engineering.
+
+If you want to know what's new in each version, please check out the
+file NEWS.
+
+Bug reports and remarks can be sent to Luc.VanEycken at esat.kuleuven.be .
+
+
+Documentation
+-------------
+guidelines_thesis.pdf   Guidelines for writing a master thesis at the
+		        KU Leuven Faculty of Engineering
+kulemt.pdf              User manual
+kulemt-src.pdf          Documented source (of kulemt.cls & kulemt.cfg)
+kulemtx.pdf             User manual and documented source of kulemtx
+                        (kulemt extension)
+sjabloon                Directory with Dutch templates
+template                Directory with English templates
+
+All documentation is available from the doc/latex/kulemt directory in the
+kulemt-tds.zip file. To locate it on your system after installation, read
+the installation instructions below.
+
+
+Installation on a Unix like system
+----------------------------------
+A Unix like system is any recent TeX installation on a Unix machine, MacOS X,
+or Cygwin on Windows. These TeX installations are all based on teTeX or
+TeXLive.
+
+1) Before installing this package, make sure that the memoir package is
+   installed on your TeX system. To check this, issue the command
+       > kpsewhich memoir.cls
+   and make sure it outputs a file path.
+
+2) Find a suitable texmf tree to install in. We'll use $ROOT to refer to
+   the root directory of that tree.
+
+   a) For a system-wide installation:
+       > ROOT=`kpsewhich -expand-var='$TEXMFLOCAL'`
+
+   b) For an installation for the current user only:
+       > ROOT=`kpsewhich -expand-var='$TEXMFHOME'`
+      Note: some older installations use HOMETEXMF instead of TEXMFHOME.
+      If no directory name is returned, use texmf in your home directory:
+       > ROOT="$HOME/texmf"
+   
+   Make sure this root directory exists:
+       > mkdir -p "$ROOT"
+
+3) Unzip kulemt-tds.zip (from <ftp://ftp.esat.kuleuven.be/latex/kulemt/>)
+   in $ROOT:
+       > unzip -d "$ROOT" kulemt-tds.zip
+
+4) If you also want to install the sources, unzip kulemt-src.zip (from
+   <ftp://ftp.esat.kuleuven.be/latex/kulemt/>) in the appropriate
+   directory:
+       > mkdir -p "$ROOT/source/latex"
+       > unzip -d "$ROOT/source/latex" kulemt-src.zip
+
+5) Update the filename database (only needed for system-wide installations):
+       > mktexlsr "$ROOT"
+
+Note: All documentation is available in the "$ROOT/doc/latex/kulemt" directory.
+
+
+Installation on MikTeX
+----------------------
+This also includes MikTeX derived installations such as proTeXt.
+
+Note: The following procedure has only been tested on MikTeX 2.8.
+      The MikTeX options can be accessed through the start menu
+      MikTeX 2.8 | Maintenance | Settings. For system-wide installations,
+      use "Maintenance (Admin)" instead of "Maintenance".
+
+1) Before installing this package, make sure that you enabled the automatic
+   installation of missing packages ("Package installation" on the General
+   tab of the MikTeX options)
+
+2) Find a suitable texmf tree to install in. We'll use %ROOT% to refer to
+   the root directory of that tree. On the "Roots" tab of the MikTeX
+   options, you can select any directory, which is not a MikTeX maintained
+   root directory. If you don't find a suitable candidate, create a new
+   directory and add it to that tab.
+
+3) Unzip (using 7-zip or winzip or ...) kulemt-tds.zip (from
+   <ftp://ftp.esat.kuleuven.be/latex/kulemt/>) into the %ROOT% directory.
+
+4) If you also want to install the sources, unzip kulemt-src.zip (from
+   <ftp://ftp.esat.kuleuven.be/latex/kulemt/>) in the directory
+   %ROOT%\source\latex .
+
+5) Update the filename database by clicking the "Refresh FNDB" button on
+   the General tab of the MikTeX options.
+
+Note: All documentation is available in the %ROOT%\doc\latex\kulemt directory.

@@ -1,0 +1,169 @@
+\documentclass[master=elt,masteroption=im,english,oneside]{kulemt}
+\newcommand*\classversion{1.8}
+\newcommand*\manualdate{2015-06-01}
+\setup{title={Writing a master thesis in LaTeX},
+  subtitle={The `kulemt' v\classversion\ manual (\manualdate)},
+  author={Luc Van Eycken},
+  promotor={Prof.\,dr.\,ir. Y.~Berbers},
+  assessor={Werkgroep masterproef},
+  assistant={P. Wilson \and D. Knuth}}
+
+%% Filing card information
+\setup{filingcard,
+  translatedtitle={Een masterproeftekst schrijven met LaTeX},
+  udc=621.3,
+  shortabstract={This document serves as the user manual for the
+    \cls{kulemt} document class. The source of the class as well as the
+    information for developpers is described in another document.
+    \endgraf\smallskip
+    This manual (dated \manualdate) describes the \cls{kulemt} class
+    version~\classversion.}}
+
+%% Fonts 
+%  - Select the main text fonts: Utopia, Bera-Sans and LuxiMono
+%    Remember their names, so we can use them in the text
+\setup{font=utopia}
+\newcommand*\rmfontname{Utopia}
+\newcommand*\sffontname{Helvetica}
+\newcommand*\ttfontname{Latin Modern Typewriter}
+\IfFileExists{berasans.sty}{%
+  \usepackage[scaled=.85]{berasans}%
+  \renewcommand*\sffontname{Bera Sans}}{}
+\IfFileExists{luximono.sty}{%
+  \usepackage[scaled=.85]{luximono}%
+  \renewcommand*\ttfontname{Luxi Mono}}{}
+
+%% Additional formatting settings
+%  - Use the chapter and headings styles as well as the ToC formatting
+%    as defined in the kulemtx document style
+\usepackage{kulemtx}
+\headstyles{kulemtman}
+\kulemtmanToC
+%  - List are tighter than default
+\firmlists
+%  - Footnotes: set the marker flushleft and the text as a block paragraph
+\setlength\footmarkwidth{1.5ex}
+\setlength\footmarksep{0pt}
+\footmarkstyle{\textsuperscript{#1}\hfill}
+%  - Verbatim: I always use a tab setting of 8 characters
+\tabson[8]
+%  - URLs are always surrounded by angle brackets
+%    Note: some PDF viewers require that URLs start with "http://"!
+\usepackage{url}
+\renewcommand*\UrlLeft{\langle\thinspace}
+\renewcommand*\UrlRight{\thinspace\rangle}
+
+%% Additional packages
+%  - subfigures
+\newsubfloat{figure}
+%  - tikz/pgf
+\usepackage{tikz}
+\usetikzlibrary{arrows,calc}
+%  - isodate (to properly print dates)
+\usepackage[cleanlook,english]{isodate}
+
+%% Finally hyperref is loaded for proper PDF links
+%  Colors: external links in blue, internal ones in dark blue
+\usepackage[pdfusetitle,colorlinks,
+  filecolor={[rgb]{0,0,1}},urlcolor={[rgb]{0,0,1}},
+  citecolor={[rgb]{0,0,.4}},linkcolor={[rgb]{0,0,.4}}]{hyperref}
+\pdfstringdefDisableCommands{\let\cs\textbackslash}
+
+%% Define some typesetting commands
+%  NOTE: Please don't use logos (\LaTeX ...) in the text, but simply LaTeX ...
+\newcommand*\acro[1]{{%
+    \ifdim\csname f@size\endcsname pt<10pt\else \expandafter\small\fi #1}\@}
+\newcommand*\cls[1]{\textsf{#1}}
+\newcommand*\pkg[1]{\textsf{#1}}
+\newcommand*\env[1]{\cmdprint{#1}}
+\newcommand*\opt[1]{\texttt{#1}}
+\newcommand*\file[1]{\texttt{#1}}
+\newcommand*\PDF{\acro{PDF}}
+\newcommand\Dutch[1]{`\foreignlanguage{dutch}{#1}'}
+\newcommand\English[1]{`\foreignlanguage{english}{#1}'}
+\newcommand*\NewInVersion[1]{\sidepar{\small\textcolor{gray}{New in v#1}}\ignorespaces}
+
+\begin{document}
+
+\begin{preface}
+  I would like to thank everybody who has kept me busy with writing,
+  debugging, and documenting this LaTeX document class. My thanks goes
+  especially to my supervisor and my mentors. I also thank my assessors,
+  at least those who read this text.
+
+  Finally I would like to thank all the people who provided feedback,
+  either with bug reports or by suggesting improvements.
+\end{preface}
+
+\tableofcontents*
+
+\begin{abstract}
+  This document describes the use of the LaTeX document class \cls{kulemt},
+  which implements the KU~Leuven Faculty of Engineering guidelines for
+  writing a master thesis. Since there are slight differences between the
+  actual guidelines of the different engineering masters, this class
+  implements not only the common part, but it also provides the necessary
+  options to adapt it to the specific requirements. So please check the
+  guidelines of your master before using or tweaking typesetting options.
+
+  To illustrate the difference between the main text language and the
+  master language, this document is written in English (as the main text
+  language) for a Dutch master.
+
+  This manual (dated \manualdate) describes the \cls{kulemt} class
+  version~\classversion.
+\end{abstract}
+
+\begin{abstract*}
+  Dit document beschrijft de LaTeX-documentklas \cls{kulemt}, die de
+  richtlijnen van de Faculteit Ingenieurswetenschappen van de KU~Leuven
+  voor het schrijven van een masterproeftekst implementeert. Maar vermits
+  de richtlijnen van de verschillende ingenieursopleidingen licht
+  verschillen, voorziet de documentklas de nodige opties om het resultaat
+  aan te passen. Hou dus bij het aanmaken van de tekst niet zozeer rekening
+  met wat de documentklas toelaat, maar wel met wat jouw master als
+  specifieke richtlijnen opgeeft.
+
+  Voor studenten van een Nederlandstalige master die hun masterproef in het
+  Engels schrijven (bv.\ Erasmus-studenten) is een Nederlandse samenvatting
+  verplicht. Als jouw master een uitgebreide samenvatting verlangt met
+  figuren en tabellen kun je die best voorzien als een bijlage. Anders
+  volstaat deze samenvatting van 1~bladzijde.
+
+  Om het effect van twee talen te illustreren is dit document geschreven
+  als een Engelse tekst (verder \English{text language} genoemd) voor een
+  Nederlandstalige master (verder \English{master language} genoemd).
+
+  Deze handleiding van \manualdate\ beschrijft de LaTeX-documentklas
+  \cls{kulemt} versie~\classversion.
+\end{abstract*}
+
+\listoffiguresandtables
+
+\mainmatter
+
+\include{inlatex}
+\include{class}
+%\include{faq}
+
+\appendix
+\appendixpage*
+
+\include{masters}
+\include{template}
+
+\backmatter
+\include{terminology}
+
+\bibliographystyle{abbrvurl}
+\bibliography{references}
+
+%% TODO: An index
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End: 

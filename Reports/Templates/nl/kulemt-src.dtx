@@ -1,0 +1,2800 @@
+% ^^A General remark:
+% ^^A  Don't forget to adjust the version number of the class!
+% \iffalse meta-comment
+%
+% Copyright (C) 2012 by Luc Van Eycken <Luc.VanEycken@esat.kuleuven.be>
+% ---------------------------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{kulemt-src.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[2001/06/01]
+%<class>\ProvidesClass{kulemt}
+%<*driver|class>
+    [2015/05/25 v1.8
+%</driver|class>
+%<class>     KU Leuven engineering master thesis document class]
+%<*driver>
+     kulemt source]
+%</driver>
+%
+%<*driver>
+\documentclass{ltxdoc}
+%% Steal \autoindex  and use it as \index, so hypdoc can redefine it
+\newcommand*\autoindex{\index}
+\newcommand*\UsageIndex[1]{\autoindex{#1\encapchar usage}}
+\IfFileExists{hypdoc.sty}%
+ {\usepackage{hypdoc}[2006/06/01]%
+  \hypersetup{linkcolor=[rgb]{0,0,1}}}%
+ {\newcommand\pdfstringdefDisableCommands[1]{}}
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\newcommand*\NeedLineSpace[1]{%
+  \vskip 0pt plus #1\baselineskip
+  \penalty -100\vskip 0pt plus -#1\baselineskip
+  \vskip #1\baselineskip
+  \penalty 9999\vskip-#1\baselineskip}
+\setlength\MacroIndent{1.5em}
+\EnableCrossrefs         
+\CodelineIndex
+\RecordChanges
+\setcounter{IndexColumns}{2}
+\begin{document}
+  \DocInput{kulemt-src.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{1681}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+%
+% ^^A \changes{v0.9}{2010/01/06}{Beta version 1}
+% \changes{v1.0}{2010/03/01}{Initial release}
+%
+% \GetFileInfo{kulemt-src.dtx}
+%
+% ^^A Do not index standard TeX commands
+% \DoNotIndex{\active,\advance,\baselineskip,\begingroup,\bigskip,\catcode,
+%   \centerline,\csname,\def,\do,\edef,\else,\endcsname,\endgroup,\expandafter,
+%   \fi,\gdef,\global,\hbox,\hfill,\hsize,\hskip,\hss,\if,\ifcase,\ifnum,\ifx,
+%   \ignorespaces,\let,\lineskip,\lowercase,\month,\newcount,\newdimen,
+%   \newif,\noexpand,\noindent,\null,\or,\par,\parindent,\parskip,\relax,
+%   \space,\string,\the,\vbox,\vfill,\vskip,\vss,\xdef,\year}
+% ^^A Do not index well known standard LaTeX commands
+% \DoNotIndex{\,,\",\\,\arabic,\bfdefault,\centering,\chapter,
+%   \ClassError,\ClassWarning,\ClassWarningNoLine,\clearpage,\copyright,
+%   \CurrentOption,\end,\fboxsep,\fontfamily,\fontseries,\fontsize,
+%   \i,\IfFileExists,\itshape,\Large,\medskip,\medskipamount,\MakeLowercase,
+%   \MessageBreak,\newcommand,\newenvironment,\pagestyle,\PackageWarningNoLine,
+%   \protect,\providecommand,\ProvidesFile,\raggedleft,\raggedright,
+%   \renewcommand,\renewenvironment,\scshape,\selectfont,\setlength,\sloppypar,
+%   \smallskipamount,\stretch,\textit,\textmd,\texttt,\textwidth,\ttdefault,
+%   \upshape}
+% ^^A "\ " needs special attention
+% \let\origMakePrivateLetters\MakePrivateLetters
+% \def\MakePrivateLetters{\origMakePrivateLetters \catcode`\ 12\relax}
+% \DoNotIndex{\ }
+% \let\MakePrivateLetters\origMakePrivateLetters
+% ^^A Do not index internal (La)TeX commands
+% \DoNotIndex{\@car,\@classoptionslist,\@currext,\@currname,\@empty,
+%   \@firstofone,\@firstoftwo,\@for,\@gobble,\@hangfrom,\@ifnextchar,
+%   \@ifundefined,\@ifpackageloaded,\@makeother,\@namedef,\@ne,\@nil,
+%   \@onlypreamble,\@plus,\@secondoftwo,\@tempa,\@tempb,\@tempc,\@tempd,
+%   \@tempcnta,\@tempcntb,\@tempdima,\@tfor,\@undefined,\@unusedoptionlist,
+%   \@xiipt,\@xivpt,\@xviipt,\@xxvpt,\cf@encoding,\f@encoding,\g@addto@macro,
+%   \ifin@,\in@,\m@ne,\p@,\protected@edef,\toks@,\z@,\z@skip,\zap@space}
+% ^^A Do not index common commands from some required classes/packages
+% \DoNotIndex{\addto,\centerlastline,\colorbox,\iflanguage,\ifpdf,\textcolor}
+% ^^A Do not index \end... commands
+% \DoNotIndex{\endabstract}
+% 
+% \let\pkg\textsf
+% \let\cls\textsf
+% \let\pstyle\textsf
+% \let\ncolor\textsf
+% \pdfstringdefDisableCommands{^^A
+%   \let\cls\@firstofone
+%   \let\pkg\@firstofone
+% }
+% \newcommand*\subsubsubsection{\subsubsection*}
+% \makeatletter
+% \newcommand\DefineItem[3]{\par
+%   \noindent \marginpar{\raggedleft\MacroFont
+%     \@for\@tempa:=#3\do{\ifhmode\break\fi #2\@tempa}}^^A
+%   \@for\@tempa:=#3\do{^^A
+%     \UsageIndex{\@tempa\actualchar #2{\@tempa} (#1)}^^A
+%     \UsageIndex{#1s:\levelchar\@tempa\actualchar #2{\@tempa}}}\ignorespaces}
+% \newcommand\DefineItemNoIndex[2]{\par
+%   \noindent \marginpar{\raggedleft\MacroFont
+%     \@for\@tempa:=#2\do{\ifhmode\break\fi #1\@tempa}}\ignorespaces}
+% \makeatother
+% \newcommand\DefineColorName[1]{\DefineItem{color}\ncolor{#1}}
+% \newcommand\DefinePageStyle[1]{\DefineItem{pagestyle}\pstyle{#1}}
+% \newcommand\DefineOptions[3]{^^A
+%   \DefineItem{option}\texttt{#1}^^A
+%   \DefineOptionsStart{#2}{#3}}
+% \newcommand\DefineOptionsNoIndex[3]{^^A
+%   \DefineItemNoIndex\texttt{#1}^^A
+%   \DefineOptionsStart{#2}{#3}}
+% \newcommand\DefineOptionsStart[2]{^^A
+%   \begingroup
+%     \let\oldmeta\meta \def\meta##1{\textrm{\oldmeta{##1}}}^^A
+%     \def\or{\unskip\textrm{'' or ``}\ignorespaces}^^A
+%     Option ``\texttt{#1}''.^^A
+%   \endgroup
+%   \if !#2!\else \qquad(#2)\fi
+%   \hfil\penalty-999 \ignorespaces}
+%
+% \title{The source of the \cls{kulemt} class\thanks{This document
+%     corresponds to \textsf{kulemt}~\fileversion, dated \filedate.}}
+% \author{Luc Van Eycken \\ \texttt{Luc.VanEycken@esat.kuleuven.be}}
+% \maketitle
+%
+% \begin{abstract}
+% \noindent The \cls{kulemt} class provides a general \LaTeX\ class to
+% typeset a KU~Leuven master thesis. The defaults are based on the
+% requirements of the Faculty of Engineering Science, but the class can be
+% configured and extended to suit other requirements.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{Using the \cls{kulemt} class}
+% This document describes the source of the \cls{kulemt} class and its
+% default configuration file. The user manual of the class is available in
+% a separate document |kulemt.pdf|, which serves as an example of the class
+% at the same time. Using these names for the files, guarantees that
+% \begin{verbatim}
+%    > texdoc kulemt
+%\end{verbatim}
+% will find the user manual first.
+%
+% The \cls{kulemt} class is derived from the \cls{memoir} class. This class
+% has the advantage that it includes the functionality of the most useful
+% \LaTeX\ packages. Therefore it requires that the \cls{memoir} class as
+% well as some required packages (\pkg{babel}, \pkg{helvet},
+% \pkg{hyperref}, \pkg{keyval}, \pkg{mathpazo}, \pkg{mathptmx},
+% \pkg{graphicx}, and \pkg{color}) are installed on the system.
+% Besides the required packages, some additional image files are used,
+% which are distributed with this class: the KU~Leuven logo (|logokul|) and
+% the combined logo of the Faculty of Engineering Science and  the KU~Leuven
+% (|logokuleng|). All image files are available as |.eps| (for PostScript
+% printing) and as |.pdf| (for PDF generation).
+%
+% \DescribeMacro{\setup}
+% Options for the \cls{kulemt} class are given using the
+% ``\meta{key}|=|\meta{value}'' format from the \pkg{keyval} package. But
+% some key-value pairs can't be used as options to \cls{kulemt} because
+% options can't contain spaces, braces, or expandable commands. So we
+% provide the \cs{setup}\marg{options} command to handle values without
+% these restrictions. Of course it can be used for other keys too. In
+% addition we allow multiple usage of \cs{setup}, but only in the document
+% preamble.
+%
+% \DescribeEnv{preface}
+% The |preface| environment typesets the preface page. The environment has
+% one optional argument: the preface author. It defaults to the value of
+% the |author| option. The argument can be used to remove the preface
+% author or add a date to it.
+%
+% ^^A \changes{v0.91}{2010/01/06}{`\texttt{abstract*}' added}
+% \NeedLineSpace2
+% \DescribeEnv{abstract}
+% \DescribeEnv{abstract*}
+% The |abstract| environment typesets an abstract page in the default
+% language. The |abstract*| environment does the same, but it uses the
+% optional argument, defaulting to the official master language.
+%
+% ^^A \changes{v0.94}{2010/01/16}{`\cs{listoffiguresandtables}' and
+% ^^A   `\cs{listfiguresandtablesname}' added}
+% \NeedLineSpace2
+% \DescribeMacro{\listoffiguresandtables}
+% \DescribeMacro{\listfiguresandtablesname}
+% Normally all ``List of \ldots'' overviews are printed on a separate page.
+% However, for shorter texts like a master thesis these list may be smaller
+% than half a page. Therefore an additional command
+% \cs{listoffiguresandtables} is provided, which combines the list of
+% figures and tables without a page break. The command
+% \cs{listfiguresandtablesname} holds the title of that document section.
+%
+% \section{Configuring and extending the class}
+% The \cls{kulemt} class is designed to automatically handle the
+% typesetting of any KU~Leuven engineering master thesis. But some
+% masters have additional requirements besides the common requirements from
+% the faculty. Furthermore this class could also be used to typeset a
+% master thesis of other faculties or of inter-faculty masters.
+%
+% The configuration file |kulemt.cfg| holds all information which is master
+% or faculty dependent. The class itself provides most of the defaults for
+% the Faculty of Engineering Science, except for the definition of the
+% master data. The default configuration file for the Faculty of
+% Engineering Science is found in section~\ref{sec:cfgfile}. Additionally
+% the configuration file can be used to provide different defaults for the
+% options. It can also be used to redefine commands to print data, such as
+% the commands which provides faculty defaults (see page~\pageref{sec:comdef}).
+%
+% If a master wants more control over the typesetting, it can define its
+% own configuration file, which is loaded after the general configuration
+% file. The default name of this configuration file is
+% `\texttt{kulemt-}\meta{id}\texttt{.cfg}'. The \meta{id} is the
+% abbreviated master name as defined in the main configuration file, e.g.,
+% `\texttt{arc}' for the `Master in de ingenieurswetenschappen:
+% architectuur'. A typical use of this master specific configuration file
+% is redefining the \cs{kulemt@fac@logo} command to add master specific logos.
+%
+% A master can also define its own class based on the \cls{kulemt} class.
+% The new class can decide if a configuration file is used or not, and its
+% name (see page~\pageref{def:cfgfile}). It can undefine existing options
+% and define new ones. The command \cs{setup} can be used in the document
+% preamble to set or modify the existing options as well as the new options.
+%
+%
+% \StopEventually{\PrintChanges\PrintIndex}
+%
+% \section{Implementation of the \cls{kulemt} class}
+% \iffalse
+%<*class>
+% \fi
+% The namespace |kulemt| is claimed, so all commands are prefixed with
+% |kulemt@| to avoid name clashes. In case you notice that other packages
+% use this prefix too, please contact the author of this class!
+%
+% \subsection{Shorthand commands}
+% We start by defining some shorthand commands to save \TeX\ memory tokens.
+%
+% \begin{macro}{\kulemt@cls}
+% \cs{kulemt@cls} $\rightarrow$ name of this class
+%    \begin{macrocode}
+\def\kulemt@cls{kulemt}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{macro}{\kulemt@error}
+% \cs{kulemt@error}\marg{msg} signals a fatal error with message \meta{msg}.
+%    \begin{macrocode}
+\def\kulemt@error#1{%
+  \ClassError\kulemt@cls{#1}{Exit, correct this error and rerun.}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@opt@missingpkg}
+% \cs{kulemt@opt@missingpkg}\marg{opt}\marg{pkg} signals a fatal error
+% indicating that option \meta{opt} can only be used if package \meta{pkg}
+% is installed.
+%    \begin{macrocode}
+\def\kulemt@opt@missingpkg#1#2{\kulemt@error{%
+    The option `#1' is ignored because\MessageBreak
+    it requires the installation of the package `#2'}}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \begin{macro}{\kulemt@ifdutch}
+% \cs{kulemt@ifdutch}\marg{D}\marg{E} $\equiv$
+%   \cs{iflanguage}|{dutch}|\marg{D}\marg{E}\\
+% Note: This command is robust.
+%    \begin{macrocode}
+\def\kulemt@ifdutch{\protect\iflanguage{dutch}}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \changes{v1.4}{2011/06/07}{Raise an error if language \texttt{dutch} is
+%   not installed}^^A
+% This class only works if the language |dutch| is available. We raise an
+% error now if it is missing. We don't test for |english|, since this
+% language is the default in a TeX installation.
+%    \begin{macrocode}
+\@ifundefined{l@dutch}{\kulemt@error{%
+    The language `dutch' is not available.\MessageBreak
+    You must install Dutch hyphenation patterns}}{}
+%    \end{macrocode}
+%
+% \begin{macro}{\kulemt@ifand}
+% \changes{v1.4}{2011/06/07}{Take 3 arguments and make it expandable}
+% \begin{macro}{\kulemt@ifand@}
+% The command \cs{kulemt@ifand}\marg{cs}\marg{true}\marg{false} checks for
+% the presence of \cs{and} in \meta{cs}. If \cs{and} is found, \meta{true}
+% is executed, else \meta{false} is executed.
+% To make this command fully expandable, we assume that \cs{and} is never
+% followed by a |=|.
+%    \begin{macrocode}
+\def\kulemt@ifand#1{\expandafter\kulemt@ifand@ #1\and\@nil}
+\def\kulemt@ifand@#1\and #2\@nil{%
+  \if=\noexpand#2=\expandafter\@secondoftwo\else
+    \expandafter\@firstoftwo\fi}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \subsection{Options}
+% \subsubsection{Option handling commands}
+% Option handling is based on the standard \pkg{keyval} package with ideas
+% coming from the \pkg{kvoptions} package.
+%    \begin{macrocode}
+\RequirePackage{keyval}
+%    \end{macrocode}
+%
+% \begin{macro}{\setup}
+% Keys can be used as options or in the argument \meta{arg} of
+% \cs{setup}\marg{arg}. Some keys only make sense as an option because they
+% are used when loading the \cls{kulemt} class. On the other hand some
+% key-value pairs can't be used as options because the value contains
+% expandable commands. Finally, some keys can only be defined once without
+% problems. The command \cs{kulemt@do@once@opts} guarantees this.
+%
+% ^^A \changes{v0.99}{2010/02/27}{Set the language extra definitions when
+% ^^A   parsing the argument and make the double quote active for Dutch}
+% The \cs{setup} command first calls \cs{kulemt@catcode@setup} to set the
+% correct catcodes before parsing its argument.
+%    \begin{macrocode}
+\newcommand*\setup{%
+  \kulemt@catcode@setup
+  \kulemt@setup}
+\@onlypreamble\setup
+%    \end{macrocode}
+% \begin{macro}{\kulemt@setup}
+% The command \cs{kulemt@setup} does the actual handling of the argument of
+% \cs{setup}. After using the argument it restores the original catcodes
+% via \cs{kulemt@uncatcode@setup}.
+%    \begin{macrocode}
+\def\kulemt@setup#1{%
+  \setkeys{kulemt}{#1}%
+  \kulemt@uncatcode@setup
+  \kulemt@do@once@opts}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@catcode@setup}
+% The command \cs{kulemt@catcode@setup} can be used to change the catcodes
+% before handling the \cs{setup} parameters. By default it defines the
+% language shorthands, such as `|"|' in Dutch. But unfortunately the
+% \pkg{babel} package doesn't make the shorthand characters active in the
+% preamble, so we have to do it ourselves.
+%    \begin{macrocode}
+\def\kulemt@catcode@setup{%
+  \csname extras\languagename\endcsname
+  \kulemt@ifdutch{\catcode`\"\active}{}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@uncatcode@setup}
+% The command \cs{kulemt@uncatcode@setup} reverses the catcode changes
+% introduced by \cs{kulemt@catcode@setup}. By default it undefines the
+% language shorthands and turns the active characters into normal ones.
+%    \begin{macrocode}
+\def\kulemt@uncatcode@setup{%
+  \csname noextras\languagename\endcsname
+  \@makeother\"}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@invalidate@key}
+% The \cs{kulemt@invalidate@key}\marg{key}\marg{how-used} command
+% invalidates the key \meta{key} by (re)defining it as a class warning.
+% The parameter \meta{how-used} tells how the key could be used. Typical
+% examples of \meta{how-used} are `|once|' or `|as |\ldots'.
+%    \begin{macrocode}
+\def\kulemt@invalidate@key#1#2{%
+  \define@key{kulemt}{#1}{\ClassWarning\kulemt@cls{%
+      The key `#1' can only be used #2.\MessageBreak
+      It is ignored}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@keynovalue}
+% The \cs{kulemt@keynovalue}\marg{key}\marg{definition} command defines the
+% \meta{key} option without value. If a value is given anyway, it is simply
+% ignored.
+%    \begin{macrocode}
+\def\kulemt@keynovalue#1#2{%
+  \define@key{kulemt}{#1}[]{%
+    \def\@tempa{##1}\ifx\@tempa\@empty\else
+      \PackageWarningNoLine\kulemt@cls{Value of option `#1' ignored}\fi
+    #2}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@clskey}
+% \begin{macro}{\kulemt@clskeys}
+% The command \cs{kulemt@clskey} is used to define a key, which can only be used
+% as a class option.
+% A list of these keys is kept in the command sequence \cs{kulemt@clskeys}.
+% This can be used to invalidate them at the appropriate moment.
+%    \begin{macrocode}
+\def\kulemt@clskeys{}
+%    \end{macrocode}
+% \end{macro}
+% The \cs{kulemt@clskey}\marg{key}\oarg{def-value}\marg{definition} command
+% defines the key \meta{key} to call the \meta{definition}. If the optional
+% parameter is used, the key can be used without value and gets the
+% \meta{def-value} value then. See the \pkg{keyval} package for more
+% information.
+%    \begin{macrocode}
+\def\kulemt@clskey#1{%
+  \edef\kulemt@clskeys{\kulemt@clskeys,#1}%
+  \define@key{kulemt}{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@clsopt}
+% The \cs{kulemt@clsopt}\marg{key}\marg{definition} command defines the
+% class option \meta{key} without value. If a value is given anyway, it is
+% simply ignored.
+%    \begin{macrocode}
+\def\kulemt@clsopt#1{%
+  \edef\kulemt@clskeys{\kulemt@clskeys,#1}%
+  \kulemt@keynovalue{#1}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@process@ptions}
+% The command \cs{kulemt@process@ptions} is used to handle all options
+% which were defined as options. Its definition is heavily inspired by the
+% command \cs{ProcessKeyvalOptions} of the \pkg{kvoptions} package. A
+% simplified version is included here to remove a dependency on a package
+% which is not guaranteed to be present.
+%    \begin{macrocode}
+\def\kulemt@process@ptions{%
+  \@ifundefined{opt@\@currname.\@currext}{}%
+   {\begingroup
+    \toks@\expandafter\expandafter\expandafter{%
+      \csname opt@\@currname.\@currext\endcsname}%
+    \edef\CurrentOption{\the\toks@}%
+    \toks@{}%
+    \@for\CurrentOption:=\CurrentOption\do{%
+      \@ifundefined{%
+        KV@kulemt@\expandafter\kulemt@getkey\CurrentOption=\@nil}%
+%    \end{macrocode}
+% Options with unknown keys are put in the unused option list.
+%    \begin{macrocode}
+       {\ifx\@unusedoptionlist\@empty
+          \global\let\@unusedoptionlist\CurrentOption
+        \else
+          \expandafter\expandafter\expandafter\gdef
+          \expandafter\expandafter\expandafter\@unusedoptionlist
+          \expandafter\expandafter\expandafter{%
+            \expandafter\@unusedoptionlist
+            \expandafter,\CurrentOption}%
+        \fi}%
+%    \end{macrocode}
+% Options with known keys are temporarily stored in \cs{toks@}. The
+% problems with braces around a value are reduced with
+% \cs{kulemt@update@classoptions}.
+%    \begin{macrocode}
+       {\toks@\expandafter{%
+          \the\expandafter\toks@\expandafter,\CurrentOption}%
+        \expandafter\kulemt@update@classoptions\CurrentOption=aa=\@nil
+       }}%
+    \edef\@tempa{\endgroup
+      \noexpand\setkeys{kulemt}{\the\toks@}}%
+    \@tempa
+    \let\CurrentOption\@empty}%
+%    \end{macrocode}
+% After processing the class options, invalidate all class options so they
+% can't be used in subsequent \cs{setup} commands.
+%    \begin{macrocode}
+  \@for\@tempa:=\kulemt@clskeys\do{%
+    \expandafter\kulemt@invalidate@key\expandafter{\@tempa}{%
+      as a class option}}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@getkey}
+% The \cs{kulemt@getkey} command is a copy of \cs{KVO@getkey} of the
+% \pkg{kvoptions} package. It used inside \cs{kulemt@process@ptions} to get
+% the key from a key-value pair.
+%    \begin{macrocode}
+\def\kulemt@getkey#1=#2\@nil{#1}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@update@classoptions}
+% The \cs{kulemt@update@classoptions} command removes the first key-value
+% pair with a value of exactly one token from \cs{@classoptionslist}. We
+% assume we don't have single letter values so we can use it remove pairs
+% with a value surrounded by braces. We also assume that these key-value
+% options are only used in the class itself and don't have to be kept as
+% global options for other packages. As you see, we make a lot of
+% assumptions here!
+%    \begin{macrocode}
+\def\kulemt@update@classoptions#1=#2#3=#4\@nil{%
+  \def\@tempa{#3}\ifx\@tempa\@empty
+    \def\@tempa##1,#1=##2,##3\@nil{##1,##3\@nil}%
+    \def\@tempb,##1,\@nil{##1}%
+    \xdef\@classoptionslist{\expandafter\expandafter\expandafter\@tempb
+      \expandafter\@tempa\expandafter,\@classoptionslist,\@nil}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Keys which can only be used as class options}
+% The following keys can only be used as class options because they are
+% either used directly in this class file or they must be passed as class
+% options to \cls{memoir}. These options are defined with \cs{kulemt@clskey}.
+%
+% \subsubsubsection{Selecting the master}
+% \DefineOptions{master}{master=\meta{id}}{required option}
+% The \meta{id} defines the master. The set of allowed \meta{id}s is
+% defined later in the configuration file.
+%    \begin{macrocode}
+\kulemt@clskey{master}{\lowercase{\edef\kulemt@opt@master{#1}}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@opt@master}
+% The \meta{id} is lowercased and saved in \cs{kulemt@opt@master}.
+%    \begin{macrocode}
+\def\kulemt@opt@master{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Type size}
+% \DefineOptions{10pt,11pt}{10pt \or 11pt}{default is \texttt{11pt}}
+% These two options are mutually exclusive.
+%    \begin{macrocode}
+\kulemt@clsopt{10pt}{\def\kulemt@ptsize{0}}
+\kulemt@clsopt{11pt}{\def\kulemt@ptsize{1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@ptsize}
+% The last digit of the type size is stored in the command \cs{kulemt@ptsize}.
+% It is initialized with the default value (|11pt|). It will be passed to
+% \cls{memoir} but will also be used to determine the page layout.
+%    \begin{macrocode}
+\def\kulemt@ptsize{1}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Printing options}
+% \DefineOptions{openright,openleft,openany}{^^A
+%   openright \or openleft \or openany}{default is \texttt{openright}}
+% These three options are mutually exclusive.
+% They determine on which page a chapter starts: recto, verso or any page.
+% These options are passed directly to the \cls{memoir} class.
+%    \begin{macrocode}
+\kulemt@clsopt{openright}{\PassOptionsToClass{open}{memoir}}
+\kulemt@clsopt{openany}{\PassOptionsToClass{openany}{memoir}}
+\kulemt@clsopt{openleft}{\PassOptionsToClass{openleft}{memoir}}
+%    \end{macrocode}
+%
+% \DefineOptions{oneside,twoside}{^^A
+%   oneside \or twoside}{default is \texttt{twoside}}
+% These two options are mutually exclusive.
+% They indicate whether the document will be printed on one or both sides
+% of the paper. When you prepare electronic documents, it makes sense to
+% choose the |oneside| option.
+%    \begin{macrocode}
+\kulemt@clsopt{oneside}{\PassOptionsToClass{oneside}{memoir}}
+\kulemt@clsopt{twoside}{\PassOptionsToClass{twoside}{memoir}}
+%    \end{macrocode}
+%
+% \DefineOptions{bind}{bind=\meta{dimen}}{default \texttt{0pt}}
+% This option specifies the loss \meta{dimen} of visible paper due to
+% binding the book.
+%    \begin{macrocode}
+\kulemt@clskey{bind}{\setlength\kulemt@bind{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@bind}
+% The \meta{dimen} is saved in the register \cs{kulemt@bind}. It is
+% initialized with the default value 0\,pt.
+%    \begin{macrocode}
+\newdimen\kulemt@bind
+\kulemt@bind\z@
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{draft}{draft}{}
+% The |draft| option is passed directly to the \cls{memoir} class. The effect
+% is to mark overfull lines and to not show graphics content.
+%    \begin{macrocode}
+\kulemt@clsopt{draft}{\PassOptionsToClass{draft}{memoir}}
+%    \end{macrocode}
+%
+% \subsubsubsection{Language options}
+% These options pass information to the \pkg{babel} package, which is included
+% by default.
+% \begin{macro}{\kulemt@babel@opt}
+% The options of the \pkg{babel} package are collected in the
+% \cs{kulemt@babel@opt} command. At least the languages English and Dutch
+% are initialized since they may be used on the title or copyright page.
+%    \begin{macrocode}
+\def\kulemt@babel@opt{english,dutch}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \DefineOptions{dutch,english}{dutch \or english}{}
+% These options allow you to select the main text language. Since you can
+% have only one main text language, the two options are mutually exclusive.
+%    \begin{macrocode}
+\kulemt@clsopt{dutch}{\def\kulemt@language{dutch}}
+\kulemt@clsopt{english}{\def\kulemt@language{english}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@language}
+% The text language is stored in the command \cs{kulemt@language}.
+% It is initialized with the master language, which will be stored in
+% \cs{kulemt@master@language}.
+%    \begin{macrocode}
+\def\kulemt@language{\kulemt@master@language}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \DefineOptions{extralanguage}{extralanguage=\meta{lang}}{}
+% This option adds \meta{lang} to the \pkg{babel} options, but only if it
+% wasn't included yet.
+%    \begin{macrocode}
+\kulemt@clskey{extralanguage}{%
+  \edef\@tempa{{,#1,}{,\kulemt@babel@opt,}}\expandafter\in@\@tempa
+  \ifin@\else \edef\kulemt@babel@opt{#1,\kulemt@babel@opt}\fi}
+%    \end{macrocode}
+%
+% \subsubsubsection{Options to disable package loading}
+% Some of the packages loaded below may be absent in a specific
+% installation or they may conflict with other packages used in the
+% document. Therefore we provide options to disable them in case of
+% emergency.
+%
+% ^^A \changes{v0.93}{2010/01/15}{Option `\textsf{nomicrotype}' added}
+% \DefineOptions{nomicrotype}{nomicrotype}{}
+% This option disables the \pkg{microtype} package.
+%    \begin{macrocode}
+\kulemt@clsopt{nomicrotype}{\kulemt@microtypefalse}
+%    \end{macrocode}
+% \begin{macro}{\ifkulemt@microtype}
+% The switch |kulemt@microtype| indicates whether the \pkg{microtype} must be
+% loaded or not. By default it is loaded.
+%    \begin{macrocode}
+\newif\ifkulemt@microtype \kulemt@microtypetrue
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Other options}
+% \DefineOptions{fleqn}{fleqn}{}
+% The |fleqn| option is passed directly to the \cls{memoir} class. The effect
+% is to flush equations left.
+%    \begin{macrocode}
+\kulemt@clsopt{fleqn}{\PassOptionsToClass{fleqn}{memoir}}
+%    \end{macrocode}
+%
+% \subsubsection{Keys which can only be used once}
+% The following keys can only be used once in the preamble, either as an
+% option or once in \cs{setup}.
+% \begin{macro}{\kulemt@do@once@opts}
+% The \cs{kulemt@do@once@opts} command holds the commands to execute once,
+% either after option processing later on or at the end of \cs{setup}.
+%    \begin{macrocode}
+\gdef\kulemt@do@once@opts{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@add@once@opts}
+% The \cs{kulemt@add@once@opts}\marg{key}\marg{cs}\marg{coms} command appends
+% \meta{coms} to \cs{kulemt@do@once@opts}, surrounded by a test. The
+% commands \meta{coms} are only executed if the command \meta{cs} is not
+% empty. When the commands \meta{coms} executed, the key \meta{key} is
+% invalidated.
+% \changes{v1.8}{2015/05/25}{Make sure \cs{@tempa} is not overwritten}
+%    \begin{macrocode}
+\def\kulemt@add@once@opts#1#2#3{\g@addto@macro\kulemt@do@once@opts{%
+    \ifx #2\@empty\else
+      \kulemt@invalidate@key{#1}{once}%
+      \def\@tempa{#3\let#2\@empty}%
+      \expandafter\@tempa
+    \fi}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Setting the master option}
+% \DefineOptions{masteroption}{masteroption=\meta{mo}}{default is no option}\\
+% The \meta{mo} defines the master option or major topic (in Dutch
+% ``optie'' or ``afstudeerrichting''). The \meta{mo} is a text starting
+% with ``|option |\ldots'' (or ``|optie |\ldots'' or
+% ``|afstudeerrichting |\ldots''). If the master defines options (see
+% \cs{kulemt@def@master} for details) you can use the option abbreviation
+% here.\\
+% The \meta{mo} can be a comma separated list of options in case students
+% of different options work on one common master thesis. If a comma is used
+% inside a master option declaration, it must be hidden inside braces.
+%    \begin{macrocode}
+\define@key{kulemt}{masteroption}{\def\kulemt@opt@masteroption{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@opt@masteroption}
+% The \meta{mo} is saved in \cs{kulemt@opt@masteroption}.
+%    \begin{macrocode}
+\def\kulemt@opt@masteroption{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@master@option}
+% At the end of \cs{setup} the command \cs{kulemt@master@option} is set. It
+% holds a comma separated list of the expanded master option texts.
+%    \begin{macrocode}
+\def\kulemt@master@option{}
+%    \end{macrocode}
+% If the lowercased \cs{kulemt@opt@masteroption} is an abbreviation of an
+% option specified in \cs{kulemt@master@options}, \cs{kulemt@master@option}
+% is set to the full master option. Otherwise \cs{kulemt@master@option} is
+% set to the original content of \cs{kulemt@opt@masteroption}.\\
+% If \cs{kulemt@opt@masteroption} is a comma separated list, each item in
+% the list is handled in the way described above.\\
+% \changes{v1.7}{2013/05/01}{Handle disallowing master options.}^^A
+% If a master does not want master options to be printed, raise an error if
+% the option ``|masteroption|'' is used.
+%    \begin{macrocode}
+\kulemt@add@once@opts{masteroption}\kulemt@opt@masteroption{%
+  \global\let\kulemt@master@option\@empty
+  \ifx\kulemt@master@options@vl\relax
+    \ifx\kulemt@opt@masteroption\@empty\else
+      \kulemt@error{%
+        The option `masteroption' is ignored because\MessageBreak
+        your program disallows a master option on front pages}%
+    \fi
+  \else
+    \@for\@tempa:=\kulemt@opt@masteroption\do{%
+      \let\@tempc\@tempa
+      \expandafter\kulemt@handle@mo\expandafter\kulemt@master@options
+      \expandafter{%
+        \expandafter\kulemt@add@mo@tempc\expandafter{\@tempa}}%
+      \expandafter\g@addto@macro\expandafter\kulemt@master@option
+        \expandafter{\@tempc,}}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@add@mo@tempc}
+% The command \cs{kulemt@add@mo@tempc}\marg{smo}\marg{abbrev}\marg{full}
+% adds to \cs{@tempc} \meta{full} if the lowercased \meta{smo} (a single
+% master option) equals \meta{abbrev}.
+%    \begin{macrocode}
+\def\kulemt@add@mo@tempc#1#2#3{%
+  \lowercase{\def\@tempa{#1}}\def\@tempb{#2}\ifx\@tempa\@tempb
+    \def\@tempc{#3}\fi}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@handle@mo}
+% \changes{v1.6}{2012/05/13}{Extra first argument \meta{molist}}^^A
+% The command \cs{kulemt@handle@mo}\marg{molist}\marg{func} processes each
+% element from the token list \meta{molist}, such as
+% \cs{kulemt@master@options}, with \meta{func}.
+%    \begin{macrocode}
+\def\kulemt@handle@mo#1#2{%
+  \expandafter\@tfor\expandafter\@tempd\expandafter:\expandafter=#1\do{%
+    \expandafter\kulemt@handle@mo@\@tempd\@nil{#2}}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@handle@mo@}
+% Helper command which calls \meta{func}\marg{abbrev}\marg{full}.
+%    \begin{macrocode}
+\def\kulemt@handle@mo@ #1:#2\@nil #3{#3{#1}{#2}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Input file encoding}
+% \DefineOptions{inputenc}{inputenc=\meta{enc}}{}
+% This option specifies the character encoding \meta{enc} of the document.
+% The \meta{enc} must be a valid option of the \pkg{inputenc} package, e.g.,
+% |latin1| or |utf8|.
+% \changes{v1.7}{2013/04/12}{Explicitly set input encoding to \texttt{ascii}}^^A
+% If this option is not used, the document is supposed to use the ASCII
+% character encoding. To detect another encoding, we set the input encoding
+% initially to |ascii|.
+%    \begin{macrocode}
+\RequirePackage[ascii]{inputenc}
+\define@key{kulemt}{inputenc}{\def\kulemt@opt@inputenc{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@opt@inputenc}
+% The \meta{enc} is saved in \cs{kulemt@opt@inputenc}.
+%    \begin{macrocode}
+\def\kulemt@opt@inputenc{}
+%    \end{macrocode}
+% At the end of \cs{setup} the input encoding is changed.
+%    \begin{macrocode}
+\kulemt@add@once@opts{inputenc}\kulemt@opt@inputenc{%
+  \inputencoding\kulemt@opt@inputenc}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Fonts}
+% \DefineOptions{font}{^^A
+%   font=\meta{fnt} \or font=\meta{fnt}:\meta{fntopt}}{default is \texttt{cm}}\\
+% The key |font| lets you specify the font family \meta{fnt} to use. A font
+% family consists of a serif font, a sans-serif font, a typewriter font
+% and a math font. In our implementation we also set the font encoding.
+% The comma separated list \meta{fntopt} holds the options to pass to the
+% font definition package. This implies that the possibilities and their
+% meaning depends on the \meta{fnt}.
+%    \begin{macrocode}
+\define@key{kulemt}{font}{%
+  \edef\@tempa{\zap@space#1 \@empty}%
+  \expandafter\kulemt@set@font\@tempa::\@empty}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@set@font}
+% The \cs{kulemt@set@font} command parses ``\meta{fnt}:\meta{fntopt}'' and
+% calls the handler \cs{kulemt@set@font@}\meta{fnt}\marg{fntopt}. If
+% the handler is not defined, an error is signaled.
+%    \begin{macrocode}
+\def\kulemt@set@font#1:#2:#3\@empty{%
+  \expandafter\let\expandafter\@tempa
+    \csname kulemt@set@font@#1\endcsname
+  \ifx\@tempa\relax
+    \kulemt@error{Font `#1' is ignored because it is an unknown font}%
+  \else \@tempa{#2}\fi}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@loadfont@}
+% Every handler must define \cs{kulemt@loadfont@} to hold the commands to
+% define the different fonts.
+%    \begin{macrocode}
+\let\kulemt@loadfont@\@empty
+%    \end{macrocode}
+% \end{macro}
+% At the end of \cs{setup} the fonts are loaded, followed by the
+% \pkg{microtype} package.\label{loadmt-after-font}
+%    \begin{macrocode}
+\kulemt@add@once@opts{font}\kulemt@loadfont@{%
+  \kulemt@loadfont@ \kulemt@loadmt}
+%    \end{macrocode}
+%
+% \noindent The font options described below show the implemented font
+% families. \par \smallskip
+%
+% \DefineOptionsNoIndex{font=cm}{font=cm}{}\\
+% Use the Computer Modern family: |cmr| (serif), |cmss| (sans-serif),
+% |cmtt| (typewriter), and Computer Modern math. OT1 is used as character
+% encoding.
+% \begin{macro}{\kulemt@set@font@cm}
+% Since these are the default \LaTeX\ fonts, nothing special has to be done.
+%    \begin{macrocode}
+\def\kulemt@set@font@cm#1{\let\kulemt@loadfont@\relax}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptionsNoIndex{font=lm}{font=lm}{}\\
+% Use the Latin Modern family: |lmr| (serif), |lmss| (sans-serif),
+% |lmtt| (typewriter), and Latin Modern math. T1 is used as character
+% encoding.
+% \begin{macro}{\kulemt@set@font@lm}
+% On older systems, Latin Modern is not installed by default, so we have to
+% check for it.
+%    \begin{macrocode}
+\def\kulemt@set@font@lm#1{%
+  \IfFileExists{lmodern.sty}%
+   {\def\kulemt@loadfont@{%
+      \RequirePackage[T1]{fontenc}%
+      \RequirePackage{lmodern}}}%
+   {\kulemt@opt@missingpkg{font=lm}{lm}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptionsNoIndex{font=palatino}{^^A
+%   font=palatino \or font=palatino:\meta{mpopts}}{}\\
+% Use Palatino as serif font, Helvetica as sans-serif, |lmtt| (if
+% available) as typewriter, and Pazo math. T1 is used as character
+% encoding. For possible \meta{mpopts} options to the \pkg{mathpazo} package,
+% see its documentation. \\
+% Note: if the FPL fonts are installed use |sc| as part of \meta{mpopts} to
+% get real small caps.
+% \begin{macro}{\kulemt@set@font@palatino}
+% Helvetica is scaled down to fit the x-height of Palatino.
+%    \begin{macrocode}
+\def\kulemt@set@font@palatino#1{%
+  \def\kulemt@loadfont@{%
+    \RequirePackage[T1]{fontenc}%
+    \RequirePackage[#1]{mathpazo}%
+    \RequirePackage[scaled=.9]{helvet}}%
+  \IfFileExists{lmodern.sty}{%
+    \g@addto@macro\kulemt@loadfont@{%
+      \renewcommand{\ttdefault}{lmtt}}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptionsNoIndex{font=times}{font=times \or font=times:\meta{mtopts}}{}\\
+% Use Times as serif font, Helvetica as sans-serif, |lmtt| (if
+% available) as typewriter, and the virtual `mathptmx' fonts as math font.
+% T1 is used as character encoding. For possible \meta{mtopts} options to
+% the \pkg{mathptmx} package, see its documentation.\\
+% Note: This implementation has no boldmath version!
+% \begin{macro}{\kulemt@set@font@times}
+% Helvetica is scaled down to fit the x-height of Times.
+%    \begin{macrocode}
+\def\kulemt@set@font@times#1{%
+  \def\kulemt@loadfont@{%
+    \RequirePackage[T1]{fontenc}%
+    \RequirePackage[#1]{mathptmx}%
+    \RequirePackage[scaled=.9]{helvet}}%
+  \IfFileExists{lmodern.sty}{%
+    \g@addto@macro\kulemt@loadfont@{%
+      \renewcommand{\ttdefault}{lmtt}}}{}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptionsNoIndex{font=utopia}{^^A
+%   font=utopia \or font=utopia:\meta{muopts}}{}\\
+% Use Utopia as serif font, Helvetica as sans-serif, |lmtt| (if
+% available) as typewriter, and the Fourier math font.
+% T1 is used as character encoding. For possible \meta{muopts} options to
+% the \pkg{fourier} package, see its documentation.
+% \begin{macro}{\kulemt@set@font@utopia}
+% This option requires the \pkg{fourier} package for the math fonts.
+% Helvetica is scaled down to fit the x-height of Utopia.
+%    \begin{macrocode}
+\def\kulemt@set@font@utopia#1{%
+  \IfFileExists{fourier.sty}%
+    {\def\kulemt@loadfont@{%
+       \RequirePackage[T1]{fontenc}%
+       \RequirePackage[#1]{fourier}%
+       \RequirePackage[scaled=.9]{helvet}}%
+     \IfFileExists{lmodern.sty}{%
+       \g@addto@macro\kulemt@loadfont@{%
+         \renewcommand{\ttdefault}{lmtt}}}{}}%
+    {\kulemt@opt@missingpkg{font=utopia}{fourier}}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Keys which can be used multiple times}
+% The following keys can be used multiple times in the preamble, as an
+% option and in every \cs{setup}.
+%
+% \subsubsubsection{Information for the title page}
+% \DefineOptions{title}{title=\meta{title}}{required option}
+% This option sets the title using the standard \LaTeX\ command \cs{title},
+% which stores \meta{title} in \cs{@title}. Using \cs{title} and
+% \cs{@title} also ensures that the \pkg{hyperref} package picks up the title.\\
+% Since this is a required option, \cs{@title} is initialized with an error
+% message.
+%    \begin{macrocode}
+\define@key{kulemt}{title}{\title{#1}}
+\def\@title{\kulemt@error{No title given}}
+%    \end{macrocode}
+%
+% \DefineOptions{subtitle}{subtitle=\meta{stitle}}{}
+% This option specifies the subtitle \meta{stitle}.
+%    \begin{macrocode}
+\define@key{kulemt}{subtitle}{\def\kulemt@subtitle{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@subtitle}
+% The \meta{stitle} is saved in \cs{kulemt@subtitle}.
+%    \begin{macrocode}
+\def\kulemt@subtitle{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{author}{author=\meta{authors}}{required option}
+% This option sets the authors using the standard \LaTeX\ command \cs{author},
+% which stores \meta{authors} in \cs{@author}. Using \cs{author} and
+% \cs{@author} also ensures that the \pkg{hyperref} package picks up the
+% authors. If multiple authors are given, they should be separated by
+% \cs{and}.\\
+% Since this option is a required option, \cs{@author} is initialized with
+% an error message.
+%    \begin{macrocode}
+\define@key{kulemt}{author}{\author{#1}}
+\def\@author{\kulemt@error{No author given}}
+%    \end{macrocode}
+%
+% \DefineOptions{promotor,promoter}{^^A
+%   promotor=\meta{promoters}\or promoter=\meta{promoters}}{required}
+% This option lists the promoter(s). If multiple promoters are given, they
+% should be separated by \cs{and}.
+% \changes{v1.2}{2010/08/03}{Disallow empty values for the promotor keyword}^^A
+% No empty value is allowed since a promoter must be printed on the front pages.
+%    \begin{macrocode}
+\define@key{kulemt}{promotor}{%
+  \def\@tempa{#1}\ifx\@tempa\@empty\else \def\kulemt@promotor{#1}\fi}
+%    \end{macrocode}
+% \changes{v1.7}{2013/05/01}{New option \texttt{promoter}.}^^A
+% The option |promoter| is an alias to option |promotor|, so the correct
+% English terminology can also be used.
+%    \begin{macrocode}
+\let\KV@kulemt@promoter\KV@kulemt@promotor
+%    \end{macrocode}
+% \begin{macro}{\kulemt@promotor}
+% The \meta{promoters} is saved in \cs{kulemt@promotor}. Since the
+% |promotor| option is a required option, the command is initialized with
+% an error message.
+%    \begin{macrocode}
+\def\kulemt@promotor{\kulemt@error{No promoter given}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{assessor}{assessor=\meta{assessors}}{required option}
+% This option lists the assessors, separated by \cs{and}.
+%    \begin{macrocode}
+\define@key{kulemt}{assessor}{\def\kulemt@assessor{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@assessor}
+% The \meta{assessors} is saved in \cs{kulemt@assessor}. Since the
+% |assessor| option is a required option, the command is initialized with
+% an error message.
+%    \begin{macrocode}
+\def\kulemt@assessor{\kulemt@error{No assessor given}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{assistant}{assistant=\meta{assistants}}{required option}
+% This option lists the assistant(s). If multiple assistants are given, they
+% should be separated by \cs{and}.
+%    \begin{macrocode}
+\define@key{kulemt}{assistant}{\def\kulemt@assistant{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@assistant}
+% The \meta{assistants} is saved in \cs{kulemt@assistant}. Since the
+% |assistant| option is a required option, the command is initialized with
+% an error message.
+%    \begin{macrocode}
+\def\kulemt@assistant{\kulemt@error{No assistant given}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{acyear}{^^A
+%   acyear=\meta{acyear}}{default the current academic year}
+% This option sets the academic year of the thesis. The \meta{acyear}
+% should have a format like ``|{2009|~|--|~|2010}|''. This option should
+% probably not be used because the default works quite well.
+%    \begin{macrocode}
+\define@key{kulemt}{acyear}{\def\kulemt@acyear{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@acyear}
+% The \meta{acyear} is saved in \cs{kulemt@acyear}. If the value is empty,
+% the current academic year must be used.
+%    \begin{macrocode}
+\def\kulemt@acyear{}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@acyear@t}
+% The command \cs{kulemt@acyear@t} typesets the academic year. If
+% \cs{kulemt@acyear} hasn't been set yet, its value is computed and stored
+% in that command. To allow for the thesis to be printed in September, we
+% start the academic year on October 1.
+%    \begin{macrocode}
+\def\kulemt@acyear@t{%
+  \ifx\kulemt@acyear\@empty
+    \@tempcnta\year \ifnum\month<10 \advance\@tempcnta\m@ne \fi
+    \@tempcntb\@tempcnta \advance\@tempcntb\@ne
+    \xdef\kulemt@acyear{\the\@tempcnta\space -- \the\@tempcntb}%
+  \fi
+  \kulemt@acyear}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Additional information for the filing card}
+% Since not every master requires the use of a filing card, the options
+% below are only required when the filing card is used.
+%
+% \DefineOptions{translatedtitle}{^^A
+%   translatedtitle=\meta{title2}}{required option}
+% This option specifies the title in the language other than the text language.
+%    \begin{macrocode}
+\define@key{kulemt}{translatedtitle}{\def\kulemt@translatedtitle{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@translatedtitle}
+% The \meta{title2} is saved in \cs{kulemt@translatedtitle}. Since the
+% option is a required option if the filing card is used, the command is
+% initialized with an error message.
+%    \begin{macrocode}
+\def\kulemt@translatedtitle{%
+  \kulemt@error{No translated title available}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{shortabstract}{shortabstract=\meta{short abstract}}{}
+% This option specifies the short abstract for the filing card.
+%    \begin{macrocode}
+\define@key{kulemt}{shortabstract}{\def\kulemt@shortabstract{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@shortabstract}
+% The \meta{short abstract} is saved in \cs{kulemt@shortabstract}. Since the
+% option is a required option if the filing card is used, the command is
+% initialized with an error message.
+%    \begin{macrocode}
+\def\kulemt@shortabstract{%
+  \kulemt@error{No short abstract available}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{udc}{udc=\meta{UDC nr}}{}
+% This option specifies the UDC number. No UDC number formatting is checked.
+%    \begin{macrocode}
+\define@key{kulemt}{udc}{\def\kulemt@udc{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@udc}
+% The \meta{UDC nr} is saved in \cs{kulemt@udc}. Since the option is a
+% required option if the filing card is used, the command is initialized
+% with an error message.
+%    \begin{macrocode}
+\def\kulemt@udc{%
+  \kulemt@error{UDC number missing}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{keywords}{keywords=\meta{keywordlist}}{}
+% This option specifies the list of keywords.
+%    \begin{macrocode}
+\define@key{kulemt}{keywords}{\def\kulemt@keywords{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@keywords}
+% The \meta{keywordlist} is saved in \cs{kulemt@keywords}.
+%    \begin{macrocode}
+\def\kulemt@keywords{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{articletitle}{articletitle=\meta{arttitle}}{}
+% This option specifies the title of the thesis article, which is required
+% by some masters, to be put on the filing card.
+%    \begin{macrocode}
+\define@key{kulemt}{articletitle}{\def\kulemt@article@title{#1}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@article@title}
+% The \meta{arttitle} is saved in \cs{kulemt@article@title}.
+%    \begin{macrocode}
+\def\kulemt@article@title{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Conditionally generating pages}
+% \DefineOptions{coverpageonly}{coverpageonly}{}
+% When this option is used, only the cover page is generated. If it is not
+% used, no cover page is generated.
+%    \begin{macrocode}
+\kulemt@keynovalue{coverpageonly}{\kulemt@coverpagetrue}
+%    \end{macrocode}
+% \begin{macro}{\ifkulemt@coverpage}
+% The switch |kulemt@coverpage| remembers whether the cover page should be
+% generated or not.
+%    \begin{macrocode}
+\newif\ifkulemt@coverpage
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{frontpagesonly}{frontpagesonly}{}
+% When this option is used, only the front pages (title page, copyright
+% page and filing card) are generated. If it is not used, the complete
+% document is generated.
+%    \begin{macrocode}
+\kulemt@keynovalue{frontpagesonly}{\kulemt@frontpagestrue}
+%    \end{macrocode}
+% \begin{macro}{\ifkulemt@frontpages}
+% The switch |kulemt@frontpages| remembers whether only the front pages
+% should be generated or not.
+%    \begin{macrocode}
+\newif\ifkulemt@frontpages
+%    \end{macrocode}
+% \end{macro}
+%
+% \DefineOptions{filingcard}{filingcard}{}
+% When this option is used, the filing card is printed, even if the master
+% doesn't require it. When the master requires a filing card, it will be
+% printed anyway regardless of the use of this option.
+%    \begin{macrocode}
+\kulemt@keynovalue{filingcard}{\kulemt@filingcardtrue}
+%    \end{macrocode}
+% \begin{macro}{\ifkulemt@filingcard}
+% The switch |kulemt@filingcard| tells us whether a filing card should be
+% printed or not. Its default is set by \cs{kulemt@set@master}. The option
+% |filingcard| makes it true.
+%    \begin{macrocode}
+\newif\ifkulemt@filingcard
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Other options}
+% \DefineOptions{bindcover}{bindcover=\meta{dimen}}{default \texttt{0pt}}
+% \changes{v1.6}{2012/05/13}{New option \texttt{bindcover}}
+% \changes{v1.7}{2013/04/12}{Option \texttt{bindcover} is obsolete}
+% This option specifies the loss \meta{dimen} of visible paper due on the
+% cover page only due to the binding tape. Because of the new cover page
+% layout, it became obsolete in version~1.7.
+%    \begin{macrocode}
+\define@key{kulemt}{bindcover}{\ClassWarningNoLine\kulemt@cls{%
+    Option `bindcover' is no longer supported}}
+%    \end{macrocode}
+%
+% \subsubsection{Commands for the configuration file}
+% \subsubsubsection{Auxiliary commands}
+% \begin{macro}{\kulemt@def@master}
+% The \cs{kulemt@def@master}\marg{id}\marg{deflist} command defines the
+% master specific data for master with abbreviation \meta{id}. The
+% \meta{deflist} contains an unseparated list of groups (or single letters)
+% with the following meaning:
+% \begin{enumerate}
+% \item |N| (Dutch) or |E| (English): the master language (the official
+%   language of the master)
+% \item Number for faculty identification (use braces if more than one
+%   digit). See \cs{kulemt@facnum} for more information.
+% \item |F| or |N|: always print a filing card (|F|) or not (|N|)
+% \item Master colors, using the format
+%   ``|{|\meta{background}|:|\meta{text}|}|'' or
+%   ``|{|\meta{background}|}|''. The default \meta{background} color is
+%   white and the default \meta{text} color is black. When specified, each
+%   color is given as a comma separated list of C,M,Y,K fractions.
+% \item Master title (between braces)
+% \item Optional copyright contact info
+%   |{|\meta{address}|:|\meta{phone}|:|\meta{email}|}|. If this element
+%   isn't present, the faculty information is used.
+% \item Optional unseparated list of master options. Each option is
+%   surrounded by braces and consists of an abbreviation, followed by |:|
+%   and the title of the option.
+% \item Optional unseparated list of obsolete master options. Each option is
+%   surrounded by braces and consists of an abbreviation, followed by |:|
+%   and the title of the option. You have to make sure that the
+%   abbreviation doesn't conflict with an abbreviation of a master option.
+% \end{enumerate}
+% As soon as an optional element isn't used, any of the following elements
+% can't be used either.
+%    \begin{macrocode}
+\def\kulemt@def@master#1{\@namedef{kulemt@m@#1}}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@obsolete@master}
+% \changes{v1.4}{2011/06/07}{New command}^^A
+% The \cs{kulemt@obsolete@master}\oarg{spec}\marg{id}\marg{deflist} command
+% defines the master specific data in the same way as
+% \cs{kulemt@def@master}, but for an obsolete master with abbreviation
+% \meta{id}. The optional argument \meta{spec} lets you specify the version
+% of the obsolete master. Using the year the master became obsolete, may be
+% a good \meta{spec}.
+%    \begin{macrocode}
+\newcommand*\kulemt@obsolete@master[2][]{%
+  \@namedef{kulemt@m@#2\if &#1&\else .#1\fi}}
+%    \end{macrocode}
+% This way a user can still generate a thesis for an obsolete master by
+% using a master id ``\meta{id}|.|\meta{spec}'' or ``\meta{id}'' if
+% \meta{spec} is empty or missing.
+% \end{macro}
+%
+% \begin{macro}{\kulemt@set@master}
+% \changes{v1.6}{2012/05/13}{Extra argument for obsolete master options.}
+% \begin{macro}{\kulemt@master@language}
+% \begin{macro}{\kulemt@master@colors}
+% \begin{macro}{\kulemt@master@title}
+% \begin{macro}{\kulemt@copyright@contact}
+% \begin{macro}{\kulemt@master@options}
+% The command \cs{kulemt@set@master} isn't a command for the configuration
+% file, but it is defined here because it is related to the previous
+% command. It sets the commands \cs{kulemt@master@language} (the master
+% language), \cs{kulemt@facnum} (the faculty number of the master),
+% \cs{kulemt@master@colors} (the master colors formatted as
+% ``\meta{bg}\texttt{:}\meta{fg}'' or  ``\meta{bg}''),
+% \cs{kulemt@master@title} (the name of the master),
+% \cs{kulemt@copyright@contact} (the contact information for the
+% copyright), and \cs{kulemt@master@options} (a list of master options).
+%    \begin{macrocode}
+\def\kulemt@set@master#1#2#3#4#5#6#7#8#9\@nil{%
+  \edef\kulemt@master@language{%
+    \if N\@car#1\@nil dutch\else english\fi}%
+  \kulemt@facnum=#2\relax
+  \if F\@car#3\@nil \kulemt@filingcardtrue \fi
+  \def\kulemt@master@colors{#4}%
+  \def\kulemt@master@title{#5}%
+  \def\kulemt@copyright@contact{#6}%
+  \ifx\kulemt@copyright@contact\@empty
+    \protected@edef\kulemt@copyright@contact{\kulemt@fac@copyright}%
+  \fi
+  \@ifnextchar[\kulemt@set@mo{\kulemt@set@mo[]}#7\@nil{#8}}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@set@mo}
+% \changes{v1.7}{2013/04/12}{New command.}
+% The command \cs{kulemt@set@mo}\oarg{list}\meta{valid}|\@nil|\marg{obsolete}
+% stores the information on the master options.
+% \begin{macro}{\kulemt@master@options@v}
+% \changes{v1.6}{2012/05/13}{New command.}
+% \begin{macro}{\kulemt@master@options@o}
+% \changes{v1.6}{2012/05/13}{New command.}
+% The valid master options \meta{valid} can be found in
+% \cs{kulemt@master@options@v}, while the obsolete options \meta{obsolete}
+% are stored in \cs{kulemt@master@options@o}.
+% \begin{macro}{\kulemt@master@options@vl}
+% \changes{v1.7}{2013/04/12}{New command.}
+% If setting the master option is required by the master,
+% \cs{kulemt@master@options@vl} contains \meta{list}, a list of abbreviated
+% master options to choose from.
+% If the \meta{list} is ``|-|'', the command is undefined and the option
+% variables are emptied.
+%    \begin{macrocode}
+\def\kulemt@set@mo[#1]#2\@nil#3{%
+  \def\kulemt@master@options@vl{#1}%
+  \def\kulemt@master@options@v{-}%
+  \ifx\kulemt@master@options@vl\kulemt@master@options@v
+    \let\kulemt@master@options@vl\relax
+    \let\kulemt@master@options@v\@empty
+    \let\kulemt@master@options@o\@empty
+    \let\kulemt@master@options\@empty
+  \else
+    \def\kulemt@master@options@v{#2}%
+    \def\kulemt@master@options@o{#3}%
+    \def\kulemt@master@options{#2#3}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@getcolors}
+% \begin{macro}{\kulemt@color@bg}
+% \begin{macro}{\kulemt@color@fg}
+% The command \cs{kulemt@getcolors} splits the master color specification,
+% as specified for \cs{kulemt@master@colors}, into the background and the
+% text color. The are stored respectively in \cs{kulemt@color@bg} and
+% \cs{kulemt@color@fg}.
+%    \begin{macrocode}
+\def\kulemt@getcolors#1:#2:#3\@nil{%
+  \edef\kulemt@color@bg{\if !#1!{white}\else [cmyk]{#1}\fi}%
+  \edef\kulemt@color@fg{\if !#2!{black}\else [cmyk]{#2}\fi}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@div@master}
+% ^^A \changes{v0.95}{2010/01/19}{added}
+% When typesetting the contents of the configuration file, it's nice to
+% divide up the long list of masters. Therefore the command
+% \cs{kulemt@div@master}\marg{head} is introduced. It normally simply
+% gobbles its argument \meta{head}. But the user can redefine it before
+% inputting |kulemt.cfg| to have different actions on different sections.
+%    \begin{macrocode}
+\let\kulemt@div@master\@gobble
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@end@master@def}
+% ^^A \changes{v0.99}{2010/01/27}{added}
+% The command \cs{kulemt@end@master@def} indicates the end of the master
+% information in the configuration file. The only commands allowed before
+% it in the configuration file are \cs{ProvidesFile},
+% \cs{kulemt@div@master}, and \cs{kulemt@def@master}. All other
+% configuration commands in the main configuration file |kulemt.cfg|
+% must be placed after this command.
+%    \begin{macrocode}
+\let\kulemt@end@master@def\relax
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsubsection{Commands providing defaults}\label{sec:comdef}
+% These commands store the default data if no configuration file is used.
+% If you define them in the configuration file, you must use
+% \cs{renewcommand} (or \cs{def}).
+% \begin{macro}{\kulemt@facnum}
+% The \cs{kulemt@facnum} count register stores information about which
+% faculties are involved. It is used in commands to select faculty
+% dependent data. The default value 1 corresponds to the Faculty of
+% Engineering Science. The value 0 is used when multiple faculties are involved.
+% Values larger than 1 are currently not used so they are available for
+% other faculties or combinations.
+%    \begin{macrocode}
+\newcount\kulemt@facnum
+\kulemt@facnum\@ne
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@fac@name}
+% The \cs{kulemt@fac@name} command is used to typeset the faculty name.
+% This default implementation only typesets something for
+% \cs{kulemt@facnum} equal to one.
+%    \begin{macrocode}
+\def\kulemt@fac@name{%
+  \ifcase\kulemt@facnum \or
+    Facult\kulemt@ifdutch{eit Ingenieurswetenschappen}%
+                         {y of Engineering}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@kulfac@logo}
+% \changes{v1.7}{2013/04/12}{New command}
+% The \cs{kulemt@kulfac@logo}\marg{igopts} command is used to typeset the
+% KU~Leuven logo, eventually combined with a faculty logo. The
+% \meta{igopts} options are passed to a \cs{includegraphics} command.
+% This default implementation only typesets the KU~Leuven logo |logokul|
+% (|.eps| or |.pdf|). If \cs{kulemt@facnum} equals to one, it typesets the
+% combined logo |logokuleng| (|.eps| or |.pdf|).
+%    \begin{macrocode}
+\def\kulemt@kulfac@logo#1{%
+  \edef\@tempa{[#1]{logokul\ifnum\kulemt@facnum=\@ne eng\fi}}%
+  \expandafter\includegraphics\@tempa}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@fac@logo}
+% \changes{v1.7}{2013/04/12}{No-op because a combined logo is used}
+% The \cs{kulemt@fac@logo}\marg{igopts} command is used to typeset the
+% faculty logo. The \meta{igopts} options are passed to an
+% \cs{includegraphics} command. The default implementation is a no-op.
+%    \begin{macrocode}
+\def\kulemt@fac@logo#1{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@fac@copyright}
+% The \cs{kulemt@fac@copyright} command is used to generates the default
+% copyright contact information\footnote{See \cs{kulemt@contact@scan} for
+%   the format used.}. It must \emph{always} generate contact information!
+% This default implementation uses the Faculty of Engineering Science data,
+% also if the master belongs to multiple faculties. Other cases
+% (\cs{kulemt@facnum}${}>1$) simply refer to the promoter.
+%    \begin{macrocode}
+\def\kulemt@fac@copyright{%
+  \ifnum\kulemt@facnum >\@ne
+    \kulemt@ifdutch d{th}e \MakeLowercase{\noexpand\kulemt@paa@0}::%
+  \else
+    Faculteit Ingenieurswetenschappen, Kasteelpark Arenberg 1 bus 2200,
+    B-3001 Heverlee:+32-16-321350:%
+  \fi}
+%    \end{macrocode}
+% Note that this command is used in a moving argument, so only robust
+% commands are allowed inside its definition! However we use \cs{noexpand}
+% instead of \cs{protect} before \cs{kulemt@paa@} to guard only against the
+% first expansion in \cs{kulemt@set@master}. Otherwise \cs{MakeLowercase}
+% won't work.
+% \end{macro}
+%
+% \begin{macro}{\kulemt@paa@}
+% ^^A \changes{v0.99}{2010/02/26}{Solve bug 1: use a numeric argument to select
+% ^^A   the type of heading}
+% ^^A \changes{v1.0}{2010/03/02}{Use ``assessoren'' in Dutch}
+% The command \cs{kulemt@paa@}\marg{num} generates the labels for promoters
+% (if \meta{num} is |0|), assessors (if \meta{num} is |1|), or assistants
+% (if \meta{num} is |2|).
+%    \begin{macrocode}
+\def\kulemt@paa@#1{%
+  \ifcase #1%
+    Promot\kulemt@ifand\kulemt@promotor{\kulemt@ifdutch{oren}{ers}}{}%
+  \or
+    Assessor\kulemt@ifand\kulemt@assessor{\kulemt@ifdutch{en}s}{}%
+  \or
+    \kulemt@ifdutch{Begeleider}{Assistant}%
+    \kulemt@ifand\kulemt@assistant{s}{}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Input the configuration file}
+% \begin{macro}{\kulemt@cfgfile}\label{def:cfgfile}
+% Provide the name of the configuration if the calling class hasn't set it
+% yet.
+%    \begin{macrocode}
+\providecommand*\kulemt@cfgfile{kulemt.cfg}
+%    \end{macrocode}
+% \end{macro}
+% Input the file if it exists.
+%    \begin{macrocode}
+\ifx\kulemt@cfgfile\@empty\else
+  \InputIfFileExists\kulemt@cfgfile{}{\kulemt@error{%
+      Configuration file `\kulemt@cfgfile' is not installed}}
+\fi
+%    \end{macrocode}
+%
+% \subsubsection{Process the class options}
+%    \begin{macrocode}
+\kulemt@process@ptions
+%    \end{macrocode}
+% Then we process the required |master| option, which must exist and must
+% be defined in the configuration file.
+%    \begin{macrocode}
+\ifx\kulemt@opt@master\@empty
+  \kulemt@error{Required option `master' missing}\fi
+\expandafter\let\expandafter\@tempa
+  \csname kulemt@m@\kulemt@opt@master \endcsname
+\ifx\@tempa\relax
+  \kulemt@error{%
+    Unsupported value `\kulemt@opt@master' for option `master'}\fi
+\expandafter\kulemt@set@master\@tempa{}{}{}\@nil
+%    \end{macrocode}
+%
+% ^^A \changes{v0.99}{2010/02/27}{Additional master specific configuration file
+% ^^A   is loaded}
+% \begin{macro}{\kulemt@cfgfile@m}
+% Provide the name of the master specific configuration file if the calling
+% class hasn't set it yet.
+%    \begin{macrocode}
+\@ifundefined{kulemt@cfgfile@m}{%
+  \edef\kulemt@cfgfile@m{kulemt-\kulemt@opt@master.cfg}}{}
+%    \end{macrocode}
+% \end{macro}
+% Input the file if it exists.
+%    \begin{macrocode}
+\ifx\kulemt@cfgfile@m\@empty\else
+  \InputIfFileExists\kulemt@cfgfile@m{}{}
+\fi
+%    \end{macrocode}
+%
+% \begin{macro}{\kulemt@check@masteroption}
+% Once we know the master, we can check the master option and eventually
+% expand the abbreviation. Since the master option can be set with
+% \cs{setup}, we have to check this at the end of the document preamble,
+% but only if the master defines options.
+% \changes{v1.6}{2012/05/13}{Missing master options generate a warning
+%   instead of an error.}^^A
+% \changes{v1.7}{2013/04/12}{Generate an error again, but only when the
+%   master requires options explicitly.}^^A
+% An error is raised if the master defines a valid option list and no
+% master option is given.
+%    \begin{macrocode}
+\ifx\kulemt@master@options@vl\@empty\else
+  \ifx\kulemt@master@options@vl\relax\else
+    \def\kulemt@check@masteroption{%
+      \ifx\kulemt@master@option\@empty
+        \kulemt@error{%
+          When using option `master=\kulemt@opt@master',\MessageBreak
+          you should specify at least one master option.\MessageBreak
+          Allowed master options are: \kulemt@master@options@vl}%
+      \fi}
+    \AtBeginDocument{\kulemt@check@masteroption}
+  \fi
+\fi
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Loading the required class and packages}
+% \subsubsection{The \cls{memoir} class}
+% This class is based on \cls{memoir} using A4 paper. Most of its
+% parameters are set later on in the document layout section on
+% page~\pageref{sec:doclayout}.
+%    \begin{macrocode}
+\LoadClass[a4paper,1\kulemt@ptsize pt]{memoir}[2004/04/05]
+%    \end{macrocode}
+% \begin{macro}{\and}
+% For the \pkg{hyperref} option |pdfusetitle| to work correctly, we redefine
+% \cs{and} as a newline.
+%    \begin{macrocode}
+\def\and{\\}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\andnext}
+% At the same time the \cls{memoir} command \cs{andnext} gets the same
+% definition.
+%    \begin{macrocode}
+\let\andnext\and
+%    \end{macrocode}
+% \end{macro}
+% 
+% \subsubsection{The \pkg{babel} package}
+% We use the \pkg{babel} options stored in \cs{kulemt@babel@opt}.
+%    \begin{macrocode}
+\RequirePackage[\kulemt@babel@opt]{babel}
+%    \end{macrocode}
+% English and Dutch translations of additional \cls{memoir} commands are
+% also provided.
+%    \begin{macrocode}
+\addto\captionsenglish{%
+  \def\appendixtocname{Appendices}%
+  \def\appendixpagename{Appendices}%
+  \def\figurerefname{Figure}%
+  \def\tablerefname{Table}%
+  \def\pagerefname{page}%
+  \def\partrefname{Part~}%
+  \def\chapterrefname{Chapter~}%
+  \def\listfiguresandtablesname{List of Figures and Tables}}
+\begingroup
+  \catcode`\"\active
+  \@firstofone{\endgroup
+    \addto\captionsdutch{%
+      \def\appendixtocname{B"ylagen}%
+      \def\appendixpagename{B"ylagen}%
+      \def\figurerefname{figuur}%
+      \def\tablerefname{tabel}%
+      \def\pagerefname{pagina}%
+      \def\partrefname{Deel~}%
+      \def\chapterrefname{hoofdstuk~}%
+      \def\listfiguresandtablesname{L"yst van figuren en tabellen}}}
+%    \end{macrocode}
+% \begin{macro}{\latinencoding}
+% \changes{v1.5}{2011/08/10}{Set to T1 only if T1 is the current encoding.}
+% The T1 font encoding is always defined for the front page (cf.\
+% page~\pageref{t1def}). This confuses \pkg{babel}. So we redefine
+% \cs{latinencoding} to look only at the current font encoding and ignore
+% the fact that the T1 encoding is loaded. This resolves a \pkg{microtype}
+% error when using the default Computer Modern fonts.
+%    \begin{macrocode}
+\AtBeginDocument{\gdef\latinencoding{T1}%
+  \ifx\cf@encoding\latinencoding\else \xdef\latinencoding{OT1}\fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% Finally the main language is set to the text language. Since
+% \cs{main@language} must be fully expanded, \cs{kulemt@language} is
+% expanded first. This guarantees that \cs{kulemt@language} can be used
+% later on directly as a \pkg{babel} language.\\
+% Note: active characters are only activated after |\begin{document}|.
+%    \begin{macrocode}
+\edef\kulemt@language{\kulemt@language}
+\expandafter\main@language\expandafter{\kulemt@language}
+%    \end{macrocode}
+%
+% \begin{macro}{\kulemt@selectmasterlanguage}
+% The shorthand command \cs{kulemt@selectmasterlanguage} switches to the
+% official master language.
+%    \begin{macrocode}
+\def\kulemt@selectmasterlanguage{%
+  \expandafter\selectlanguage\expandafter{\kulemt@master@language}}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@selecttextlanguage}
+% The shorthand command \cs{kulemt@selecttextlanguage} switches to the main
+% text language.
+%    \begin{macrocode}
+\def\kulemt@selecttextlanguage{%
+  \expandafter\selectlanguage\expandafter{\kulemt@language}}
+%    \end{macrocode}
+% \end{macro}
+% 
+% \subsubsection{The \pkg{graphicx} and \pkg{color} package}
+% The package \pkg{graphicx} is needed for including images on the cover
+% and the title page.
+%    \begin{macrocode}
+\RequirePackage{graphicx}
+%    \end{macrocode}
+% The package \pkg{color} is needed for the cover page, but it is also used
+% to color the hyperlinks.
+%    \begin{macrocode}
+\RequirePackage{color}
+%    \end{macrocode}
+% 
+% \subsubsection{The \pkg{microtype} package}
+% Using the \pkg{microtype} package results in much nicer output: less
+% overfull hboxes and less hyphenation. The user can always setup or
+% disable \pkg{microtype} with \cs{microtypesetup}.
+% \begin{macro}{\kulemt@loadmt}
+% Older versions must be loaded after font definitions, so we postpone
+% requiring the package with \cs{kulemt@loadmt}. The best place to load it
+% is after the font declaration, so the user can put a \cs{microtypesetup}
+% after it. Therefore it will be loaded after the \cs{setup} which declares
+% the fonts (see p.~\pageref{loadmt-after-font}). If the user doesn't use
+% the |font| option, it must be loaded at the end of the preamble. This
+% implies that \cs{kulemt@loadmt} can be called twice. We also have to take
+% into account that the user herself may have required the package already
+% in the preamble, e.g., with options.
+%    \begin{macrocode}
+\def\kulemt@loadmt{%
+  \@ifpackageloaded{microtype}{}{\RequirePackage{microtype}}}
+\AtBeginDocument{\kulemt@loadmt}
+%    \end{macrocode}
+% \end{macro}
+% The package \pkg{microtype} is not available in older installation, so
+% it's only used when available and wanted by the user (option
+% |nomicrotype|) and pdfTeX is used in PDF mode. When the package is not
+% used, a message is put in the log file.\\
+% In the following code, \cs{@tempa} temporarily stores the reason why the
+% package wasn't loaded.
+%    \begin{macrocode}
+\ifkulemt@microtype
+  \ifpdf
+    \IfFileExists{microtype.sty}{}{%
+      \def\@tempa{the package is not installed}%
+      \kulemt@microtypefalse}
+  \else
+    \def\@tempa{you're not using pdflatex in pdf mode}
+    \kulemt@microtypefalse
+  \fi
+\else
+  \def\@tempa{option `nomicrotype' was used}
+\fi
+\ifkulemt@microtype\else
+  \let\kulemt@loadmt\relax
+  \ClassWarningNoLine\kulemt@cls{%
+    Package `microtype' not used because\MessageBreak
+    \@tempa}%
+\fi
+%    \end{macrocode}
+% 
+% \subsubsection{The \pkg{hyperref} package}
+% ^^A \changes{v0.93}{2010/01/15}{Package \textsf{hyperref} no longer loaded}
+% The package \pkg{hyperref} is wanted to create useful PDF files. Because
+% it interacts with many other packages, it is not loaded by default.
+%
+% \begin{macro}{\kulemt@check@hyperref}
+% If \pkg{hyperref} has been been loaded, some additional actions are
+% needed, which are stored in \cs{kulemt@check@hyperref}.
+%    \begin{macrocode}
+\def\kulemt@check@hyperref{%
+  \@ifpackageloaded{hyperref}{%
+%    \end{macrocode}
+% \begin{macro}{\HyPsd@babel@dutch}
+% It seems that some \pkg{babel} ligatures are not translated to an
+% equivalent character sequence for the bookmarks. I guess it should be
+% reported as a feature request, but for the time being and for older
+% versions, we provide them ourselves. 
+%    \begin{macrocode}
+    \@ifundefined{HyPsd@babel@dutch}{}{%
+      \addto\HyPsd@babel@dutch{%
+        \declare@shorthand{dutch}{"y}{ij}%
+        \declare@shorthand{dutch}{"Y}{IJ}}}%
+%    \end{macrocode}
+% \end{macro}
+% The package \pkg{memhfixc} provides \pkg{hyperref} related fixes and
+% extensions for \pkg{memoir}. Newer versions of \pkg{hyperref} load this
+% automatically, but we require it for older versions.
+%    \begin{macrocode}
+    \@ifpackageloaded{memhfixc}{}{%
+      \RequirePackage{memhfixc}}%
+%    \end{macrocode}
+% \begin{macro}{\theHsubfigure}
+% ^^A \changes{v0.96}{2010/01/24}{provided}
+% \begin{macro}{\theHsubtable}
+% ^^A \changes{v0.96}{2010/01/24}{provided}
+% To avoid name conflicts, subfloats should be numbered within the parent
+% float. The defaults are provided for the most common cases of subfigures
+% and subtables.
+%    \begin{macrocode}
+    \providecommand*\theHsubfigure{\theHfigure.\arabic{subfigure}}%
+    \providecommand*\theHsubtable{\theHtable.\arabic{subtable}}%
+  }{}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% The actions from \cs{kulemt@check@hyperref} are executed after all
+% packages are loaded.
+%    \begin{macrocode}
+\AtBeginDocument{\kulemt@check@hyperref}
+%    \end{macrocode}
+%
+% \subsubsection*{End of option handling}
+% Now is the time to check the one time options for the first time. They
+% will be checked again after each \cs{setup}.\\
+% But before loading fonts, we make sure the T1\label{t1def} encoding is
+% defined for the front page font (cf.\ \S\ref{sec:frontpagefont}) and the
+% default \LaTeX\ font encoding OT1 is selected again.
+%    \begin{macrocode}
+\RequirePackage[T1,OT1]{fontenc}
+\kulemt@do@once@opts
+%    \end{macrocode}
+%
+% \subsection{Document layout}\label{sec:doclayout}
+% \subsubsection{Page layout}
+% The default \cs{headheight} and \cs{headsep} from \pkg{memoir} are left
+% as is, but the text body dimensions are redefined depending on the text
+% point size (10pt and 11pt respectively).
+%    \begin{macrocode}
+\ifcase\kulemt@ptsize\relax
+  \textwidth=13cm
+  \textheight=20cm
+\or
+  \textwidth=14cm
+  \textheight=215mm
+\fi
+%    \end{macrocode}
+% The inner (\cs{spinemargin}) and outer (\cs{foremargin}) margins are
+% computed as follows:\\
+% \hspace*{2em}$\begin{array}[t]{@{}l@{{}={}}l@{}}
+%   \cs{foremargin}  & 0.6\,(\cs{paperwidth} - \cs{textwidth} -
+%                            \mathrm{binding}) \\
+%   \cs{spinemargin} & 0.4\,(\cs{paperwidth} - \cs{textwidth} -
+%                            \mathrm{binding}) + \mathrm{binding} \\
+% \end{array}$ \\
+% For one side layout, the visible parts of both margins are made equal
+% (use a factor 0.5 instead of 0.4 and 0.6).
+%    \begin{macrocode}
+\spinemargin\paperwidth
+\advance\spinemargin -\textwidth
+\foremargin\spinemargin
+\advance\foremargin -\kulemt@bind\relax
+\foremargin .\if@twoside 6\else 5\fi\foremargin
+\advance\spinemargin -\foremargin
+%    \end{macrocode}
+% Margin notes get a fixed width independent of one side or two side
+% printing. This makes sure that printing that the PDF distribution (one
+% side) and the printed version (two side) have the same text on each page.
+% The separation between notes is kept as small as possible, as well as the
+% distance from the text block.
+%    \begin{macrocode}
+\marginparwidth=56pt
+\marginparsep=1.2\onelineskip
+\marginparpush=\onelineskip
+%    \end{macrocode}
+% The lower margin is 1.2 times the upper margin. The header parameters
+% are set to the default values.
+%    \begin{macrocode}
+\setulmargins{*}{*}{1.2}
+\setheaderspaces{*}{\headsep}{*}
+%    \end{macrocode}
+% Finish up the layout definitions. Redo this at the end of the document
+% preamble in case the user redefines some parameters (which she shouldn't
+% of course).
+%    \begin{macrocode}
+\checkthelayout\fixthelayout
+\AtBeginDocument{\checkandfixthelayout}
+%    \end{macrocode}
+%
+% \begin{macro}{\clearforchapter}
+% ^^A \changes{v0.92}{2010/01/10}{redefinition}
+% The |open|\ldots options only control the main matter chapters. Chapters
+% in the front and back matter are always |openany|. If you don't like
+% this, you can use the \cs{openleft} or \cs{openright} command in the
+% document.
+%    \begin{macrocode}
+\renewcommand*\clearforchapter{%
+  \if@mainmatter
+    \if@openleft
+      \cleartoverso
+    \else
+      \if@openright
+        \cleartorecto
+      \else
+        \clearpage
+      \fi
+    \fi
+  \else
+    \clearpage
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Page styles}
+% \DefinePageStyle{ruled}
+% By default the pagestyle \pstyle{ruled} is used. However for front matter
+% (actually for non-main matter) the header on odd pages is the same as on
+% even pages, because typically front matter chapters have no sections.
+%    \begin{macrocode}
+\makeoddhead{ruled}{}{}{%
+  \if@mainmatter \rightmark \else \scshape\leftmark \fi}
+\pagestyle{ruled}
+%    \end{macrocode}
+%
+% ^^A \changes{v0.97}{2010/01/26}{Aliased the `\pstyle{chapter}' pagestyle to
+% ^^A   the new `\pstyle{nohead}' pagestyle}
+% \DefinePageStyle{nohead}
+% The \pstyle{nohead} pagestyle puts the page number in the footer at the
+% outer margin.
+%    \begin{macrocode}
+\makepagestyle{nohead}
+\makeevenfoot{nohead}{\thepage}{}{}
+\makeoddfoot{nohead}{}{}{\thepage}
+%    \end{macrocode}
+% \DefinePageStyle{nohead}
+% The \pstyle{chapter} pagestyle is aliased to this new pagestyle.
+%    \begin{macrocode}
+\aliaspagestyle{chapter}{nohead}
+%    \end{macrocode}
+%
+% \subsubsection{Section numbering}
+% Sections are numbered up to the subsection level.
+%    \begin{macrocode}
+\maxsecnumdepth{subsection}
+%    \end{macrocode}
+% But numbering in the table of contents ends at the section level.
+%    \begin{macrocode}
+\maxtocdepth{section}
+%    \end{macrocode}
+%
+% \subsubsection{Content lists}
+% In \cls{memoir}, content lists don't start a new page. By default it is
+% done here. But in case only a few figures and tables are used, the new
+% \cs{listoffiguresandtables} can be used.
+%    \begin{macrocode}
+\def\tocheadstart{\clearforchapter\chapterheadstart}
+\def\lofheadstart{\clearforchapter\chapterheadstart}
+\def\lotheadstart{\clearforchapter\chapterheadstart}
+%    \end{macrocode}
+% \begin{macro}{\listoffiguresandtables}
+% The command \cs{listoffiguresandtables} list first the figures and then
+% the tables on the same page.
+%    \begin{macrocode}
+\newcommand*\listoffiguresandtables{%
+  \chapter\listfiguresandtablesname
+  \def\@lofmaketitle{\section*\listfigurename}%
+  \listoffigures*%
+  \let\listoffigures\relax
+  \def\@lotmaketitle{\section*\listtablename}%
+  \listoftables*%
+  \let\listoftables\relax}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\listfiguresandtablesname}
+% The command \cs{listfiguresandtablesname} generates the title for a page
+% combining the list of figures and of tables.
+%    \begin{macrocode}
+\newcommand*\listfiguresandtablesname{List of Figures and Tables}
+%    \end{macrocode}
+% \end{macro}
+% The content lists are typeset ragged right without hyphenation.
+%    \begin{macrocode}
+\setrmarg{2.55em plus1fil}
+%    \end{macrocode}
+% For these lists the space before chapter items is halved.
+%    \begin{macrocode}
+\setlength{\cftbeforechapterskip}{1ex \@plus\p@}
+%    \end{macrocode}
+%
+% \subsubsection{Tables and figures}
+% The captions of tables and figures have the last line centered. The
+% caption name is printed in small caps. Because of bugs in some versions
+% of \cls{memoir} the font settings for the caption name must be undone for
+% the caption title.
+%    \begin{macrocode}
+\captionnamefont{\scshape}
+\captiontitlefont{\upshape}
+\captionstyle[\centering]{\centerlastline}
+%    \end{macrocode}
+%
+% \subsection{Front material}
+% The front material consists of the cover page, the title page, the
+% copyright page, and the filing card. Since either the cover page or the
+% title page are printed, we call both the front page.
+% \subsubsection{Front page font}\label{sec:frontpagefont}
+% \changes{v1.1}{2010/03/07}{The \texttt{phv} font seems to require a T1
+%   encoding to work for accented characters. This also means it can be
+%   defined at the class loading time.}
+% For the cover page and the title page the Helvetica font must be used. To
+% avoid collisions with scaled Helvetica body fonts, a specific front page
+% font is defined based on unscaled Helvetica. It seems that we need a T1
+% encoding to print accented characters when \pkg{babel} is used for Dutch.\\
+% Note: Since the font shapes are defined outside of an |.fd| file, spaces
+% are \emph{not} ignored in the definitions. So remove all spaces!
+%    \begin{macrocode}
+\DeclareFontFamily{T1}{kulemtfpf}{}
+\DeclareFontShape{T1}{kulemtfpf}{m}{n}{<->phvr8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{m}{sc}{<->phvrc8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{m}{sl}{<->phvro8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{m}{it}{<->ssub*kulemtfpf/m/sl}{}
+\DeclareFontShape{T1}{kulemtfpf}{bx}{n}{<->phvb8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{bx}{sc}{<->phvbc8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{bx}{sl}{<->phvbo8t}{}
+\DeclareFontShape{T1}{kulemtfpf}{bx}{it}{<->ssub*kulemtfpf/bx/it}{}
+\DeclareFontShape{T1}{kulemtfpf}{b}{n}{<->ssub*kulemtfpf/bx/n}{}
+\DeclareFontShape{T1}{kulemtfpf}{b}{sc}{<->ssub*kulemtfpf/bx/sc}{}
+\DeclareFontShape{T1}{kulemtfpf}{b}{sl}{<->ssub*kulemtfpf/bx/sl}{}
+\DeclareFontShape{T1}{kulemtfpf}{b}{it}{<->ssub*kulemtfpf/bx/sl}{}
+%    \end{macrocode}
+%
+% ^^A \changes{v0.99}{2010/02/21}{Reduce the font sizes on the cover
+% ^^A    and title page}
+% \begin{macro}{\kulemt@fpf@title}
+% This command selects the font used for the title (24.88\,pt Helvetica).
+%    \begin{macrocode}
+\def\kulemt@fpf@title{\fontsize\@xxvpt{30}\selectfont}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@fpf@subtitle}
+% This command selects the font used for the subtitle (17.28\,pt Helvetica).
+%    \begin{macrocode}
+\def\kulemt@fpf@subtitle{\fontsize\@xviipt{22}\selectfont}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@fpf@author}
+% This command selects the font used for the author (14.4\,pt Helvetica).
+%    \begin{macrocode}
+\def\kulemt@fpf@author{\fontsize\@xivpt{18}\selectfont}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@fpf@txthead}
+% This command selects the font used for the text heading (12\,pt Helvetica
+% bold).
+%    \begin{macrocode}
+\def\kulemt@fpf@txthead{\fontsize\@xiipt{14.5}%
+  \fontseries\bfdefault\selectfont}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@fpf@text}
+% This command selects the font used for the ordinary text (12\,pt Helvetica).
+%    \begin{macrocode}
+\def\kulemt@fpf@text{\fontsize\@xiipt{14}\selectfont}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@fpf@banner}
+% This command selects the font used for the banner at the bottom of the
+% page (14.4\,pt Helvetica bold). The academic year text above the banner
+% is printed in the non-bold version of this font.
+%    \begin{macrocode}
+\def\kulemt@fpf@banner{\fontsize\@xivpt{18}%
+  \fontseries\bfdefault\selectfont}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Utility commands}
+% \begin{macro}{\kulemt@master@text}
+% The command \cs{kulemt@master@text} prints the full master degree text
+% including the master option or major topic. Multiple master options are
+% separated by ``and'' (or ``en'' in Dutch).
+%    \begin{macrocode}
+\def\kulemt@master@text{Thesis
+  \kulemt@ifdutch
+    {voorgedragen tot het behalen van de graad van}%
+    {submitted for the degree of}
+  \kulemt@master@title
+  \ifx\kulemt@master@option\@empty\else
+    \def\@tempb{, }%
+    \@for\@tempa:=\kulemt@master@option\do{%
+      \ifx\@tempa\@empty\else
+        \@tempb \def\@tempb{ \kulemt@ifdutch{en}{and} }%
+        \@tempa
+      \fi}%
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\kulemt@paa@fp}
+% ^^A \changes{v0.99}{2010/02/26}{Solve bug 1: use a numeric argument to select
+% ^^A   the type of heading}
+% The command \cs{kulemtpaa@fp}\marg{num} typesets the promoters,
+% assessors, or assistants in front page format. The possible values of
+% \meta{num} are the same as the argument \meta{num} of \cs{kulemt@paa@}.
+% ^^A \changes{v0.99}{2010/02/21}{Move bold setting to \cs{kulemt@fpf@txthead}}
+% \changes{v1.2}{2010/08/03}{Make it a no-op for an empty keyword value}
+%    \begin{macrocode}
+\def\kulemt@paa@fp#1{%
+  \begingroup
+    \ifcase #1\relax
+      \let\@tempa\kulemt@promotor
+    \or
+      \let\@tempa\kulemt@assessor
+    \or
+      \let\@tempa\kulemt@assistant
+    \else
+       \let\@tempa\@empty
+    \fi
+    \ifx\@tempa\@empty\else
+      \medskip \begingroup 
+        \kulemt@fpf@txthead \kulemt@paa@{#1}:\vskip 2\p@
+      \endgroup \@tempa \par
+    \fi
+  \endgroup}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Typesetting the front page}
+% The front page is either the cover page or the title page. The
+% distinction between them is made by the switch |kulemt@coverpage|: when
+% true, the cover page is generated, otherwise the title page.
+% \begin{macro}{\kulemt@frontpage}
+% The front page contains no header or footer. It start in the front matter
+% as page~-1. Since it is followed by the copyright page (page~0), the
+% first real page can start at~1.
+%    \begin{macrocode}
+\def\kulemt@frontpage{\clearpage
+  \setcounter{page}\m@ne
+  \thispagestyle{empty}%
+%    \end{macrocode}
+% The text on the front page starts on 1\,cm below the upper page edge.
+%    \begin{macrocode}
+  \@tempdima\uppermargin \advance\@tempdima\topskip
+  \advance\@tempdima\baselineskip \advance\@tempdima -1cm%
+  \null \vskip -\@tempdima
+%    \end{macrocode}
+% The typeset area on the first page is different from the rest of the
+% text. It is always centered horizontally, also with two side printing.
+% The binding offset is ignored as well.
+% \changes{v1.7}{2013/04/12}{New logo handling and positioning}^^A
+%% The margins are 16\,mm, resulting in a text width of 178\,mm on A4 paper.
+% The margins are 2\,cm, resulting in a text width of 17\,cm on A4 paper.
+%    \begin{macrocode}
+  \hbox to\hsize{%
+    \@tempdima 2cm\advance\@tempdima -\spinemargin \hskip\@tempdima
+    \vbox to\z@{\hsize 17cm\relax
+%    \end{macrocode}
+% All elements on the front page are positioned, so avoid inserting
+% automatic glue. 
+%    \begin{macrocode}
+      \lineskip\z@skip \parskip\z@skip
+%    \end{macrocode}
+% \changes{v1.7}{2013/04/12}{Disable \pkg{microtype} in the front pages}
+% The cover page may be generated by a server at a different location. To
+% make sure that the typesetting of the front pages doesn't depend on the
+% presence of the \pkg{microtype} package. Therefore micro-typography is
+% disabled in a front page.
+%    \begin{macrocode}
+      \@ifundefined{microtypesetup}{}{\microtypesetup{activate=false}}%
+%    \end{macrocode}
+% The front page text is typeset ragged right in Helvetica using the master
+% language.
+%    \begin{macrocode}
+      \fontencoding{T1}\fontfamily{kulemtfpf}\kulemt@fpf@text
+      \raggedright \kulemt@selectmasterlanguage
+%    \end{macrocode}
+% The first line contains the KU~Leuven logo on the left, eventually
+% combined with a faculty logo, and a separate faculty logo on the right.
+% The height of this logo line is 3\,cm, which corresponds to the height of
+% the combined KU~Leuven-faculty logo. The KU~Leuven logo (without attached
+% faculty logo) has fixed dimensions (56\,mm, 2\,cm). The optional faculty
+% logo on the right has the same height.
+% The left margin of the KU~Leuven logo is 1\,cm.
+%    \begin{macrocode}
+      \noindent \hskip-1cm%
+      \vbox to3cm{\hbox{\kulemt@kulfac@logo{width=56mm}}\vss}\hfill
+      \vbox to3cm{\hbox{\kulemt@fac@logo{height=2cm}}\vss}%
+      \hskip-1cm\hskip\z@skip
+%    \end{macrocode}
+% The last |\hskip\z@skip| is needed because the last skip is always
+% removed by the paragraph builder.\\
+% The minimal space before the title is 40\,pt but it stretches twice as
+% fast as the space below the author.\\
+% The title and the subtitle are printed in the main text language.
+%    \begin{macrocode}
+      \vskip 40\p@ \@plus 2fill\relax
+      \begingroup \kulemt@selecttextlanguage
+        \kulemt@fpf@title \@title \par
+%    \end{macrocode}
+% If a subtitle is given, it is typeset at the appropriate size and at a
+% fixed distance below the title.
+%    \begin{macrocode}
+        \ifx\kulemt@subtitle\@empty\else
+          \vskip 1em\relax
+          \kulemt@fpf@subtitle \kulemt@subtitle \par
+        \fi
+      \endgroup
+%    \end{macrocode}
+% The minimal space before the authors is again 40\,pt but with a very
+% limited stretching. The space after it is 30\,pt with the standard
+% stretching.
+%    \begin{macrocode}
+      \vskip 40\p@ \@plus .3fill%
+      \begingroup \kulemt@fpf@author \@author
+        \vskip 30\p@ \@plus 1fill\endgroup
+%    \end{macrocode}
+% The rest is ordinary text which is typeset ragged left, occupying at most
+% half of the text body. First comes the degree, followed by the
+% promoter(s). On the title page, the assessors and the assistants are
+% also listed. The space below this text is 20\,pt with the same stretching
+% as above the title.
+%    \begin{macrocode}
+      \noindent \hfill \vbox{\hsize .5\textwidth \raggedleft
+        \kulemt@master@text \par
+        \kulemt@paa@fp0%
+        \ifkulemt@coverpage\else
+          \kulemt@paa@fp1%
+          \kulemt@paa@fp2%
+        \fi}%
+      \vskip 20\p@ \@plus 2fill\relax
+%    \end{macrocode}
+% The academic year is printed below the text and centered on the page,
+% with a space of 15\,pt below it.
+% ^^A \changes{v0.99}{2010/02/21}{Academic year uses the non-bold banner font}
+%    \begin{macrocode}
+      \centering \kulemt@fpf@banner
+      \textmd{Academi\kulemt@ifdutch{ejaar}{c year} \kulemt@acyear@t}%
+      \vskip 15\p@
+%    \end{macrocode}
+% \changes{v1.7}{2013/04/12}{Color banner width set to 19\,cm}
+% A 19\,cm wide and 15\,mm high color banner with the master degree name is
+% printed on the cover page only, placed 30\,pt below the academic year.
+% The banner is only printed if the colors \cs{kulemt@master@colors} are
+% defined.
+%    \begin{macrocode}
+      \ifkulemt@coverpage
+        \ifx\kulemt@master@colors\@empty\else
+          \vskip 15\p@
+          \centerline{\fboxsep\z@
+            \expandafter\kulemt@getcolors\kulemt@master@colors::\@nil
+            \expandafter\colorbox\kulemt@color@bg{%
+              \vbox to 15mm{\hsize 19cm\vss
+                \expandafter\textcolor\kulemt@color@fg{%
+                  \kulemt@master@title}\vss}}}%
+        \fi
+      \fi
+%    \end{macrocode}
+% A bottom margin of 1\,cm results on A4 paper in a body height of 27.7\,cm.
+%    \begin{macrocode}
+      \vskip -277mm}%
+    \hss}%
+  \clearpage}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\maketitle}
+% Because the previous command prints the title information, the command
+% \cs{maketitle} is undefined to avoid problems.
+%    \begin{macrocode}
+\let\maketitle\relax
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Typesetting the copyright page}
+% \begin{macro}{\kulemt@contact@print}
+% \begin{macro}{\kulemt@contact@scan}
+% The command \cs{kulemt@contact@print} prints the copyright contact
+% information stored in \cs{kulemt@copyright@contact}. The format of the
+% contact information is ``\meta{address}|:|\meta{tel}|:|\meta{email}''.
+% The \meta{address} must be written to follow ``addressed to'' in English
+% and to follow ``wend u tot'' in Dutch. The \meta{address} must be
+% present, the telephone number \meta{tel} and the \meta{email} may be
+% missing.
+%    \begin{macrocode}
+\def\kulemt@contact@print{%
+  \expandafter\kulemt@contact@scan\kulemt@copyright@contact:::\@nil}
+\def\kulemt@contact@scan#1:#2:#3:#4\@nil{#1%
+  \def\@tempa{#2}\def\@tempb{#3}%
+  \ifx\@tempa\@empty
+    \ifx\@tempb\@empty\else , \texttt{#3}\fi
+  \else
+    , #2%
+    \ifx\@tempb\@empty\else
+      \space o\kulemt@ifdutch{f via e-}{r by e}mail \texttt{#3}%
+    \fi
+  \fi}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% A command \cs{kulemt@copyright@}\meta{lang} must defined for every
+% existing master and text language \meta{lang}. It contains the copyright
+% text in the language \meta{lang}.
+% \begin{macro}{\kulemt@copyright@english}
+% The command \cs{kulemt@copyright@english} contains the copyright text in
+% English.^^A
+% \changes{v1.4}{2011/06/07}{Remove the hardcoded ``promotor''}
+%    \begin{macrocode}
+\def\kulemt@copyright@english{\selectlanguage{english}%
+  Without written permission of the \MakeLowercase{\kulemt@paa@0} and
+  the author\kulemt@ifand\@author{s}{} it is forbidden to reproduce
+  or adapt in any form or by any means any part of this publication.
+  Requests for obtaining the right to reproduce or utilize parts of
+  this publication should be addressed to \kulemt@contact@print.\par
+  A written permission of the \MakeLowercase{\kulemt@paa@0} is also
+  required to use the methods, products, schematics and programs
+  described in this work for industrial or commercial use, and for
+  submitting this publication in scientific contests.\par}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@copyright@dutch}
+% The command \cs{kulemt@copyright@dutch} contains the copyright text in Dutch.
+% ^^A \changes{v0.99}{2010/02/21}{Replaced ``wendt U'' by ``wend u''}
+% \changes{v1.4}{2011/06/07}{Remove the hardcoded ``promotor''}
+%    \begin{macrocode}
+\def\kulemt@copyright@dutch{\selectlanguage{dutch}%
+  Zonder voorafgaande schriftelijke toestemming van zowel de
+  \MakeLowercase{\kulemt@paa@0} als de auteur\kulemt@ifand\@author{s}{}
+  is overnemen, kopi\"eren, gebruiken of realiseren van deze uitgave
+  of gedeelten ervan verboden. Voor aanvragen tot of informatie
+  i.v.m.\ het overnemen en/of gebruik en/of realisatie van gedeelten
+  uit deze publicatie, wend u tot \kulemt@contact@print.\par
+  Voorafgaande schriftelijke toestemming van de
+  \MakeLowercase{\kulemt@paa@0} is eveneens vereist voor het
+  aanwenden van de in deze masterproef beschreven (originele)
+  methoden, producten, schakelingen en programma's voor industrieel
+  of commercieel nut en voor de inzending van deze publicatie ter
+  deelname aan wetenschappelijke prijzen of wedstrijden.\par}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\kulemt@copyrightpage}
+% The copyright page contains no header or footer, with the copyright
+% notice at the bottom of the page. Paragraphs in the copyright notice are
+% typeset without indentation and half a line of spacing between them. To
+% avoid hyphenation as much as possible, \cs{sloppypar} is used.
+%    \begin{macrocode}
+\def\kulemt@copyrightpage{\clearpage
+  \thispagestyle{empty}%
+  \null \vfill
+  \begingroup
+    \parindent\z@ \parskip .5\baselineskip \sloppypar
+    \copyright\space Copyright KU~Leuven\vskip\baselineskip
+%    \end{macrocode}
+% ^^A \changes{v0.98}{2010/01/27}{English copyright first}
+% If the text and the master language are the same, a copyright notice is
+% printed in that language. If  they differ, the English version comes first.\\
+% Note: Because of catcode differences we can't compare the master language
+% \cs{kulemt@master@language} and the text language \cs{kulemt@language}
+% directly.
+% \changes{v1.8}{2015/05/25}{Make sure \cs{@tempb} is not overwritten by
+%   \cs{@tempa}}
+%    \begin{macrocode}
+    \expandafter\let\expandafter\@tempa
+      \csname kulemt@copyright@\kulemt@master@language\endcsname
+    \expandafter\let\expandafter\@tempb
+      \csname kulemt@copyright@\kulemt@language\endcsname
+    \ifx\@tempa\@tempb \@tempa \else
+      \ifx\@tempb\kulemt@copyright@english
+        \let\@tempb\@tempa \let\@tempa\kulemt@copyright@english \fi
+      \def\@tempc{\@tempa \vskip\baselineskip}%
+      \expandafter\@tempc\@tempb
+    \fi
+  \endgroup
+  \clearpage}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Typesetting the filing card}
+% \DefinePageStyle{filingcard}
+% The filing card uses its own page style \pstyle{filingcard}, typeset in the
+% master language. Its ruled header contains the faculty name and the academic
+% year. No footer is used.
+%    \begin{macrocode}
+\makepagestyle{filingcard}
+\makeheadrule{filingcard}{\textwidth}{\normalrulethickness}
+\makeevenhead{filingcard}{\kulemt@selectmasterlanguage
+  KU~Leuven \kulemt@fac@name}{}{\kulemt@acyear@t}
+\makeoddhead{filingcard}{\kulemt@selectmasterlanguage
+  KU~Leuven \kulemt@fac@name}{}{\kulemt@acyear@t}
+%    \end{macrocode}
+%
+% \begin{macro}{\kulemt@filingcard}
+% The filing card is put on a separate page with its own page style, using
+% the master language.
+%    \begin{macrocode}
+\def\kulemt@filingcard{\clearforchapter
+  \thispagestyle{filingcard}%
+  \begingroup
+    \kulemt@selectmasterlanguage
+%    \end{macrocode}
+% First a centered title is printed.
+%    \begin{macrocode}
+    \begingroup
+      \centering \Large
+      \kulemt@ifdutch{Fiche masterproef}{Master thesis filing card}%
+      \vskip 1em
+    \endgroup
+%    \end{macrocode}
+% First the title, translated title, keywords, and article title are
+% typeset with a medium space between them. The title and translated title
+% are typeset in the main text language.
+%    \begin{macrocode}
+    \begingroup
+      \parskip\medskipamount
+      \@hangfrom{\textit{%
+          Student\kulemt@ifand\@author{\kulemt@ifdutch{en}s}}{}: }%
+        \@author\par
+      \@hangfrom{\textit{Tit\kulemt@ifdutch{el}{le}}: }%
+        {\kulemt@selecttextlanguage \@title}\par
+      \ifx\kulemt@translatedtitle\@empty\else
+        \@hangfrom{\textit{%
+            \kulemt@ifdutch
+             {\kulemt@selecttextlanguage
+              \kulemt@ifdutch{Engel}{Nederland}se titel}%
+             {\kulemt@selecttextlanguage
+              \kulemt@ifdutch{English}{Dutch} title}}: }%
+        \kulemt@translatedtitle\par
+      \fi
+      \noindent \textit{UDC}: \kulemt@udc\par
+      \ifx\kulemt@keywords\@empty\else
+        \@hangfrom{\textit{Keywords}: }\kulemt@keywords\par
+      \fi
+      \ifx\kulemt@article@title\@empty\else
+        \@hangfrom{\textit{%
+            \kulemt@ifdutch{Titel van het artikel}{Article title}}: }%
+          \kulemt@article@title\par
+      \fi
+      \vskip\medskipamount
+    \endgroup
+%    \end{macrocode}
+% Then comes the short abstract in the main text language.
+%    \begin{macrocode}
+    \noindent \textit{\kulemt@ifdutch{Korte inhoud}{Abstract}}:%
+    \vskip 2\p@
+    \begingroup \kulemt@selecttextlanguage
+      \noindent\ignorespaces \kulemt@shortabstract
+    \endgroup
+%    \end{macrocode}
+% The rest comes at the bottom of the page: master degree, promoter(s),
+% assessors, and assistant(s). Between these items we put a small space.
+% The \cs{raggedright} command must be used inside a group because it is
+% incompatible with \cs{@hangfrom}.
+%    \begin{macrocode}
+    \vfill \parskip\smallskipamount
+    \begingroup \raggedright
+      \noindent \kulemt@master@text \par
+    \endgroup
+    \@hangfrom{\textit{\kulemt@paa@0}: }\kulemt@promotor\par
+    \@hangfrom{\textit{\kulemt@paa@1}: }\kulemt@assessor\par
+    \@hangfrom{\textit{\kulemt@paa@2}: }\kulemt@assistant\par
+  \endgroup
+  \clearpage}
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsubsection{Printing the required pages}
+% At the beginning of the document, the front matter starts with the front
+% page (either the cover page or the title page). Next the copyright page
+% is printed unless the first page was a cover page. If only the cover page
+% or the front pages are printed, the document ends here.\\
+% The \pkg{hyperref} package requires a unique printed page number. Since
+% non-positive page numbers have no roman representation, the
+% \cs{frontmatter} is only switched on after the copyright page.\\
+% \changes{v1.3}{2011/05/13}{Required pages are now printed at the end of
+%   \cs{document}}^^A
+% We can't use \cs{AtBeginDocument} here, because some packages assume that
+% no text is generated before the commands they add to this hook. An
+% example is the externalization library of the package \pkg{tikz}. To
+% avoid such problems, we simply append the commands to the definition of
+% \cs{document}.
+% \changes{v1.8}{2015/05/25}{Make sure \cs{@tempb} is not overwritten by
+%   \cs{@tempa}}
+%    \begin{macrocode}
+\g@addto@macro\document{\kulemt@frontpage
+  \ifkulemt@coverpage
+    \def\@tempa{\end{document}}%
+  \else
+    \kulemt@copyrightpage
+    \ifkulemt@frontpages
+      \def\@tempa{\end{document}}%
+    \else
+      \let\@tempa\frontmatter
+    \fi
+  \fi
+  \@tempa}
+%    \end{macrocode}
+% \begin{macro}{\kulemt@error@mm}
+% The user must switch to the main matter herself and we make sure that she
+% doesn't forget it. The command \cs{kulemt@error@mm} will be called at the
+% end of the document.
+% \changes{v1.4}{2011/06/06}{Make \cs{mainmatter*} work again}^^A
+% Since \cs{mainmatter} tests for a trailing star, we can't add commands at
+% the end of it.
+%    \begin{macrocode}
+\def\kulemt@error@mm{\kulemt@error{%
+    You forgot to use \string\mainmatter}}
+\expandafter\def\expandafter\mainmatter\expandafter{%
+  \expandafter\let\expandafter\kulemt@error@mm\expandafter\relax
+  \mainmatter}
+%    \end{macrocode}
+% \end{macro}
+% At the end of the document, we first check if \cs{mainmatter} was used,
+% unless only cover or front pages are printed. If a filing card is wanted,
+% it is printed as back matter.
+%    \begin{macrocode}
+\AtEndDocument{%
+  \ifkulemt@coverpage\else
+    \ifkulemt@frontpages\else \kulemt@error@mm \fi
+    \ifkulemt@filingcard
+      \if@mainmatter \backmatter \fi
+      \kulemt@filingcard
+    \fi
+  \fi}
+%    \end{macrocode}
+%
+% \subsection{Front matter environments}
+% \begin{environment}{preface}
+% The |preface| environment holds the preface text. It has one optional
+% argument, which holds the preface author. The default preface author is
+% the value of the |author| option.  The preface is printed as a single
+% page chapter.
+% \begin{macro}{\kulemt@preface@}
+% The command \cs{kulemt@preface@} remembers the argument of the |preface|
+% environment until the end of the environment.
+%    \begin{macrocode}
+\newenvironment{preface}[1][\@author]%
+ {\chapter\prefacename
+  \def\kulemt@preface@{#1}}%
+ {\par
+  \ifx\kulemt@preface@\@empty\else
+    \bigskip \raggedleft \itshape \kulemt@preface@
+  \fi
+  \vfill \clearpage}
+%    \end{macrocode}
+% \end{macro}
+% \end{environment}
+%
+% \begin{environment}{abstract}
+% The |abstract| environment is redefined as an ordinary chapter.
+%    \begin{macrocode}
+\renewenvironment{abstract}%
+ {\chapter\abstractname}%
+ {\clearpage}
+%    \end{macrocode}
+% \end{environment}
+%
+% \begin{environment}{abstract*}
+% \changes{v1.6}{2012/05/13}{New optional language argument}
+% The |abstract*| environment works like the |abstract| environment, but it
+% uses the language from its optional argument. By default this is the
+% master language.
+%    \begin{macrocode}
+\newenvironment{abstract*}[1][\kulemt@master@language]%
+ {\expandafter\selectlanguage\expandafter{#1}%
+  \abstract}%
+ {\endabstract}
+%    \end{macrocode}
+% \end{environment}
+%
+% \iffalse
+%</class>
+% \fi
+% \section{The Faculty of Engineering Science configuration file}
+% \label{sec:cfgfile}
+% \iffalse
+%<*config>
+% \fi
+% \def\generalname{kulemt.cfg}^^A For the \changes command
+% \subsection{Definition of the masters}
+% Note: To reuse this information in the manual, it must be the first
+% section in the configuration file.
+% ^^A \changes{v0.99}{2010/02/21}{Colors \texttt{wit} changed}
+% ^^A \changes{v0.99}{2010/02/21}{Contact info \texttt{arc} added}
+% ^^A \changes{v0.99}{2010/02/27}{Info modified for \texttt{arc}, \texttt{cit},
+% ^^A   \texttt{cws}, \texttt{wit}, \texttt{wtk}, \texttt{ecit}, \texttt{mai}}
+% \changes{v1.4}{2011/06/07}{New master \texttt{mse} replaces \texttt{mvt}}
+% \changes{v1.6}{2012/05/13}{All master titles and options updated to the
+%   2012 situation}
+% \changes{v1.7}{2013/04/12}{2013 master titles and options}
+% \changes{v1.7}{2013/05/01}{Disallow master options for some masters}
+% \changes{v1.8a}{2015/06/01}{Update Nano options and add some English masters}
+%    \begin{macrocode}
+%% This kulemt.cfg file holds all master dependent information for
+%% the KU Leuven engineering master thesis class.
+%% Author: Luc Van Eycken (Luc.VanEycken@esat.kuleuven.be)
+%% If you modify this file:
+%% * provide feedback to the original author
+%% * please adjust the date [YYYY/MM/DD]
+\ProvidesFile{kulemt.cfg}[2013/05/01]
+%% Define known masters and their options
+%%   The definition of the master contains the following elements:
+%%    1. "N" or "E" : the language of the master
+%%                    "N" for dutch, "E" for English
+%%    2. Number for faculty identification (use braces if > 1 digit)
+%%       0 = multiple faculties
+%%       1 = Faculty of Engineering Science
+%%    3. "F" or "N" : if "F", a filing card is always required
+%%    4. Master colors "{bg:fg}" or "{bg}", with each color a comma
+%%       separated list of C,M,Y,K fractions.
+%%    5. Master title between braces
+%%    6. Optional copyright contact info {<address>:<phone>:<email>}
+%%       Use faculty information if empty
+%%    7. Optional list of master option abbreviations
+%%       Each option is surrounded by braces and consists of an
+%%       abbreviation, followed by ":" and the title of the option.
+%%       Optionally the list can start with a list of abbreviations
+%%       between square brackets. If this list is not empty, an error
+%%       is raised when no master option is specified by the student.
+%%       If the list equals "-", no master options are allowed.
+%%    8. Optional list of obsolete master option abbreviations.
+%%       The list has the same format as the list of master options.
+%%       You have to make sure that the abbreviations don't conflict
+%%       with those of the master options. The convention is to append
+%%       a dot and the last year it was valid.
+%%
+\kulemt@div@master{Dutch initial masters}
+\kulemt@def@master{arc}{N1N{0.93,0.52,0.35,0.11:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen: architectuur}{}{[-]}}
+\kulemt@def@master{bin}{N0N{}%
+  {Master of Science in de bio-informatica}}
+\kulemt@def@master{bmt}{N1N{0.6,0,0.3,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   biomedische~technologie}}
+\kulemt@def@master{bwk}{N1N{0.2,0.7,1,0:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen: bouwkunde}{}%
+  {{ct:optie Civiele techniek}%
+   {gt:optie Gebouwentechniek}%
+   {vk:optie Verkeerskunde}}}
+\kulemt@def@master{cit}{N1N{0.9,0.26,1,0.13:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   chemische~technologie}{}%
+  {{cbpe:optie Chemische en biochemische proces engineering}%
+   {me:optie Milieu engineering}%
+   {pe:optie Product engineering}}%
+  {{cbr.2012:optie Chemische en biochemische reactorkunde}%
+   {ct.2012:optie Chemische technologie}%
+   {mv.2012:optie Milieu en veiligheid}}}
+\kulemt@def@master{cws}{N1F{0,0,1,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   computerwetenschappen}%
+  {\kulemt@ifdutch{het}{the} Departement Computerwetenschappen,
+   Celestijnenlaan 200A bus 2402, B-3001 Heverlee:%
+   +32-16-327700:info@cs.kuleuven.be}%
+  {{ai:hoofdspecialisatie Artifici\"ele intelligentie}%
+   {ci:hoofdspecialisatie Computationele informatica}%
+   {db:hoofdspecialisatie Databases}%
+   {gs:hoofdspecialisatie Gedistribueerde systemen}%
+   {mmc:hoofdspecialisatie Mens-machine communicatie}%
+   {se:hoofdspecialisatie Software engineering}%
+   {vs:hoofdspecialisatie Veilige software}}%
+  {{ai.2011:optie Artifici\"ele intelligentie}%
+   {gs.2011:optie Gedistribueerde systemen}%
+   {mmc.2011:optie Mens-machine communicatie}%
+   {vs.2011:optie Veilige software}}}
+\kulemt@def@master{elt}{N1N{0,0.2,0.7,0}%
+  {Master of Science in de ingenieurswetenschappen: elektrotechniek}%
+  {ESAT, Kasteelpark Arenberg 10 postbus 2440,
+   B-3001 Heverlee:+32-16-321130:info@esat.kuleuven.be}%
+  {[eg,im]%
+   {eg:optie Elektronica en ge\"{\i}ntegreerde schakelingen}%
+   {im:optie Ingebedde systemen en multimedia}}%
+  {{ge.2012:optie Ge\"{\i}ntegreerde elektronica}%
+   {ms.2012:optie Multimedia en signaalverwerking}%
+   {tt.2012:optie Telecommunicatie en telematica}}}
+\kulemt@def@master{ene}{N1N{0.5,0,1,0}%
+  {Master of Science in de ingenieurswetenschappen: energie}{}{[-]}}
+\kulemt@obsolete@master{gmk}{N1N{0.8,0.6,0,0:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   geotechniek en mijnbouwkunde}}
+\kulemt@def@master{mtk}{N1N{0.3,0,0.3,0}%
+  {Master of Science in de ingenieurswetenschappen: materiaalkunde}{}%
+  {{mb:optie Materialen in de biomedische sector}%
+   {mk:optie Metalen en keramieken}%
+   {mn:optie Materialen voor nanotechnologie}%
+   {pc:optie Polymeren en composieten}%
+   {pp:optie Productie en processen}}}
+\kulemt@def@master{vlit}{N1N{0,0,0.33,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   verkeer, logistiek en intelligente transportsystemen}%
+  {Centre for Industrial Management, Celestijnenlaan 300A Bus 2422,
+   B-3001 Heverlee:+32-16-322567}%
+  {{lt:optie Logistiek en transport}%
+   {vi:optie Verkeer en Infrastructuur}}}
+\kulemt@obsolete@master{mtw}{N0N{}%
+  {Master in de milieutechnologie en de milieuwetenschappen}}
+\kulemt@def@master{nan}{N1N{0,0.8,0.7,0:0,0,0,0}%
+  {Master of Science in de nanowetenschappen en de nanotechnologie}{}%
+  {{nm:optie Nanomaterialen en nanochemie}%
+   {ne:optie Nano-elektronicaontwerp}%
+   {nc:optie Nanocomponenten en nanofysica}%
+   {nb:optie Nanobiotechnologie}}%
+  {{bi.2014:afstudeerrichting bio-ingenieur}%
+   {ir.2014:afstudeerrichting burgerlijk ingenieur}%
+   {nw.2014:afstudeerrichting natuurwetenschappen}}}
+\kulemt@def@master{sta}{N0N{}%
+  {Master of Science in de Statistiek}{}%
+  {{asm:specialisatie Algemene statistische methodologie}%
+   {bm:specialisatie Biometrie}%
+   {bs:specialisatie Business statistiek}%
+   {is:specialisatie Industri\"ele statistiek}%
+   {sgp:specialisatie Statistiek in de sociale, gedrags- en
+        pedagogische wetenschappen}%
+   {so:specialisatie Statistiek en onderwijs}}}
+\kulemt@def@master{wit}{N1F{0.9,0.94,0.02,0.07:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen:
+   wiskundige~ingenieurstechnieken}%
+  {\kulemt@ifdutch{het}{the} Departement Computerwetenschappen,
+   Celestijnenlaan 200A bus 2402, B-3001 Heverlee:%
+   +32-16-327700:info@cs.kuleuven.be}}
+\kulemt@def@master{wtk}{N1N{0.6,0.3,0,0:0,0,0,0}%
+  {Master of Science in de ingenieurswetenschappen: werktuigkunde}{}{[-]}}
+%
+\kulemt@div@master{English initial masters}
+\kulemt@def@master{ebmt}{E1N{0.6,0,0.3,0}%
+  {Master of Science in Biomedical~Engineering}}
+\kulemt@def@master{ebin}{E0N{}%
+  {Master of Science in Bioinformatics}}
+\kulemt@def@master{ecit}{E1N{0.9,0.26,1,0.13:0,0,0,0}%
+  {Master of Science in Chemical~Engineering}{}%
+  {{cbpe:option Chemical and biochemical process engineering}%
+   {me:option Environmental engineering}%
+   {pe:option Product engineering}}}
+\kulemt@def@master{ect}{E1N{0.9,0.26,1,0.13:0,0,0,0}%
+  {Master of Science in Chemical Engineering (Engineering Rheology)}}
+\kulemt@def@master{ecws}{E1F{0,0,1,0}%
+  {Master of Science in Engineering: Computer Science}%
+  {\kulemt@ifdutch{het}{the} Departement Computerwetenschappen,
+   Celestijnenlaan 200A bus 2402, B-3001 Heverlee:%
+   +32-16-327700:info@cs.kuleuven.be}%
+  {{ai:specialisation Artificial Intelligence}%
+   {ss:specialisation Secure Software}}}
+\kulemt@def@master{eelt}{E1N{0,0.2,0.7,0}%
+  {Master of Science in Electrical~Engineering}%
+  {Departement Elektrotechniek, Kasteelpark Arenberg 10 postbus 2440,
+    B-3001 Heverlee:+32-16-321130:info@esat.kuleuven.be}%
+  {[ei,em]%
+   {ei:option Electronics and Integrated Circuits}%
+   {em:option Embedded Systems and Multimedia}}}
+\kulemt@def@master{eene}{E1N{0.5,0,1,0}%
+  {Master of Science in Engineering: Energy}{}{[-]}}
+\kulemt@def@master{ekene}{E1N{0.5,0,1,0}%
+  {EIT-KIC Master in Energy}{}{[-]}}
+\kulemt@def@master{ememn}{E1N{0.5,0,1,0}%
+  {Erasmus Mundus Joint Master of Economics and
+   Management of Network~Industries}}
+\kulemt@def@master{emtk}{E1N{0.3,0,0.3,0}%
+  {Master of Science in Materials Engineering}{}%
+  {{mc:option Metals and Ceramics}%
+   {mn:option Materials for Nanotechnology}%
+   {pc:option Polymers and Composites}}}
+\kulemt@def@master{enan}{E1N{0,0.8,0.7,0:0,0,0,0}%
+  {Master of Science in Nanoscience and Nanotechnology}{}%
+  {{nm:option Nanomaterials and Nanochemistry}%
+   {ne:option Nanoelectronic Design}%
+   {nd:option Nanodevices and Nanophysics}%
+   {nb:option Nanobiotechnology}}%
+  {{be.2014:major subject Bioscience engineering}%
+   {eng.2014:major subject Engineering}%
+   {ns.2014:major subject Natural sciences}}}
+\kulemt@def@master{emnan}{E0N{0,0.8,0.7,0:0,0,0,0}%
+  {Erasmus Mundus Master of Science in
+   Nanoscience and Nanotechnology}{}%
+  {{bb:graduation option Biophysics and Bionanotechnology}%
+   {ne:graduation option Nanoelectronics}%
+   {nn:graduation option Nanophysics and Nanochemistry}}}
+\kulemt@def@master{esta}{E0N{}%
+  {Master of Science in Statistics}{}%
+  {{ars:option All Round Statistics}%
+   {bm:option Biometrics}%
+   {bs:option Business Statistics}%
+   {gsm:option General Statistical Methodology}%
+   {is:option Industrial Statistics}%
+   {qas:abridged programme --
+        Quantitative Analysis in the Social Sciences}%
+   {sbe:option Social, Behavioral and Educational Statistics}}}
+\kulemt@def@master{ewit}{E1F{0.9,0.94,0.02,0.07:0,0,0,0}%
+  {Master of Science in Mathematical Engineering}%
+  {\kulemt@ifdutch{het}{the} Departement Computerwetenschappen,
+   Celestijnenlaan 200A bus 2402, B-3001 Heverlee:%
+   +32-16-327700:info@cs.kuleuven.be}}
+\kulemt@def@master{ewtk}{E1N{0.6,0.3,0,0:0,0,0,0}%
+  {Master of Science in Mechanical Engineering}{}{[-]}}
+%
+\kulemt@div@master{Post-initial masters}
+\kulemt@def@master{cms}{E1N{}%
+  {Master of Science in Conservation of Monuments and Sites}}
+\kulemt@def@master{mai}{E0N{}%
+  {Master of Science in Artificial Intelligence}%
+  {\kulemt@ifdutch{het}{the} Departement Computerwetenschappen,
+   Celestijnenlaan 200A bus 2402, B-3001 Heverlee:%
+   +32-16-327700:info@cs.kuleuven.be}%
+  {{cs:option Cognitive Science}%
+   {ecs:option Engineering and Computer Science}%
+   {slt:option Speech and Language Technology}}}
+\kulemt@def@master{mhs}{E1N{}%
+  {Master of Science in Human Settlements}}
+\kulemt@obsolete@master{mim}{E1N{}%
+  {Master of Industrial Management}{}%
+  {{ese:option Environment, Safety and Energy}%
+   {ict:option Information and Communication Technology}%
+   {plp:option Production and Logistics Planning}}}
+\kulemt@def@master{mms}{N0N{}%
+  {Master of Science in de medische stralingsfysica}}
+\kulemt@def@master{mne}{E1N{}%
+  {Master of Science in Nuclear Engineering}}
+\kulemt@def@master{mse}{E1N{}%
+  {Master of Science in Safety Engineering}{}
+  {[p,ps]%
+   {p:option Prevention}%
+   {ps:option Process Safety}}}
+\kulemt@def@master{mss}{E0N{}%
+  {Master of Science in Space Studies}{}%
+  {{slpbm:major subject: Space Law, Policy, Business and Management}%
+   {ss:major subject: Space Sciences}%
+   {sta:major Subject: Space Technology and Applications}}}
+\kulemt@obsolete@master{mvt}{N1N{}%
+  {Master in de veiligheidstechniek}}
+\kulemt@def@master{usp}{E1N{}%
+  {Master of Science in Urbanism and Strategic Planning}{}%
+  {{sp:option Spatial Planning}%
+   {u:option Urbanism}}}
+%
+\kulemt@end@master@def
+%    \end{macrocode}
+%
+% \subsection{Local definitions}
+% If you don't agree with the default titles of the jury members (promoter,
+% assessor, assistant), you can redefine them here. These definitions are
+% inspired by the official KU~Leuven translations and by suggestions from
+% the faculty.
+%    \begin{macrocode}
+\def\kulemt@paa@#1{%
+  \ifcase #1%
+    \kulemt@ifdutch
+      {Promotor\kulemt@ifand\kulemt@promotor{en}{}}%
+      {Thesis supervisor\kulemt@ifand\kulemt@promotor{s}{}}%
+  \or
+    \kulemt@ifdutch
+      {Assessor\kulemt@ifand\kulemt@assessor{en}{}}%
+      {Assessor\kulemt@ifand\kulemt@assessor{s}{}}%
+  \or
+    \kulemt@ifdutch
+      {Begeleider\kulemt@ifand\kulemt@assistant{s}{}}%
+      {Mentor\kulemt@ifand\kulemt@assistant{s}{}}%
+  \fi}
+%    \end{macrocode}
+% \iffalse
+%</config>
+% \fi
+%
+%
+% \Finale
+\endinput
+
+%% Local Variables:
+%% ispell-check-comments: exclusive
+%% End:

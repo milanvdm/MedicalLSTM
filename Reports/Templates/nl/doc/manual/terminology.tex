@@ -1,0 +1,110 @@
+\newenvironment{termlist}%
+ {\renewcommand*\descriptionlabel[1]{\hspace\labelsep
+    \normalfont\scshape ##1}%
+  \let\olditem\item
+  \renewcommand*\item[1][??]{\olditem[##1]\leavevmode\newline\ignorespaces}%
+  \newcommand*\latex{\unskip\quad\upshape (LaTeX)}%
+  \description}%
+ {\enddescription}
+
+\chapter{Terminology}
+\label{cha:terminology}
+\begin{termlist}
+\item[Back matter]
+  The back matter conveys information ancillary to that in the main matter,
+  such as a bibliography, an index, or a glossary.
+\item[Copyright page]
+  Second (unnumbered) page of the thesis, containing the copyright
+  statements. It is part of the front pages.
+\item[Cover page]
+  The cover page (\Dutch{kaft} in Dutch) is the outside front page.
+  Although it is part of the front pages, it is not part of the printed or
+  electronic thesis. It is generated separately.
+\item[Document class option \latex]
+  A document class option can only be used as an option of the
+  \cs{documentclass} command.
+\item[Engine \latex]
+  In TeX parlance, the engine is the program which compiles the TeX
+  document using a macro package. Several engines currently exist: TeX (the
+  original by D.\ Knuth, outputting \file{.dvi}), eTeX (TeX with some
+  extended capabilities), pdfTeX (extended eTeX and additional \PDF\
+  output), XeTeX (eTeX which can use system fonts), and \mbox{LuaTeX}
+  (scriptable pdfTeX, still under development). All these engines can
+  preload the LaTeX macro package. On modern systems, \file{latex} means
+  pdfTeX in compatibility mode (equivalent to the TeX engine) with LaTeX
+  preloaded and \file{pdflatex} means pdfTeX with LaTeX preloaded
+  (generating \file{.pdf} output).
+\item[Filing card]
+  The filing card (\Dutch{fiche} in Dutch) is a one-page summary containing
+  all administrative information about the thesis. When included in the
+  text, it is part of the back matter.
+\item[Font]
+  A font is a set of visual representations of characters in a specific
+  typeface.
+\item[Font family]
+  A font family is a set of fonts designed to work harmoniously together.
+  Typically this means at least a roman font and an italic font. But it can
+  be extended to combinations of serif and sans-serif fonts.
+\item[Front matter]
+  The front matter is the part of the thesis, which contains the
+  introductory material such as a preface, an abstract, and content lists
+  (table of contents, list of tables, list of figures, list of symbols, etc.).
+\item[Front pages]
+  In this text the front pages refer to the the cover page, the title page
+  and the copyright page.
+\item[Leading]
+  Leading is the vertical space between two lines of text. The line spacing
+  is the font size plus the leading.
+\item[Main matter]
+  The main matter is the middle part of the thesis, between the front and
+  the back matter. It contains the actual information of the thesis in
+  regular chapters and appendices.
+\item[Master language]
+  The master language refers to the official language of the master.
+  Usually it is the same as the text language but not necessarily.
+\item[Once-only option \latex]
+  A once-only option can only be used once, either as an argument of a
+  \cs{setup} command or as an option of the \cs{documentclass} command.
+\item[Optical alignment of margins]
+  Some characters (e.g., punctuation) can make a line appear shorter than
+  others to the human eye. Shifting such characters by an appropriate
+  amount into the margins (called character protrusion) gives the impression
+  that the margins are aligned and not ragged.
+\item[Point (pt)]
+  A point (pt) is a printer's unit: $72.27\,\mathrm{pt} = 1\,\mathrm{inch} =
+  25.4\,\mathrm{mm}$. PostScript and other popular software, such as word
+  processors, use a slightly larger point size: $72\,\mathrm{pt} =
+  1\,\mathrm{inch}$.
+\item[Preamble \latex]
+  The document preamble is the part of a LaTeX document, which comes before
+  the \verb"\begin{document}" command.
+\item[Protrusion]
+  See `Optical alignment of margins'.
+\item[Recto page]
+  The recto page is the right-hand page of a printed book. It normally
+  corresponds to odd numbered pages.
+\item[Repeatable option \latex]
+  A repeatable option can be used as an option of the \cs{documentclass}
+  command or as an argument of a \cs{setup} command. It can be used
+  multiple times without problem.
+\item[Serif]
+  A serif is a cross stroke at the bottom of a letter. Compare a serif and
+  a sans-serif typeface: ``{\fontfamily{lmr}\selectfont A serif}'' and
+  ``{\fontfamily{lmss}\selectfont A sans-serif}''.
+\item[Text language]
+  The text language refers to the language used to write the text in.
+  Usually it is the same as the master language but not necessarily.
+\item[Title page]
+  The first (unnumbered) page of the thesis. It is part of the front pages.
+\item[Typeface]
+  A typeface is a visual style to represent characters, regardless of their
+  size. This sentence uses the typeface `\rmfontname'. 
+\item[Verso page]
+  The verso page is the left-hand page of a printed book. It normally
+  corresponds to even numbered pages.
+\end{termlist}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "kulemt"
+%%% End: 

@@ -1,0 +1,72 @@
+\newcommand*\showfile[1]{%
+  \begingroup
+    \setverbatimfont{\normalfont\ttfamily\footnotesize}%
+    \bvperpagefalse
+    \linenumberfrequency{1}\resetbvlinenumber
+    \linenumberfont{\rmfamily\tiny}%
+    \bvnumbersoutside
+    \renewcommand*\bvtoprulehook{%
+      \hrule width\linewidth \nobreak
+      \hbox to\linewidth{%
+        \hss \smash{\colorbox[gray]{.9}{\ttfamily\enspace #1\enspace}}\qquad}%
+      \nobreak\vskip-.1pt\nobreak\vskip-\lineskip\relax}%
+    \boxedverbatiminput{../#1}%
+    \tracingnone
+  \endgroup}
+
+\chapter{LaTeX Template}
+\label{app:template}
+LaTeX templates are provided for a Dutch master as well as for an English
+master. The Dutch and English examples can be found respectively in the
+directories `\file{sjabloon}' and `\file{template}' of the documentation
+directory (the directory where the file you're reading is installed). For
+each main file (either \file{masterproef.tex} or \file{thesis.tex}) the
+resulting typeset \PDF\ file is available as a reference.
+
+The following sections give examples of the most important files of the
+template: the main file (\Sref{sec:file:main}), a sample chapter
+(\Sref{sec:file:chap}), and the bibliography database
+(\Sref{sec:file:bib}). Translated versions for a Dutch master can be found
+in the directory `\file{sjabloon}'. Finally \Sref{sec:file:hoofd} gives an
+example of a main file for a Dutch master but written in English.
+
+All the examples below use the \pkg{lipsum} package to generate dummy text.
+Of course this is only needed as an example to quickly generate a lot of
+text. Because you will never need it in your real text, you can start by
+removing all invocations of \cs{lipsum} in all files as well as the lines
+30--37 of the main files (\Sref{sec:file:main} and \Sref{sec:file:hoofd}).
+
+You can also ignore the last four lines of each \file{.tex} file. These
+comment lines are only used by the Emacs editor to easily edit and compile
+multi-file LaTeX documents.
+
+\section{The main file}
+\label{sec:file:main}
+\showfile{template/thesis.tex}
+
+\section{A sample chapter}
+\label{sec:file:chap}
+\showfile{template/chap-1.tex}
+
+\section{The bibliography database}
+\label{sec:file:bib}
+\showfile{template/references.bib}
+
+\section{The main file of an English text for a Dutch master}
+\label{sec:file:hoofd}
+
+The main differences between an English text for an English master
+(\Sref{sec:file:main}) and an English text for an Dutch master are:
+\begin{itemize}
+\item the use of the \opt{english} option (line~1);
+\item a translated title is needed for a Dutch master (line~9);
+\item an additional \env{abstract*} environment is needed (lines 57--63).
+\end{itemize}
+\medskip
+
+\showfile{template/masterproef.tex}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "kulemt"
+%%% End: 

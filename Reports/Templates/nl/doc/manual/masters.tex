@@ -1,0 +1,125 @@
+\chapter{Information about the masters}
+
+This \ifanappendix appendix \else chapter \fi gives an overview of the
+masters of the Faculty of Engineering. These masters are supported by
+default by the LaTeX document class \cls{kulemt}. But all of this
+information is also valid for non-LaTeX documents.
+
+A first section gives an overview of the predefined master colors. The
+second section describes the additional master information which is stored
+in the \file{kulemt.cfg} configuration file.
+
+\section{Master colors}
+\label{sec:mastercolors}
+The master colors are shown below for all masters which have colors defined
+by the Faculty of Engineering. These are the official colors, which means
+that only the Faculty can change them. If a master wants to have its colors
+added or changed, it should contact the Faculty secretary.
+
+All colors should be defined as coordinates in the \acro{CMYK} color space
+which is normally used by printers. White corresponds to $(0,0,0,0)$ and
+black to $(0,0,0,1)$ in \acro{CMYK}.
+
+\begingroup
+\makeatletter
+\let\kulemt@end@master@def\endinput
+\renewcommand*\kulemt@def@master[2]{%
+  \kulemt@set@master#2{}{}{}\@nil
+  \ifx\kulemt@master@colors\@empty\else
+    \par\bigskip
+    \expandafter\kulemt@getcolors\kulemt@master@colors::\@nil
+    \centerline{\fboxsep\z@
+      \expandafter\colorbox\kulemt@color@bg{%
+        \vbox to 11mm{\vss \centering
+          \fontencoding{T1}\fontfamily{kulemtfpf}%
+          \fontseries\bfdefault\selectfont
+          \expandafter\textcolor\kulemt@color@fg{%
+            \kulemt@master@title}\vss}}}\nobreak
+    \centerline{%
+      Background color: \expandafter\printcolor\kulemt@color@bg\@nil\hfill
+      Text color: \expandafter\printcolor\kulemt@color@fg\@nil}%
+  \fi}
+\newcommand*\printcolor{\@ifnextchar[\printcolor@\printcolor@@}
+\newcommand*\printcolor@{}
+\def\printcolor@[#1]#2\@nil{$(#2)$%
+  \uppercase{\def\@tempa{#1}}\def\@tempb{CMYK}%
+  \ifx\@tempa\@tempb\else ~in~\acro\@tempa!\fi}
+\newcommand*\printcolor@@{}
+\def\printcolor@@ #1\@nil{\def\@tempa{#1}%
+  \def\@tempb{black}\ifx\@tempa\@tempb $(0,0,0,1)$\else
+    \def\@tempb{white}\ifx\@tempa\@tempb $(0,0,0,0)$\else #1\fi\fi}
+\input{kulemt.cfg}
+\endgroup
+
+\section{Additional information from \file{kulemt.cfg}}\label{sec:mastercfg}
+The master specific information is stored in the \file{kulemt.cfg} file.
+Apart from the master color information described in the previous section,
+it contains information about the master language, its faculty, the need
+for a filing card, known master options, and copyright contact information.
+
+\begingroup
+\makeatletter
+\@ifundefined{microtypesetup}{}{\microtypesetup{protrusion=false}}%
+\let\kulemt@end@master@def\endinput
+\def\ProvidesFile #1[#2]{%
+  This section describes the \file{#1} file dated \printdateTeX{#2}.
+  If no faculty name is shown, the master is an inter-faculty
+  master.\par\raggedright}
+\renewcommand*\kulemt@div@master[1]{\subsection{#1}}
+\sideparswitchfalse \reversesidepartrue
+\newcommand*\optionHangfrom{}
+\newcommand*\handleOption[2]{%
+  \ifvmode \@hangfrom{\optionHangfrom}\else \break \fi
+  \textbf{--} \ \texttt{#1} (`#2')}
+\newcommand*\printmasterinfo[2]{\par
+  \addvspace\medskipamount \parindent\z@
+  \kulemt@filingcardfalse \kulemt@set@master#2{}{}{}\@nil
+  \leavevmode\sidepar{\raggedleft\texttt{#1}}\textsc{\kulemt@master@title}\par
+  \nobreak \expandafter\MakeUppercase\kulemt@master@language\space master%
+  \edef\@tempa{\kulemt@fac@name}\ifx\@tempa\@empty\else\space of the \@tempa\fi.
+  A filing card is \ifkulemt@filingcard\else not \fi required.\par
+  \nobreak \@hangfrom{Contact info: }\kulemt@contact@print\par
+  \nobreak
+  \ifx\kulemt@master@options@vl\relax
+    The master doesn't allow you to mention a master option.%
+  \else\ifx\kulemt@master@options@vl\@empty
+    The master doesn't require you to mention a master option.%
+  \else
+    One of the following master options \emph{must} be used:
+    \def\@tempb{}\@for\@tempa:=\kulemt@master@options@vl\do{%
+      \@tempb\texttt{\@tempa}\def\@tempb{, }}.%
+  \fi\fi \par
+  \@tempswatrue \ifx\kulemt@master@options@v\@empty
+    \ifx\kulemt@master@options@o\@empty \@tempswafalse \fi\fi
+  \if@tempswa
+    \nobreak Known master option abbreviations:\par%\tracingall
+    \ifx\kulemt@master@options@v\@empty\else
+      \def\optionHangfrom{\quad}%
+      \nobreak \kulemt@handle@mo\kulemt@master@options@v\handleOption \par
+    \fi
+    \ifx\kulemt@master@options@o\@empty\else
+      \def\optionHangfrom{\quad obsolete: \ }%
+      \nobreak \kulemt@handle@mo\kulemt@master@options@o\handleOption \par
+    \fi
+  \fi}
+\let\kulemt@def@master\printmasterinfo
+\newif\ifobsoletemaster
+\renewcommand*\kulemt@obsolete@master[3][]{\obsoletemastertrue}
+\input{kulemt.cfg}
+\subsection{Obsolete masters}\label{sec:obsoletemasters}
+\ifobsoletemaster
+  \def\ProvidesFile #1[#2]{}
+  \let\kulemt@div@master\@gobble
+  \renewcommand*\kulemt@def@master[2]{}
+  \renewcommand*\kulemt@obsolete@master[3][]{%
+    \printmasterinfo{#2\if &#1&\else .#1\fi}{#3}}
+  \input{kulemt.cfg}
+\else
+  In this file, no obsolete masters are defined.\par
+\fi
+\endgroup
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "kulemt"
+%%% End: 
