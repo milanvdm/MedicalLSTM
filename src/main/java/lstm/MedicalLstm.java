@@ -146,12 +146,12 @@ public class MedicalLstm {
 		 * are shown for one frame only in addition to the target shape) but these are disabled by default.
 		 * These can be enabled to increase the complexity of the learning task.
 		 */
-		VideoGenerator.generateVideoData(path, "shapes", N_VIDEOS_TO_GENERATE,
-				V_NFRAMES, V_WIDTH, V_HEIGHT,
-				3,      //Number of shapes per video. Switches from one shape to another randomly over time
-				false,   //Background noise. Significantly increases video file size
-				0,      //Number of distractors per frame ('distractors' are shapes show for one frame only)
-				12345L);    //Seed, for reproducability when generating data
+		//VideoGenerator.generateVideoData(path, "shapes", N_VIDEOS_TO_GENERATE,
+		//		V_NFRAMES, V_WIDTH, V_HEIGHT,
+		//		3,      //Number of shapes per video. Switches from one shape to another randomly over time
+		//		false,   //Background noise. Significantly increases video file size
+		//		0,      //Number of distractors per frame ('distractors' are shapes show for one frame only)
+		//		12345L);    //Seed, for reproducability when generating data
 	}
 
 	private static void evaluatePerformance(MultiLayerNetwork net, int testStartIdx, int nExamples, String outputDirectory) throws Exception {

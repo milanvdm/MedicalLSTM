@@ -15,6 +15,7 @@ import scala.NotImplementedError;
 import state2vec.KNNLookupTable;
 
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -106,6 +107,19 @@ public class MedicalSequenceReader implements SequenceRecordReader {
 	public void setConf(Configuration arg0) {
 		throw new NotImplementedError();
 		
+	}
+
+	@Override
+	public Collection<Writable> record(URI uri, DataInputStream dataInputStream) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Collection<Writable>> sequenceRecord(URI uri, DataInputStream dataInputStream)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

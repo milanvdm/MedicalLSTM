@@ -22,10 +22,6 @@ import java.util.Map;
 
 import javax.ws.rs.NotFoundException;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.CSVWriter;
-
 import util.HelpFunctions;
 
 public class MergeOSIMData {

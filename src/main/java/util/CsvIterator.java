@@ -2,6 +2,7 @@ package util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -22,6 +23,16 @@ public class CsvIterator implements Iterator<String[]> {
 	
 	public CsvIterator(File file) throws IOException, InterruptedException {
 		this.csvReader = new CSVRecordReader(1, ",");
+		FileSplit split = new FileSplit(file);
+
+		csvReader.initialize(split);
+		
+		this.readData = csvReader.next();
+		this.data = new String[readData.size()];
+	}
+	
+	public CsvIterator(File file, String delimeter) throws IOException, InterruptedException {
+		this.csvReader = new CSVRecordReader(1, delimeter);
 		FileSplit split = new FileSplit(file);
 
 		csvReader.initialize(split);
@@ -61,14 +72,14 @@ public class CsvIterator implements Iterator<String[]> {
 
 		try
 		{
-			Collection<Writable> readData = csvReader.next();
+			readData = csvReader.next();
 			data = new String[readData.size()];
 		}
 		catch ( Exception e )
 		{
 			data = null;
 		}
-
+		
 		return toReturn;
 	}
 

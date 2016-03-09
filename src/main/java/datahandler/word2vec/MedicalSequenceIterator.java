@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;

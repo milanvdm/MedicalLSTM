@@ -136,8 +136,8 @@ public class State2Vec {
 	            objects/relations please take care of Labels uniqueness and meaning for yourself.
 			 */
 
-			//logger.info("Plotting State2Vec");
-			//vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
+			logger.info("Plotting State2Vec");
+			vectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
 			
 			logger.info("Started saving the model");
 			//saveState2VecModel(vectors); // Find another method to Safe
