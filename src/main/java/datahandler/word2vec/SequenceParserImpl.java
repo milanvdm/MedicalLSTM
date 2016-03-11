@@ -1,26 +1,36 @@
 package datahandler.word2vec;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 
 import data.Drug;
 import data.StateImpl;
 import util.Constants;
+import util.CsvIterator;
 
 public class SequenceParserImpl implements SequenceParser {
-
+	
+	private static Map<String, String> matches = null;
+	private static List<String> icd = null;
+	
+	private static final String MAPPING_PATH;
+	private static final String ICD_PATH;
+ 
 
 	@Override
-	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException {
+	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException, IOException, InterruptedException {
 		return convertListToSequence(states);
 	}
 
-	private Sequence<StateImpl> convertListToSequence(List<String []> states) throws ParseException {
+	private Sequence<StateImpl> convertListToSequence(List<String []> states) throws ParseException, IOException, InterruptedException {
 		Sequence<StateImpl> sequence = new Sequence<StateImpl>();
 
 		int i = 0;
@@ -44,7 +54,7 @@ public class SequenceParserImpl implements SequenceParser {
 	}
 
 	// "1","09-dec-2003","1","1942","8532","65","Condition Era","35305814","[]"
-	private StateImpl getState(String[] state) throws ParseException {
+	private StateImpl getState(String[] state) throws ParseException, IOException, InterruptedException {
 
 		double timeDifference = 0;
 		
@@ -52,7 +62,7 @@ public class SequenceParserImpl implements SequenceParser {
 
 	}
 	
-	private StateImpl getState(String [] state1, String [] state2) throws ParseException {
+	private StateImpl getState(String [] state1, String [] state2) throws ParseException, IOException, InterruptedException {
 
 		SimpleDateFormat parserSDF = new SimpleDateFormat("dd-MMM-yyyy");
 
@@ -70,7 +80,7 @@ public class SequenceParserImpl implements SequenceParser {
 
 	}
 	
-	private StateImpl getSingleState(String[] state, double timeDifference) throws ParseException {
+	private StateImpl getSingleState(String[] state, double timeDifference) throws ParseException, IOException, InterruptedException {
 		
 		List<Object> completeState = new ArrayList<Object>();
 		
@@ -98,7 +108,7 @@ public class SequenceParserImpl implements SequenceParser {
 		completeState.add(genderConcept);
 		completeState.add(conditionType);
 		completeState.add(conditionTypeDesc);
-		completeState.add(condition); //TODO: Get general condition
+		completeState.add(decideICDCategory(condition)); 
 		completeState.add(drugs);
 
 		completeState.add(getGeneralTimeDifference(timeDifference));
@@ -215,6 +225,65 @@ public class SequenceParserImpl implements SequenceParser {
             return 2.0;
         }
         else return 3.0;
+	}
+	
+	private Double decideICDCategory(double condition) throws IOException, InterruptedException {
+		if(matches == null || icd == null) {
+			readMatches();
+			getIcdTopLevelList();
+		}
+		
+		String conditionString = Double.toString(condition);
+		String icd = getIcdTopLevel(matches.get(conditionString));
+		
+		return getIcdDouble(icd);
+		
+		
+	}
+
+	private Double getIcdDouble(String icd) {
+		// A00.-
+		String toConvert = icd.replace(".-", "");
+		
+		StringBuilder sb = new StringBuilder();
+	    	for (char c : toConvert.toCharArray()) {
+	    		sb.append((int) c);
+	    	}
+	    			
+
+	    Double toReturn = new Double(sb.toString());
+		
+		return toReturn;
+	}
+
+	private String getIcdTopLevel(String fullCode) {
+		return fullCode.substring(0, 2) + ".-";
+	}
+
+	private void getIcdTopLevelList() throws IOException, InterruptedException {
+		CsvIterator iter = new CsvIterator(new File(ICD_PATH));
+		
+		while(iter.hasNext()) {
+			String[] line = iter.next();
+			
+			if(line[0].contains("-")) {
+				icd.add(line[0]);
+			}
+		}
+		
+	}
+
+	private void readMatches() throws IOException, InterruptedException {
+		CsvIterator iter = new CsvIterator(new File(MAPPING_PATH));
+		
+		//OMOP,DESC,ICD,DESC
+		while(iter.hasNext()) {
+			String[] line = iter.next();
+			
+			matches.put(line[0], line[2]);
+		}
+		
+		
 	}
 
 }

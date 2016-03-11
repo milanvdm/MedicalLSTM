@@ -1,5 +1,6 @@
 package datahandler.word2vec;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -10,6 +11,6 @@ import data.StateImpl;
 
 public interface SequenceParser {
 	
-	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException;
+	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException, IOException, InterruptedException;
 
 }
