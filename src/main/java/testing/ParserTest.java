@@ -1,16 +1,38 @@
 package testing;
 
 
+import java.io.File;
+
+import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+
+import data.StateImpl;
+import datahandler.word2vec.MedicalSequenceIterator;
+import util.Constants;
+
 public class ParserTest {
-	
+
 	public static void main(String[] args) throws Exception {
-		String line = "181010622,31-jan-2004,1,1942,8532,65,Condition Era,500000301,[[7;Drug Era - 30 day window;30;1549080;18] - [7;Drug Era - 30 day window;30;1797513;17]]";
-	
+		File file = new File(Constants.INPUT_CSV_TEST);
+
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file);
+
+
+		while(sequenceIterator.hasMoreSequences()) {
+			Sequence<StateImpl> sequence = sequenceIterator.nextSequence();
+			
+		}
+
+		sequenceIterator.reset();
+
 		
-				
-				
-	
+
+
+
+
+
+
+
 	}
-	
+
 
 }

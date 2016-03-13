@@ -9,11 +9,15 @@ import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
 import util.HelpFunctions;
 
 public class KNNLookupTable<T extends SequenceElement> {
+	
+	private static final Logger logger = LoggerFactory.getLogger(KNNLookupTable.class);
 	
 	/**
 	 * Use this class to feed in the data to the RNN!
@@ -38,24 +42,29 @@ public class KNNLookupTable<T extends SequenceElement> {
 		calculateMeanStd();
 	}
 	
-	//TODO: Check if this is correct!
 	private void calculateMeanStd() {
 		INDArray wordLabels = null;
 		
 		boolean first = true;
+		int rowNb = 0;
 		for(String word: vectors.getVocab().words()) {
+			
+			double[] label = HelpFunctions.parse(word);
+			
 			if(first) {
-				wordLabels = Nd4j.create(vectors.getVocab().numWords(), word.length());
+				wordLabels = Nd4j.create(vectors.getVocab().numWords(), label.length);
+				
 				first = false;
 			}
 			
-			double[] label = HelpFunctions.parse(word);
-			wordLabels = Nd4j.vstack(wordLabels, Nd4j.create(label));
+			wordLabels.putRow(rowNb, Nd4j.create(label));
 			
+			rowNb++;
 		}
 		
 		this.columnMeans = wordLabels.mean(0);
 	    this.columnStds = wordLabels.std(0).addi(Nd4j.scalar(Nd4j.EPS_THRESHOLD));
+	   
 		
 	}
 	private List<Double> calculateWeights() {
@@ -81,19 +90,36 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return toReturn;
 	}
 
-	//TODO: Check if ToString is correct from INDArray
 	public INDArray addSequenceElementVector(StateImpl sequenceElement) {
 		
 		String label = sequenceElement.getLabel();
 		INDArray result = null;
 		
 		if(!vectors.hasWord(label)) {
+			
+			logger.debug("Didn't find word in vocab!");
+			
 			List<DataPoint> kNearestNeighbours = nearestNeighbourLookup(sequenceElement); // KNN lookup 
+			
+			logger.debug(Integer.toString(kNearestNeighbours.size()));
 			
 			List<INDArray> wordVectors = new ArrayList<INDArray>();
 			for(DataPoint neighbour: kNearestNeighbours) {
 				
-				wordVectors.add(vectors.getWordVectorMatrix(neighbour.getPoint().toString()));
+				INDArray unNormalize = neighbour.getPoint();
+				INDArray point = unNormalize.muli(columnStds).addi(columnMeans);
+				
+				List<Double> labelList = new ArrayList<Double>();
+				int i = 0;
+				while(i < point.columns()) {
+					double toAdd = point.getDouble(i);
+					labelList.add(toAdd);
+					i++;
+				}
+				
+				String neighbourLabel = labelList.toString();
+				
+				wordVectors.add(vectors.getWordVectorMatrix(neighbourLabel));
 			}
 			
 			// gewogen gemiddelde van de arrays = 0.8 * array1 + 0.2 * array2
@@ -114,6 +140,8 @@ public class KNNLookupTable<T extends SequenceElement> {
 			
 		}
 		else {
+			
+			logger.debug("Found word in vocab!");
 			result = vectors.getLookupTable().vector(label);
 		}
 		
@@ -124,6 +152,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 	private List<DataPoint> nearestNeighbourLookup(StateImpl label) {
 		
 		if(tree == null) { // Tree hasn't been build yet.
+			
 			List<DataPoint> points = new ArrayList<>();
 			
 			int index = 0;
@@ -138,6 +167,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 			}
 			
 	        tree = new VPTree(points);
+	        
 		}
 		
         List<DataPoint> results = new ArrayList<>();

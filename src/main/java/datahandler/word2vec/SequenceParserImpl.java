@@ -6,10 +6,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import data.Drug;
 import data.StateImpl;
@@ -18,11 +21,13 @@ import util.CsvIterator;
 
 public class SequenceParserImpl implements SequenceParser {
 	
+	private static final Logger logger = LoggerFactory.getLogger(SequenceParserImpl.class);
+	
 	private static Map<String, String> matches = null;
 	private static List<String> icd = null;
 	
-	private static final String MAPPING_PATH;
-	private static final String ICD_PATH;
+	private static final String MAPPING_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/mapping.csv";
+	private static final String ICD_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/care_icd10_en.csv";
  
 
 	@Override
@@ -85,9 +90,11 @@ public class SequenceParserImpl implements SequenceParser {
 		List<Object> completeState = new ArrayList<Object>();
 		
 		SimpleDateFormat parserSDF = new SimpleDateFormat("dd-MMM-yyyy");
+		SimpleDateFormat parserSDFSeason = new SimpleDateFormat("dd-MMM");
 		
 		double conditionId = Double.parseDouble(state[Constants.CONDITION_ID_COLUMN]);
 		Date date = parserSDF.parse(state[Constants.DATE_COLUMN]);
+		Date seasonDate = parserSDFSeason.parse(state[Constants.DATE_COLUMN]);
 		double patientNumber = Double.parseDouble(state[Constants.PATIENTNUMBER_COLUMN]);
 		double birthYear = Double.parseDouble(state[Constants.BIRTH_YEAR_COLUMN]);
 		double genderConcept = Double.parseDouble(state[Constants.GENDER_CONCEPT_COLUMN]);
@@ -112,7 +119,7 @@ public class SequenceParserImpl implements SequenceParser {
 		completeState.add(drugs);
 
 		completeState.add(getGeneralTimeDifference(timeDifference));
-		completeState.add(decideSeason(date));
+		completeState.add(decideSeason(seasonDate));
 		
 		return new StateImpl(completeState);
 		
@@ -122,23 +129,14 @@ public class SequenceParserImpl implements SequenceParser {
 		if(timeDifference <= 0) {
 			return 0.0;
 		}
-		else if(timeDifference <= 5) {
+		else if(timeDifference <= 10) {
 			return 1.0;
 		}
-		else if(timeDifference <= 10) {
+		else if(timeDifference <= 20) {
 			return 2.0;
 		}
-		else if(timeDifference <= 15) {
-			return 3.0;
-		}
-		else if(timeDifference <= 20) {
-			return 4.0;
-		}
-		else if(timeDifference <= 25) {
-			return 5.0;
-		}
 		else {
-			return 6.0;
+			return 3.0;
 		}
 	}
 
@@ -233,7 +231,8 @@ public class SequenceParserImpl implements SequenceParser {
 			getIcdTopLevelList();
 		}
 		
-		String conditionString = Double.toString(condition);
+		String conditionString = String.format("%.0f", condition);
+		
 		String icd = getIcdTopLevel(matches.get(conditionString));
 		
 		return getIcdDouble(icd);
@@ -249,19 +248,21 @@ public class SequenceParserImpl implements SequenceParser {
 	    	for (char c : toConvert.toCharArray()) {
 	    		sb.append((int) c);
 	    	}
-	    			
-
+	    	
 	    Double toReturn = new Double(sb.toString());
 		
 		return toReturn;
 	}
 
 	private String getIcdTopLevel(String fullCode) {
-		return fullCode.substring(0, 2) + ".-";
+		String toReturn = fullCode.substring(0, 3) + ".-";
+		return toReturn;
 	}
 
 	private void getIcdTopLevelList() throws IOException, InterruptedException {
 		CsvIterator iter = new CsvIterator(new File(ICD_PATH));
+		
+		icd = new ArrayList<String>();
 		
 		while(iter.hasNext()) {
 			String[] line = iter.next();
@@ -275,6 +276,8 @@ public class SequenceParserImpl implements SequenceParser {
 
 	private void readMatches() throws IOException, InterruptedException {
 		CsvIterator iter = new CsvIterator(new File(MAPPING_PATH));
+		
+		matches = new HashMap<String, String>();
 		
 		//OMOP,DESC,ICD,DESC
 		while(iter.hasNext()) {

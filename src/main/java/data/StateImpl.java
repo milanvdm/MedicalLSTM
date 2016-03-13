@@ -3,20 +3,22 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.deeplearning4j.models.sequencevectors.sequence.SequenceElement;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import testing.KnnTest;
 import util.Constants;
 import util.HelpFunctions;
 
 public class StateImpl extends SequenceElement implements State  {
 	
-	//TODO: Condition ID algemener
+	protected static final Logger logger = LoggerFactory.getLogger(StateImpl.class);
 
 	private static final long serialVersionUID = -5953078372301913975L;
 	
@@ -87,14 +89,16 @@ public class StateImpl extends SequenceElement implements State  {
 		
 	}
 	
-	
+	//BIRTH_YEAR, GENDER_CONCEPT, 
 	private List<Double> convertToLabel(List<Object> completeState) {
 		List<Object> trimmedList = new ArrayList<Object>();
 		
-		for(Object toCheck: completeState) {
-			if(!Constants.COLUMS_TO_IGNORE.contains(completeState.indexOf(toCheck))) {
-				trimmedList.add(toCheck);
+		int i = 0;
+		while(i < completeState.size()) {
+			if(!Constants.COLUMS_TO_IGNORE.contains(i)) {
+				trimmedList.add(completeState.get(i));
 			}
+			i++;
 		}
 		
 		List<Double> castedList = new ArrayList<Double>();
@@ -104,8 +108,7 @@ public class StateImpl extends SequenceElement implements State  {
 			castedList.add(toAdd);
 		}
 		
-		List<Double> toReturn = new ArrayList<Double>(castedList);
-		return toReturn;
+		return castedList;
 	}
 
 	@Override
@@ -124,9 +127,12 @@ public class StateImpl extends SequenceElement implements State  {
 	}
 	
 	public INDArray getState2vecLabelNormalized(INDArray mean, INDArray std) {
+		
 		double[] primitive = HelpFunctions.ListToPrimitiveDouble(state2vecLabel);
 		
-		INDArray normalized = Nd4j.create(primitive).subi(mean).divi(std);
+		INDArray toNormalize = Nd4j.create(primitive);
+		
+		INDArray normalized = toNormalize.subi(mean).divi(std);
 		
 		return normalized;
 	}
