@@ -110,16 +110,39 @@ We use $w^l_{jk}$ to denote the weight corresponding to the connection between t
 We can now convert these notation to a vector representation. We remove the indexes for the node numbers which results in the following:
 
 \begin{equation} 
-a^l = \Delta (w^la^{l-1}+b^l)
+a^l = \sigma (w^la^{l-1}+b^l)
 \end{equation}
 
 		\subsubsection{Cost function}
 		
-AS mentioned before, backpropagation has as goal to calculate the partial derivatives of the cost function with respect to each weight. \\
+AS mentioned before, backpropagation has as goal to calculate the partial derivatives of the cost function $C$ with respect to each weight and bias. \\
 The cost function has to fulfill certain criteria. The first one is that it needs to be possible to write it as a summation over cost functions for individual training examples. Secondly, it needs to be derivable. And lastly, the cost function is a function of the activations of the last layer. 
 
 
 		\subsubsection{Fundamental equations}
+
+Backpropagation has 4 equations. They allow us to calculate the error for each node and adjust the weights based on the gradient descent. \\
+
+First we calculate the error of each node which is based on how much the cost function is influenced by each activation and on how much the activation function is influenced by $z_j^L$:
+
+\begin{equation} 
+\delta^L_j = \frac{\partial C}{\partial a^L_j} \sigma'(z_j^L)
+\text{ with }
+z_j^L = \sum_k w^L_{jk}a^{L-1}_k+b^L_j
+\end{equation}
+
+This can be written as a neat vector equation:
+
+\begin{equation} 
+\delta^L = (a^L-y) \circ \sigma'(z_j^L)
+\end{equation}
+
+The next equation explains why the algorithm is called backpropagation. The equation calculates each layers error vector based on the layer after it, it propagates the error back over the layers:
+
+\begin{equation} 
+\delta^l = ((w^{l+1)^T\delta^{l+1}) \circ \sigma'(z_j^L)
+\end{equation}
+
 
 
 
