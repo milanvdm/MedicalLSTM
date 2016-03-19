@@ -1,9 +1,5 @@
 \graphicspath{ {LiteratureStudyImages/} }
 
-%%%%%%%%%%%
-% TODO
-% This chapter has to give insights into current research and applications.
-%%%%%%%%%%%
 
 \chapter{Literature Study}
 \label{cha:literatureStudy}
@@ -98,13 +94,48 @@ Because of the linearity, it is now possible to choose changes for the weights a
 		
 	\subsection{Backpropagation}
 	
+Backpropagation is an algorithm which is used to train neural networks. It calculates the gradient of a chosen loss function with respect to the individual weights. With the gradient, the weights are updated and the loss function is minimized.
 
+		\subsubsection{Terminology}
 		
+We use $w^l_{jk}$ to denote the weight corresponding to the connection between the $k^{th}$ node in the $(l-1)^{th}$ layer to the $j^{th}$ node in the $l^{th}$ layer. We use $b^l_j$ for the bias of the $j^{th}$ node in the $l^{th}$ layer and $a^l_j$ for the activation of the $j^{th}$ node in the $l^{th}$ layer. See figure \ref{fig:termNN}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{smallChange.png}
+	\caption{Visual representation of the terminology for a neural network.}
+	\label{fig:termNN}
+\end{figure} 
+
+We can now convert these notation to a vector representation. We remove the indexes for the node numbers which results in the following:
+
+\begin{equation} 
+a^l = \Delta (w^la^{l-1}+b^l)
+\end{equation}
+
+		\subsubsection{Cost function}
+		
+AS mentioned before, backpropagation has as goal to calculate the partial derivatives of the cost function with respect to each weight. \\
+The cost function has to fulfill certain criteria. The first one is that it needs to be possible to write it as a summation over cost functions for individual training examples. Secondly, it needs to be derivable. And lastly, the cost function is a function of the activations of the last layer. 
+
+
+		\subsubsection{Fundamental equations}
+
+
+
+
 
 http://neuralnetworksanddeeplearning.com/chap1.html
 
+
+\section{Disease Progression}
+
 \section{Word2Vec}
 \lipsum[64]
+
+\section{Tsne projection}
+
+\section{Vantage Point Tree}
 
 \section{DeepWalk}
 \lipsum[64]
