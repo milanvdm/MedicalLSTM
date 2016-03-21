@@ -12,7 +12,7 @@ import java.util.Map;
 
 import util.CsvIterator;
 
-public class SimpleGeneralizer {
+public class SimpleGeneralizer implements Generalizer {
 	
 	private static Map<String, String> matches = null;
 	private static List<String> icd = null;

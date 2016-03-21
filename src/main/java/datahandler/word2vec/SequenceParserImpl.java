@@ -1,14 +1,11 @@
 package datahandler.word2vec;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 import org.slf4j.Logger;
@@ -17,11 +14,12 @@ import org.slf4j.LoggerFactory;
 import data.Drug;
 import data.StateImpl;
 import util.Constants;
-import util.CsvIterator;
 
 public class SequenceParserImpl implements SequenceParser {
 	
 	private static final Logger logger = LoggerFactory.getLogger(SequenceParserImpl.class);
+	
+	Generalizer generalizer = new SimpleGeneralizer();
  
 
 	@Override
@@ -105,15 +103,15 @@ public class SequenceParserImpl implements SequenceParser {
 		completeState.add(conditionId);
 		completeState.add(date);
 		completeState.add(patientNumber);
-		completeState.add(getGeneralBirthYear(birthYear));
+		completeState.add(generalizer.getGeneralBirthYear(birthYear));
 		completeState.add(genderConcept);
 		completeState.add(conditionType);
 		completeState.add(conditionTypeDesc);
-		completeState.add(decideICDCategory(condition)); 
+		completeState.add(generalizer.decideICDCategory(condition)); 
 		completeState.add(drugs);
 
-		completeState.add(getGeneralTimeDifference(timeDifference));
-		completeState.add(decideSeason(seasonDate));
+		completeState.add(generalizer.getGeneralTimeDifference(timeDifference));
+		completeState.add(generalizer.decideSeason(seasonDate));
 		
 		return new StateImpl(completeState);
 		

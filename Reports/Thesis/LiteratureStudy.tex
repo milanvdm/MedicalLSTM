@@ -102,7 +102,7 @@ We use $w^l_{jk}$ to denote the weight corresponding to the connection between t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{smallChange.png}
+	\includegraphics[width=8cm]{termNN.png}
 	\caption{Visual representation of the terminology for a neural network.}
 	\label{fig:termNN}
 \end{figure} 
@@ -140,11 +140,20 @@ This can be written as a neat vector equation:
 The next equation explains why the algorithm is called backpropagation. The equation calculates each layers error vector based on the layer after it, it propagates the error back over the layers:
 
 \begin{equation} 
-\delta^l = ((w^{l+1)^T\delta^{l+1}) \circ \sigma'(z_j^L)
+\delta^l = ((w^{l+1})^T\delta^{l+1}) \circ \sigma'(z_j^L)
 \end{equation}
 
+With those 2 equations we calculate the error in each layer in the neural network. Those errors can be used to calculate the derivatives of the cost function with respect to the weights and the biases:
 
+\begin{equation} 
+\frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j.
+\end{equation}
 
+\begin{equation} 
+\frac{\partial C}{\partial b^l_j} = \delta^l_j.
+\end{equation}
+
+When the derivatives are calculated, we can apply the gradient descent and update the weights and biases accordingly. This process represents the learning of a neural network.
 
 
 
@@ -154,21 +163,21 @@ http://neuralnetworksanddeeplearning.com/chap1.html
 \section{Disease Progression}
 
 \section{Word2Vec}
-\lipsum[64]
+
 
 \section{Tsne projection}
 
 \section{Vantage Point Tree}
 
 \section{DeepWalk}
-\lipsum[64]
+
 
 \section{Conclusion}
 The final section of the chapter gives an overview of the important results
 of this chapter. This implies that the introductory chapter and the
 concluding chapter don't need a conclusion.
 
-\lipsum[66]
+
 
 %%% Local Variables: 
 %%% mode: latex

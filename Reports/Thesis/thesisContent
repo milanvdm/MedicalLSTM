@@ -1,0 +1,51 @@
+- Introduction
+	
+- Background: write about machine learning, time series, neural networks, backpropagation
+
+- Context: Depends on chosen problem (ex. Prediction of Disease Progression | Word Embedding)
+	
+	Explain Disease codes
+	Explain Danish paper
+	Explain Word2Vec
+	=> Conclude to a problem/gap that needs to be solved
+
+	Review current literature 
+	=> Explain in general on how we are going to solve the problem
+
+- General Word2Vec Approach
+
+	Explain the method used
+	Explain Tsne
+	Explain generalization
+
+- DeepWalk
+
+	Explain deepwalk
+	Explain why
+
+
+- Software tools
+
+	TensorFlow
+	DL4J
+
+- Experiments
+
+	Set up
+	Chosen parameters
+	What we are validating
+	
+	Part about Word2Vec experiments to Danish paper
+	Part about DeepWalk experiments to complete dataset
+
+	Results
+
+- Discussion
+
+	Why does it work/not work
+
+
+- Conclusion
+
+
+- Future work
