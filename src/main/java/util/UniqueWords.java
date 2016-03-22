@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 
 import data.StateImpl;
+import datahandler.word2vec.DataNormaliser;
 import datahandler.word2vec.MedicalSequenceIterator;
 
 public class UniqueWords {
@@ -26,7 +27,11 @@ public class UniqueWords {
 		File file = new File(Constants.INPUT_CSV_TEST);
 		int minimumFrequency = 5;
 		
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file);
+		MedicalSequenceIterator<StateImpl> sequenceIteratorNorm = new MedicalSequenceIterator<>(file, false);
+		DataNormaliser normaliser = new DataNormaliser(sequenceIteratorNorm);
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file, true);
+		sequenceIterator.setNormaliser(normaliser);
+		
 		
 		int count = 0;
 		

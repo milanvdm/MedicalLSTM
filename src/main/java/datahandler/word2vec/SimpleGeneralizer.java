@@ -13,13 +13,14 @@ import java.util.Map;
 import util.CsvIterator;
 
 public class SimpleGeneralizer implements Generalizer {
-	
+
 	private static Map<String, String> matches = null;
 	private static List<String> icd = null;
-	
+
 	private static final String MAPPING_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/mapping.csv";
 	private static final String ICD_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/care_icd10_en.csv";
-	
+
+
 	public Double getGeneralTimeDifference(double timeDifference) {
 		if(timeDifference <= 0) {
 			return 0.0;
@@ -79,50 +80,50 @@ public class SimpleGeneralizer implements Generalizer {
 			return 13.0;
 		}
 	}
-	
+
 	public Double decideSeason(Date date) throws ParseException {
 		SimpleDateFormat f=new SimpleDateFormat("MM-dd");
-		
+
 		if(date.after(f.parse("04-21")) && date.before(f.parse("06-21"))){
-            return 4.0;
-        }
-        else if(date.after(f.parse("06-20")) && (date.before(f.parse("09-23"))))
-        {
-            return 1.0;
-        }
-        else if(date.after(f.parse("09-22")) && date.before(f.parse("12-22")))
-        {
-            return 2.0;
-        }
-        else return 3.0;
+			return 4.0;
+		}
+		else if(date.after(f.parse("06-20")) && (date.before(f.parse("09-23"))))
+		{
+			return 1.0;
+		}
+		else if(date.after(f.parse("09-22")) && date.before(f.parse("12-22")))
+		{
+			return 2.0;
+		}
+		else return 3.0;
 	}
-	
+
 	public Double decideICDCategory(double condition) throws IOException, InterruptedException {
 		if(matches == null || icd == null) {
 			readMatches();
 			getIcdTopLevelList();
 		}
-		
+
 		String conditionString = String.format("%.0f", condition);
-		
+
 		String icd = getIcdTopLevel(matches.get(conditionString));
-		
+
 		return getIcdDouble(icd);
-		
-		
+
+
 	}
 
 	private Double getIcdDouble(String icd) {
 		// A00.-
 		String toConvert = icd.replace(".-", "");
-		
+
 		StringBuilder sb = new StringBuilder();
-	    	for (char c : toConvert.toCharArray()) {
-	    		sb.append((int) c);
-	    	}
-	    	
-	    Double toReturn = new Double(sb.toString());
-		
+		for (char c : toConvert.toCharArray()) {
+			sb.append((int) c);
+		}
+
+		Double toReturn = new Double(sb.toString());
+
 		return toReturn;
 	}
 
@@ -133,32 +134,32 @@ public class SimpleGeneralizer implements Generalizer {
 
 	private void getIcdTopLevelList() throws IOException, InterruptedException {
 		CsvIterator iter = new CsvIterator(new File(ICD_PATH));
-		
+
 		icd = new ArrayList<String>();
-		
+
 		while(iter.hasNext()) {
 			String[] line = iter.next();
-			
+
 			if(line[0].contains("-")) {
 				icd.add(line[0]);
 			}
 		}
-		
+
 	}
 
 	private void readMatches() throws IOException, InterruptedException {
 		CsvIterator iter = new CsvIterator(new File(MAPPING_PATH));
-		
+
 		matches = new HashMap<String, String>();
-		
+
 		//OMOP,DESC,ICD,DESC
 		while(iter.hasNext()) {
 			String[] line = iter.next();
-			
+
 			matches.put(line[0], line[2]);
 		}
-		
-		
+
+
 	}
 
 }

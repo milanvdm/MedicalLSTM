@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
+
 public interface Generalizer {
 	
 	public Double getGeneralTimeDifference(double timeDifference);

@@ -4,30 +4,43 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-public class AdvancedGeneralized implements Generalizer {
-	
-	SimpleGeneralizer simple = new SimpleGeneralizer();
+import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
-	@Override
-	public Double getGeneralTimeDifference(double timeDifference) {
-		// TODO Auto-generated method stub
-		return null;
+import data.StateImpl;
+
+public class AdvancedGeneralizer implements Generalizer {
+	
+	private SimpleGeneralizer simple = new SimpleGeneralizer();
+	
+	private DataNormaliser normaliser;
+	
+	public AdvancedGeneralizer(DataNormaliser normaliser) {
+		this.normaliser = normaliser;
 	}
 
-	@Override
+	
+	public Double getGeneralTimeDifference(double timeDifference) {
+		INDArray normalized = toNormalize.subi(mean).divi(std);
+	}
+
+	
 	public Double getGeneralBirthYear(double birthYear) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public Double decideSeason(Date date) throws ParseException {
 		return simple.decideSeason(date);
 	}
 
-	@Override
+	
 	public Double decideICDCategory(double condition) throws IOException, InterruptedException {
 		return simple.decideICDCategory(condition);
 	}
+
+
+	
 
 }

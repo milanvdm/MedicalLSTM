@@ -11,6 +11,8 @@ import data.StateImpl;
 
 public interface SequenceParser {
 	
+	public void setGeneralizer(Generalizer generalizer);
+	
 	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException, IOException, InterruptedException;
 
 }

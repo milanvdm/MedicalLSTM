@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import testing.KnnTest;
 import util.Constants;
 import util.HelpFunctions;
 
@@ -55,6 +54,7 @@ public class StateImpl extends SequenceElement implements State  {
 		return toReturn;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private INDArray flattenDrugList() {
 		List<Drug> drugList = (List<Drug>) completeState.get(Constants.DRUG_LIST_COLUMN);
 
@@ -125,6 +125,8 @@ public class StateImpl extends SequenceElement implements State  {
 	public String getLabel() {
 		return state2vecLabel.toString();
 	}
+	
+	
 	
 	public INDArray getState2vecLabelNormalized(INDArray mean, INDArray std) {
 		

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
+import datahandler.word2vec.DataNormaliser;
 import datahandler.word2vec.MedicalSequenceIterator;
 
 public class State2Vec {
@@ -35,7 +36,10 @@ public class State2Vec {
 		/*
 	            Make a sequence iterator
 		 */
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file);
+		MedicalSequenceIterator<StateImpl> sequenceIteratorNorm = new MedicalSequenceIterator<>(file, false);
+		DataNormaliser normaliser = new DataNormaliser(sequenceIteratorNorm);
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file, true);
+		sequenceIterator.setNormaliser(normaliser);
 
 		/*
 	        Now we should build vocabulary out of sequence iterator.

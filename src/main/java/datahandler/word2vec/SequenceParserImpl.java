@@ -20,6 +20,8 @@ public class SequenceParserImpl implements SequenceParser {
 	private static final Logger logger = LoggerFactory.getLogger(SequenceParserImpl.class);
 	
 	Generalizer generalizer = new SimpleGeneralizer();
+	
+	
  
 
 	@Override
@@ -139,6 +141,12 @@ public class SequenceParserImpl implements SequenceParser {
 		}
 		
 		return toReturn;
+		
+	}
+
+	@Override
+	public void setGeneralizer(Generalizer generalizer) {
+		this.generalizer = generalizer;
 		
 	}
 	
