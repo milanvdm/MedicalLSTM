@@ -28,6 +28,25 @@ public class GraphGenerator {
 		while(iterator.hasMoreSequences()) {
 			Sequence<StateImpl> sequence = iterator.nextSequence();
 			
+			int i = 0;
+			while(i <  sequence.getSequenceLabels().size()) {
+				
+				StateImpl state = sequence.getSequenceLabels().get(i);
+				
+				StateVertex dummy = new StateVertex(-1, state.getState2vecLabel());
+				
+				if(graph.containsVertex(dummy)) {
+					
+				}
+				else {
+					StateVertex toAdd = new StateVertex(idx, state.getState2vecLabel());
+					graph.addVertex(toAdd);
+					
+					idx++;
+				}
+				
+				i++;
+			}
 			
 			
 		}

@@ -13,27 +13,36 @@ import org.deeplearning4j.graph.exception.NoEdgesException;
 
 public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
-	private List<Edge<Integer>>[] edges;  //edge[i].get(j).to = k, then edge from i -> k
-	private List<Vertex<List<Double>>> vertices;
+	private List<StateEdge>[] edges;  //edge[i].get(j).to = k, then edge from i -> k
+	private List<StateVertex> vertices;
 
 
 	@SuppressWarnings("unchecked")
 	public StateGraph(){
 		this.vertices = new ArrayList<>();
-		this.edges = (List<Edge<Integer>>[]) Array.newInstance(List.class,vertices.size());
+		this.edges = (List<StateEdge>[]) Array.newInstance(List.class,vertices.size());
+	}
+	
+	public boolean containsVertex(StateVertex vertex) {
+		return vertices.contains(vertex);
 	}
 
 	public void addVertex(StateVertex vertex) {
-		this.vertices.add(vertex);
+		if(vertices.contains(vertex)) {
+			return;
+		}
+		else {
+			this.vertices.add(vertex);
+		}
 	}
 
 
 	@Override
-	public void addEdge(Edge<Integer> edge) {
+	public void addEdge(StateEdge edge) {
 		if(edge.getFrom() < 0 || edge.getTo() >= vertices.size() )
 			throw new IllegalArgumentException("Invalid edge: " + edge + ", from/to indexes out of range");
 
-		List<Edge<Integer>> fromList = edges[edge.getFrom()];
+		List<StateEdge> fromList = edges[edge.getFrom()];
 		if(fromList == null){
 			fromList = new ArrayList<>();
 			edges[edge.getFrom()] = fromList;
@@ -44,13 +53,13 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
 	}
 
-	private void addEdgeHelper(Edge<Integer> edge, List<Edge<Integer>> list ){
+	private void addEdgeHelper(StateEdge edge, List<StateEdge> list ){
 
 		//Check for multiple edges
 		boolean duplicate = false;
-		Edge<Integer> toRemove = null;
+		StateEdge toRemove = null;
 
-		for(Edge<Integer> e : list ){
+		for(StateEdge e : list ){
 			if(e.getTo() == edge.getTo()){
 				toRemove = e;
 				duplicate = true;
