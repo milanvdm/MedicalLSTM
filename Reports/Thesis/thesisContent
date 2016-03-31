@@ -8,6 +8,7 @@
 	State of the art:
 	
 		Explain Disease codes
+		DiseaseProgression
 		Explain Danish paper, Matrix group America (recommender), Querying
 
 - Background: write about machine learning, time series, neural networks, backpropagation, Word2vec, deepwalk
@@ -23,6 +24,7 @@
 	Explain the method used
 	Explain Tsne
 	Explain generalization
+	Exlpain Vantage Point Tree
 
 
 - Implementation

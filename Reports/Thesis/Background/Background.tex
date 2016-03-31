@@ -1,8 +1,8 @@
-\graphicspath{ {LiteratureStudyImages/} }
+\graphicspath{ {Background/Images/} }
 
 
-\chapter{Literature Study}
-\label{cha:literatureStudy}
+\chapter{Background}
+\label{cha:background}
 
 \section{Introduction}
 In this chapter 
@@ -143,7 +143,7 @@ The next equation explains why the algorithm is called backpropagation. The equa
 \delta^l = ((w^{l+1})^T\delta^{l+1}) \circ \sigma'(z_j^L)
 \end{equation}
 
-With those 2 equations we calculate the error in each layer in the neural network. Those errors can be used to calculate the derivatives of the cost function with respect to the weights and the biases:
+With those 2 equations we calculate the error in each layer of the neural network. Those errors can be used to calculate the derivatives of the cost function with respect to the weights and the biases:
 
 \begin{equation} 
 \frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j.
@@ -160,14 +160,27 @@ When the derivatives are calculated, we can apply the gradient descent and updat
 http://neuralnetworksanddeeplearning.com/chap1.html
 
 
-\section{Disease Progression}
-
 \section{Word2Vec}
 
+\subsection{Motivation}
 
-\section{Tsne projection}
+In natural language processing tasks, a good representation of words helps learning algorithms perform better. A representation is learned which maps words to vectors in a low-dimensional space compared to the vocabulary size. In this representation, we try to map context-similar words close to each other in the new vector space. \\
+We could say in an informal way: a linguistic background is made which the learning algorithm can use.
 
-\section{Vantage Point Tree}
+
+\subsection{Skip-gram}
+
+
+
+
+\subsection{Neural Networks}
+
+
+http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
+
+http://arxiv.org/pdf/1402.3722v1.pdf
+
+http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/
 
 \section{DeepWalk}
 

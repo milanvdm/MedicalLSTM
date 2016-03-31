@@ -13,21 +13,17 @@ import org.deeplearning4j.graph.exception.NoEdgesException;
 
 public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
-	private List<StateEdge>[] edges;  //edge[i].get(j).to = k, then edge from i -> k
-	private List<StateVertex> vertices;
+	private List<Edge<Integer>>[] edges;  //edge[i].get(j).to = k, then edge from i -> k
+	private List<Vertex<List<Double>>> vertices;
 
 
 	@SuppressWarnings("unchecked")
 	public StateGraph(){
 		this.vertices = new ArrayList<>();
-		this.edges = (List<StateEdge>[]) Array.newInstance(List.class,vertices.size());
-	}
-	
-	public boolean containsVertex(StateVertex vertex) {
-		return vertices.contains(vertex);
+		this.edges = (List<Edge<Integer>>[]) Array.newInstance(List.class,vertices.size());
 	}
 
-	public void addVertex(StateVertex vertex) {
+	public void addVertex(Vertex<List<Double>> vertex) {
 		if(vertices.contains(vertex)) {
 			return;
 		}
@@ -38,46 +34,8 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
 
 	@Override
-	public void addEdge(StateEdge edge) {
-		if(edge.getFrom() < 0 || edge.getTo() >= vertices.size() )
-			throw new IllegalArgumentException("Invalid edge: " + edge + ", from/to indexes out of range");
-
-		List<StateEdge> fromList = edges[edge.getFrom()];
-		if(fromList == null){
-			fromList = new ArrayList<>();
-			edges[edge.getFrom()] = fromList;
-		}
-		addEdgeHelper(edge,fromList);
-
-		if(edge.isDirected()) return;
-
-	}
-
-	private void addEdgeHelper(StateEdge edge, List<StateEdge> list ){
-
-		//Check for multiple edges
-		boolean duplicate = false;
-		StateEdge toRemove = null;
-
-		for(StateEdge e : list ){
-			if(e.getTo() == edge.getTo()){
-				toRemove = e;
-				duplicate = true;
-				break;
-			}
-		}
-
-
-		if(!duplicate){
-			list.add(edge);
-		}
-		else {
-
-			StateEdge newEdge = new StateEdge(toRemove.getFrom(), toRemove.getTo(), toRemove.getValue() + 1);
-			list.remove(toRemove);
-			list.add(newEdge);
-
-		}
+	public void addEdge(Edge<Integer> edge) {
+		edges[edge.getFrom()].add(edge);
 
 	}
 

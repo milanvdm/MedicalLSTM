@@ -2,20 +2,34 @@ package deepwalk;
 
 import java.util.List;
 
-import org.deeplearning4j.graph.api.Vertex;
-
-public class StateVertex extends Vertex<List<Double>> {
+public class StateVertex {
+	
+	private int idx;
+	private List<Double> value;
 
 	public StateVertex(int idx, List<Double> value) {
-		super(idx, value);
+		this.idx = idx;
+		this.value = value;
+	}
+	
+	public List<Double> getValue() {
+		return this.value;
+	}
+	
+	public int getIdx() {
+		return this.idx;
+	}
+	
+	public void setIdx(int idx) {
+		this.idx = idx;
 	}
 	
 	@Override
     public boolean equals(Object o) {
-        if (!(o instanceof Vertex)) return false;
-        Vertex<?> v = (Vertex<?>) o;
-        if ((super.getValue() == null && v.getValue() != null) || (super.getValue() != null && v.getValue() == null)) return false;
-        return super.getValue() == null || super.getValue().equals(v.getValue());
+        if (!(o instanceof StateVertex)) return false;
+        StateVertex v = (StateVertex) o;
+        if ((this.value == null && v.getValue() != null) || (this.value != null && v.getValue() == null)) return false;
+        return this.value == null || this.value.equals(v.getValue());
     }
 	
 	
