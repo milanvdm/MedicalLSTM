@@ -170,10 +170,56 @@ We could say in an informal way: a linguistic background is made which the learn
 
 \subsection{Skip-gram}
 
+One way of learning a word2vec representation of a corpus $Text$, is by using the skip-gram model. \\
+Based on given words $w$ and their contexts $c$, we set the parameter $\theta$ of $p(c|w;\theta)$ to maximize:
 
+\begin{equation} 
+\arg \max_{\theta} \prod_{(w,c \in D} p(c|w;\theta)
+\end{equation}
+
+with $D$ the set of all word and context pairs we extract from the corpus. 
+
+\subsubsection{Finding word-context pairs}
+
+Given a sequence of words, we define their context based on n-gram. In figure \ref{fig:ngram}, n-gram is explained on the sentence "This is a sentence". 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{ngram.png}
+	\caption{Explanation of n-gram.}
+	\label{fig:ngram}
+\end{figure} 
+
+For the Skip-gram model, we define the context of a word $w_t$ as $w_{t+j}$ with $j$ between $-c$ and $c$. A larger $c$ results in more training examples and thus can lead to a higher accuracy but will have a longer training time.
+
+
+\subsubsection{Parameterization}
+
+We start with rewriting the conditional probability using soft-max:
+
+\begin{equation} 
+p(c|w;\theta) = \frac{e^{v_x*v_w}}{\sum_{c' \in C}e^{v_{c'}*v_w}}
+\end{equation}
+
+where $v_c$ and $v_w$ are vector representations for $c$ and $w$, and $C$ is the set of all available contexts. This means that the parameters $\theta$ are $v_{c_i}$ and $v_{w_i}$. Computing the optimal parameters is very expensive because you need to calculate this over all contexts $c'$. We also switch from product to sum by taking the logs:
+
+\begin{equation} 
+\arg \max_{\theta} \sum_{(w,c) \in D} \log p(c|w;\theta) = \sum_{(w,c) \in D} (\log e^{v_c * v_w} - \log \sum_{c'} e^{v_{c'}*v_w})
+\end{equation}
+
+\subsection{Negative Sampling}
+
+To compute the vectors using the Skip-gram model more efficiently, we introduce negative sampling. \\
+Instead of calculating $\sum_{c' \in C}e^{v_{c'}*v_w}$ over all contexts, we make a set $D'$ which consists of randomly sampled word-context pairs. With this new set, we remove the costly term $\sum_{c' \in C}e^{v_{c'}*v_w}$ and replace it with $\sum_{(w,c) \in D'}e^{v_{c'}*v_w}$. \\
+
+In a less formal way: we are not making sure that if words appear in the same context, their vectors are more similar than all the other word vectors, but only of several vectors chosen randomly. This makes the Skip-gram model usable in terms of speed.
 
 
 \subsection{Neural Networks}
+
+When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This can be seen as a 2-layer neural network with as goal function the function described in the previous section. \\
+The trained 2-layer neural network can be placed in front of another neural network. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
+
 
 
 http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
@@ -181,6 +227,12 @@ http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrase
 http://arxiv.org/pdf/1402.3722v1.pdf
 
 http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/
+
+http://homepages.inf.ed.ac.uk/ballison/pdf/lrec_skipgrams.pdf
+
+http://recognize-speech.com/images/Antonio/Unigram.png
+
+http://stackoverflow.com/questions/27860652/word2vec-negative-sampling-in-layman-term
 
 \section{DeepWalk}
 
