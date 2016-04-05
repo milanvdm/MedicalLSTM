@@ -161,6 +161,7 @@ http://neuralnetworksanddeeplearning.com/chap1.html
 
 
 \section{Word2Vec}
+\label{sec:word2vec}
 
 \subsection{Motivation}
 
@@ -217,7 +218,7 @@ In a less formal way: we are not making sure that if words appear in the same co
 
 \subsection{Neural Networks}
 
-When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This can be seen as a 2-layer neural network with as goal function the function described in the previous section. \\
+When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
 The trained 2-layer neural network can be placed in front of another neural network. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
 
 
@@ -228,13 +229,29 @@ http://arxiv.org/pdf/1402.3722v1.pdf
 
 http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/
 
-http://homepages.inf.ed.ac.uk/ballison/pdf/lrec_skipgrams.pdf
+http://homepages.inf.ed.ac.uk/ballison/pdf/lrec\_skipgrams.pdf
 
 http://recognize-speech.com/images/Antonio/Unigram.png
 
 http://stackoverflow.com/questions/27860652/word2vec-negative-sampling-in-layman-term
 
 \section{DeepWalk}
+
+DeepWalk is an approach where graph structured data is transformed into sequences of vertices. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. \\
+
+In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{dwAlgo.png}
+	\caption{Overview of the DeepWalk algorithm.}
+	\label{fig:dwAlgo}
+\end{figure} 
+
+First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
+Secondly, those vertices are used for word2vec. This process is explained in section \ref{sec:word2vec}.
+
+http://arxiv.org/pdf/1403.6652v2.pdf
 
 
 \section{Conclusion}

@@ -2,7 +2,7 @@
 	
 
 
-- Context: Depends on chosen problem (ex. Prediction of Disease Progression | Word Embedding | Extrtctingknowledge of EHR )
+- Context: Depends on chosen problem (ex. Prediction of Disease Progression | Word Embedding | Extracting knowledge of EHR )
 
 	Problem: info out of EHR
 	State of the art:
