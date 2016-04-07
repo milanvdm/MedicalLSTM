@@ -2,7 +2,7 @@
 	
 
 
-- Context: Depends on chosen problem (ex. Prediction of Disease Progression | Word Embedding | Extracting knowledge of EHR )
+- Context: Depends on chosen problem (ex. Prediction of Disease Progression | Word Embedding | Extracting knowledge of EHR ) - DONE
 
 	Problem: info out of EHR
 	State of the art:
@@ -11,7 +11,7 @@
 		DiseaseProgression
 		Explain Danish paper, Matrix group America (recommender), Querying
 
-- Background: write about machine learning, time series, neural networks, backpropagation, Word2vec, deepwalk
+- Background: write about machine learning, time series, neural networks, backpropagation, Word2vec, deepwalk - DONE
 	
 
 - General Word2Vec Approach
@@ -27,7 +27,7 @@
 	Exlpain Vantage Point Tree
 
 
-- Implementation
+- Implementation - 09/04
 
 	TensorFlow
 	DL4J
@@ -53,7 +53,7 @@
 - Conclusion
 
 
-- Future work
+- Future work - 07/04 and 08/04
 
 
 
