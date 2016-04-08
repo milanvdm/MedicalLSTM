@@ -7,15 +7,16 @@
 \section{Introduction}
 In this chapter 
 
-Normalisation
-Mapping Disease Codes
+Normalization
 Distributed
 RNN
 
 
 \section{Generalization}
 
+In our word2vec approach we applied generalization on the medical states. This was needed to retrieve more general n-grams. For this generalization, we divided some attributes into specific intervals.
 
+Instead of dividing some attributes into specific intervals, we could apply normalization to it. Based on the distribution of the data, we can make more sensible intervals and assign them to the attributes.
 
 
 \section{Distributed Word2Vec}
@@ -23,9 +24,9 @@ RNN
 MapReduce
 
 
-\section{Classification Patients}
+\section{Patient Classification}
 
-As mentioned in section \ref{sec:word2vec}, a trained 2-layer neural network can be placed before another neural network and function as a lookup table. In this section, we discuss a possible neural network which allows us to further investigate the effectiveness of our word2vec approach to classify patients.
+As mentioned in section \ref{sec:word2vec}, a trained 2-layer neural network can be placed before another neural network and function as a lookup table. In this section, we discuss a possible neural network which allows us to further investigate the effectiveness of our word2vec approach to classify patients. More concrete: we should check if a better accuracy is acquired with the lookup table in front of the neural network or without. 
 
 \subsection{Problem Definition}
 
@@ -70,11 +71,97 @@ First we shortly repeat the structure of a neural network in figure \ref{fig:nnS
 
 \subsubsection{Recurrent Neural Network}
 
+A standard neural network don't have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{rnnLoops.png}
+	\caption{An unrolled recurrent neural network.}
+	\label{fig:rnnLoops}
+\end{figure} 
+
+The problem with RNNs is mainly that they have troubles learning long-term dependencies which is often essential in time series.
 
 
+\subsubsection{Long Short Term Memory}
 
-\subsubsection{LSTM}
+A LSMT network is a specific RNN which is capable of learning long-term dependencies. We will explain the difference with a standard RNN and why a LSTM can learn these long-term dependencies. \\
 
+A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure as a single $tanh$ layer, see figure \ref{fig:rnnTanh}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{rnnTanh.png}
+	\caption{An unrolled recurrent neural network with a single tanh layer.}
+	\label{fig:rnnTanh}
+\end{figure} 
+
+It is important to see the difference with a LSTM. The repeating network doesn't have a single neural network layer, but has $4$ layers which each fulfills a specific goal, see figure \ref{fig:LSTMChain}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTMChain.png}
+	\caption{An unrolled LSTM network where each network has 4 layers.}
+	\label{fig:LSTMChain}
+\end{figure} 
+
+The main idea behind LSTM is that each repeated network has its own cell state. It functions as a  memory which can be updated with each new input. On figure \ref{fig:LSTMConveyor}, you can see the cell state $C$ through time. It can be compared with a conveyor belt which interacts with the input at certain gates. This way the state is updated throughout several inputs.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTMConveyor.png}
+	\caption{Representation of the cell state for a LSTM network.}
+	\label{fig:LSTMConveyor}
+\end{figure} 
+
+In the following figures, we show the different gates and their functions in changing the cell state depending on the input and the output of the previous network. Next to each figure the formulas are shown on how the cell state is updated. There should be no surprises as they are not much different than the standard formulas of neural networks. \\
+
+We start with the forget gate layer of a LSTM. Based on $x_t$ and $h_{t-1}$, it outputs a number between $0$ and $1$ for each number in the cell state $C_{t-1}$. This is shown in figure \ref{fig:LSTM1}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTM1.png}
+	\caption{The forget layer of a LSTM network.}
+	\label{fig:LSTM1}
+\end{figure} 
+
+Next we look to the input gate layer. This gate decides which values will be updated in the cell state and outputs those in $i_t$. It is then combined with the vector $\widetilde{C}_t$, which contains the new candidate values based on the input $x_t$ and $h_{t-1}$. This is shown in figure \ref{fig:LSTM2}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTM2.png}
+	\caption{The input layer of a LSTM network.}
+	\label{fig:LSTM2}
+\end{figure} 
+
+We can now combine the previous results and adjust the cell state. We multiply the old state with $f_t$ so we forget the needed elements. Then we add $i_t*\widetilde{C}_t$ which are the new candidate values multiplied by the amount on how much we want to update each state value. See figure \ref{fig:LSTM3}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTM3.png}
+	\caption{Update process of the cell state of a LSTM network.}
+	\label{fig:LSTM3}
+\end{figure} 
+
+Finally, we need to output $h_t$ to the next network. This is based on the input and the cell state $C_t$. See figure \ref{fig:LSTM4}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{LSTM4.png}
+	\caption{Decide the output of a LSTM network.}
+	\label{fig:LSTM4}
+\end{figure} 
+
+
+\subsubsection{Variants Long Short Term Memory}
+
+In [LSTM: SEARCH SPACE ODESEY], research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants don't have a large influence and mainly add a lot of extra complexity.
+
+
+http://www-dsi.ing.unifi.it/\~paolo/ps/tnn-94-gradient.pdf
+
+
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
 
 http://deeplearning4j.org/usingrnns
 
