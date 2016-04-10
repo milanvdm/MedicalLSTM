@@ -21,7 +21,7 @@ Instead of dividing some attributes into specific intervals, we could apply norm
 
 \section{Distributed Word2Vec}
 
-MapReduce
+Word2vec can be made distributed as the underlying idea is quite simplistic, it counts occurrences of n-grams. Counting occurrences based on labels, is a well known problem and is often solved by MapReduce algorithms. 
 
 
 \section{Patient Classification}
@@ -50,13 +50,30 @@ Medical data has a high dimensionality. A lot of parameters need to be taken int
 
 \subsection{Approach}
 
-Vanishing gradient
-padding
-Word2Vec standardization
-Recurrent -> high dimension
+Here we describe our approaches for the problems mentioned in the previous section. \\
+We solve the vanishing gradient problem with a special for of recurrent neural network, see section \ref{sec:nn}. \\
+By applying our word2vec approach, the input is projected on another vector space using a lookup table. This vector space causes normalization. The standardization is also done in our word2vec approach. \\
+As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:nn} often handles high dimensional data. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus has a better method to handle the high dimensionality.
+
+\subsubsection{Padding and Masking}
+The transformation of the irregular interval to a regular one, is done with padding and masking. \\
+
+If we don't use any masking and padding, our data can only be of equal length time series and at each time step a classification. Our data consists of several inputs, the different time steps of a time series, and has one output associated with it, namely the classification of the time series. \\
+
+The method of padding is simply by adding empty events (ex. zeros) to the shorter time series until all examples are of equal length for both input and output. \\
+Using padding, changes the data quite drastically and would case problems during the training because of that. For this problem we use the method of masking. With masking, we have two additional arrays which contain the information about whether an input or output is padding or not. See figure \ref{fig:masking}, picture $2$ on how the masking is done for a many to one case.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{masking.png}
+	\caption{Multiple masking methods.}
+	\label{fig:masking}
+\end{figure} 
+
 
 
 \subsection{Neural Network}
+\label{sec:nn}
 
 We mentioned the reasons on why we choose a Long Short Term Memory (LSTM) approach as a recurrent neural network solution. In this section we explain in more detail why LSTM handles the vanishing problem and long-term dependencies. \\
 
