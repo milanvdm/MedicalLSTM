@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import org.deeplearning4j.models.embeddings.WeightLookupTable;
 import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
+import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.word2vec.wordstore.VocabConstructor;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class State2VecSerTest {
 		/*
             Make a sequence iterator
 		 */
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file);
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
 
 		/*
         Now we should build vocabulary out of sequence iterator.
@@ -123,9 +124,11 @@ public class State2VecSerTest {
 		vectors.fit();
 		
 		BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(Constants.OUTPUT_WORD2VEC)));
-		State2VecSerializer.writeWordVectors(vectors, stream);
+		WordVectorSerializer serializer = new WordVectorSerializer();
 		
-		SequenceVectors<StateImpl> toTest = State2VecSerializer.readTextModel(new File(Constants.OUTPUT_WORD2VEC));
+		serializer.writeSequenceVectors();
+		
+		SequenceVectors<StateImpl> toTest = serializer.readSequenceVectors(new File(Constants.OUTPUT_WORD2VEC));
 		
 		logger.debug(vectors.getVocab().vocabWords().toString());
 		logger.debug(toTest.getVocab().vocabWords().toString());

@@ -16,7 +16,6 @@ import datahandler.word2vec.MedicalSequenceIterator;
 
 public class State2Vec {
 
-	//TODO: With next release: make distributed
 	//TODO: Safe model to file
 
 	protected static final Logger logger = LoggerFactory.getLogger(State2Vec.class);
@@ -36,10 +35,7 @@ public class State2Vec {
 		/*
 	            Make a sequence iterator
 		 */
-		MedicalSequenceIterator<StateImpl> sequenceIteratorNorm = new MedicalSequenceIterator<>(file, false);
-		DataNormaliser normaliser = new DataNormaliser(sequenceIteratorNorm);
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file, true);
-		sequenceIterator.setNormaliser(normaliser);
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file, false);
 
 		/*
 	        Now we should build vocabulary out of sequence iterator.
@@ -130,17 +126,6 @@ public class State2Vec {
 
 		trainedVectors = vectors;
 
-	}
-
-	public void plotState2Vec() {
-		/*
-        As soon as fit() exits, model considered built, and we can test it.
-        Please note: all similarity context is handled via SequenceElement's labels, so if you're using AbstractVectors to build models for complex
-        objects/relations please take care of Labels uniqueness and meaning for yourself.
-		 */
-
-		logger.info("Plotting State2Vec");
-		trainedVectors.getLookupTable().plotVocab(); // BUGGED AT THE MOMENT IN DL4J
 	}
 	
 	public SequenceVectors<StateImpl> getTrainedModel() {

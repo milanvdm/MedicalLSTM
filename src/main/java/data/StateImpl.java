@@ -146,7 +146,7 @@ public class StateImpl extends SequenceElement implements State  {
 		
 	    try {
 	    	
-			return mapper.writeValueAsString(state2vecLabel);
+			return mapper.writeValueAsString(this);
 			
 		} catch (JsonProcessingException e) {
 			return null;
