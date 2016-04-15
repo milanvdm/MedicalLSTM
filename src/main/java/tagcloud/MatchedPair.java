@@ -4,10 +4,12 @@ public class MatchedPair {
 	
 	private CodePair omopPair;
 	private CodePair icdPair;
+	private double maxScore;
 	
-	public MatchedPair(CodePair omopPair, CodePair icdPair) {
+	public MatchedPair(CodePair omopPair, CodePair icdPair, double maxScore) {
 		this.omopPair = omopPair;
 		this.icdPair = icdPair;
+		this.maxScore = maxScore;
 	}
 
 	public CodePair getOmopPair() {
@@ -26,6 +28,9 @@ public class MatchedPair {
 		this.icdPair = icdPair;
 	}
 	
+	public double getScore() {
+		return this.maxScore;
+	}
 	
 
 }

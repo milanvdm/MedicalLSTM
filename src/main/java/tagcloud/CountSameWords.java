@@ -43,4 +43,18 @@ public class CountSameWords {
 		
 	}
 	
+	public static int amountOfWordsFiltered(String description) {
+		String[] words = description.split("\\s+");
+		
+		Set<String> wordsWithoutStop = new HashSet<String>();
+		
+		for(String word: words) {
+			if(!stopWordSet.contains(word.toLowerCase()) && !StringUtils.isNumericSpace(word)) {
+				wordsWithoutStop.add(word.toLowerCase());
+			}
+		}
+		
+		return wordsWithoutStop.size();
+	}
+	
 }
