@@ -39,6 +39,7 @@
 	Chosen parameters
 	What we are validating
 	
+		Part about KNN
 		Part about Word2Vec experiments to Danish paper
 		Part about DeepWalk experiments to complete dataset
 		Part about Mapping disease codes -> amount of matching words

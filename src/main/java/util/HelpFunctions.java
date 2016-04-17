@@ -1,5 +1,6 @@
 package util;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,12 +34,13 @@ public class HelpFunctions {
 
 		double[] target = new double[doubles.size()];
 		for (int i = 0; i < target.length; i++) {
-		
+
 			target[i] = doubles.get(i);   
 		}
-		
+
 		return target;
 	}
+
 
 
 }
