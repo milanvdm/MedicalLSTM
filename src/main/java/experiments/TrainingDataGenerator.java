@@ -1,28 +1,53 @@
 package experiments;
 
+
+import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
+import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+
 import data.StateImpl;
 import datahandler.word2vec.MedicalSequenceIterator;
 
-public class TrainingDataGenerator {
+public class TrainingDataGenerator implements SequenceIterator<StateImpl> {
 	
 	private MedicalSequenceIterator<StateImpl> input;
 	
-	public TrainingDataGenerator(MedicalSequenceIterator<StateImpl> input) {
+	private int count = 0;
+	
+	public TrainingDataGenerator(MedicalSequenceIterator<StateImpl> input, double percentage) {
 		this.input = input;
+		this.input.generateTrainingData(percentage);
+	}
+
+
+	@Override
+	public boolean hasMoreSequences() {
+		if(input.hasMoreSequences() && input.getCurrentCount() < input.getTrainingData().get(input.getTrainingData().size() - 1)) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	public Sequence<StateImpl> nextSequence() {
+		while(!input.getTrainingData().contains(input.getCurrentCount())) {
+			if(input.hasMoreSequences()) {
+				input.nextSequence();
+			}
+		}
+		
+		count++;
+		return input.nextSequence();
+	}
+
+	@Override
+	public void reset() {
+		input.reset();
+		
 	}
 	
-	public MedicalSequenceIterator<StateImpl> getTrainingData(double percentage) {
-		
-		//Get amount of Sequences
-		//Get amount of samples needed based on percentage
-		//Shuffle a list from 0..size
-		//Pick first amount of samples from shuffled
-		//iterate and write samples to file
-		//Make new iterator with new file
-		//Return
-		
-		return null;
-		
+	public int getCount() {
+		return count;
 	}
 
 }
