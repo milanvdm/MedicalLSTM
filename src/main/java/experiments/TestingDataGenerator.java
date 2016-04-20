@@ -7,25 +7,25 @@ import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 import data.StateImpl;
 import datahandler.word2vec.MedicalSequenceIterator;
 
-public class TrainingDataGenerator implements SequenceIterator<StateImpl> {
+public class TestingDataGenerator implements SequenceIterator<StateImpl> {
 	
 	private MedicalSequenceIterator<StateImpl> input;
 	
-	private double percentage;
-	
 	private int count = 0;
 	
-	public TrainingDataGenerator(MedicalSequenceIterator<StateImpl> input, double percentage) {
+	public TestingDataGenerator(MedicalSequenceIterator<StateImpl> input) {
 		this.input = input;
-		this.input.generateTrainingData(percentage);
-		this.percentage = percentage;
+		if(input.getTrainingData() == null) {
+			throw new IllegalArgumentException();
+		}
+		input.reset();
 	}
 
 
 	@Override
 	public boolean hasMoreSequences() {
-		//if(input.hasMoreSequences() && input.getCurrentCount() < input.getTrainingData().get(input.getTrainingData().size() - 1)) {
-		if(input.hasMoreSequences() && input.getTrainingData().size() > count) {
+		if(input.hasMoreSequences() && input.getCount() - input.getTrainingData().size() > count) {
+				
 			return true;
 		}
 		
@@ -34,7 +34,7 @@ public class TrainingDataGenerator implements SequenceIterator<StateImpl> {
 
 	@Override
 	public Sequence<StateImpl> nextSequence() {
-		while(!input.getTrainingData().contains(input.getCurrentCount())) {
+		while(input.getTrainingData().contains(input.getCurrentCount())) {
 			if(input.hasMoreSequences()) {
 				input.nextSequence();
 			}

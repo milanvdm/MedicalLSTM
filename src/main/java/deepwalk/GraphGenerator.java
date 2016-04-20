@@ -5,21 +5,21 @@ import java.util.List;
 
 import org.deeplearning4j.graph.api.Edge;
 import org.deeplearning4j.graph.api.Vertex;
+import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 
 import data.StateImpl;
-import datahandler.word2vec.MedicalSequenceIterator;
 
 public class GraphGenerator {
 
-	private MedicalSequenceIterator<StateImpl> iterator;
+	private SequenceIterator<StateImpl> iterator;
 
 	private int idx = 0;
 
 	List<StateVertex> vertices = new ArrayList<StateVertex>();
 	List<StateEdge> edges = new ArrayList<StateEdge>();
 
-	public GraphGenerator(MedicalSequenceIterator<StateImpl> iterator) {
+	public GraphGenerator(SequenceIterator<StateImpl> iterator) {
 		this.iterator = iterator; 
 	}
 

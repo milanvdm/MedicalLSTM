@@ -67,6 +67,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 	   
 		
 	}
+	
 	private List<Double> calculateWeights() {
 		List<Double> weights = new ArrayList<Double>();
 		
@@ -147,6 +148,10 @@ public class KNNLookupTable<T extends SequenceElement> {
 		
 		return result;
 		
+	}
+	
+	public SequenceVectors<StateImpl> getSequenceVectors() {
+		return this.vectors;
 	}
 
 	private List<DataPoint> nearestNeighbourLookup(StateImpl label) {

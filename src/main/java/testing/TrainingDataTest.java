@@ -4,6 +4,7 @@ import java.io.File;
 
 import data.StateImpl;
 import datahandler.word2vec.MedicalSequenceIterator;
+import experiments.TestingDataGenerator;
 import experiments.TrainingDataGenerator;
 import util.Constants;
 
@@ -15,15 +16,25 @@ public class TrainingDataTest {
 		
 		MedicalSequenceIterator<StateImpl> input = new MedicalSequenceIterator<StateImpl>(file, false);
 		
-		TrainingDataGenerator generator = new TrainingDataGenerator(input, 0.30);
+		TrainingDataGenerator training = new TrainingDataGenerator(input, 0.30);
 		
 		System.out.println("Looping");
-		while(generator.hasMoreSequences()) {
-			generator.nextSequence();
+		while(training.hasMoreSequences()) {
+			training.nextSequence();
 		}
 		
 		System.out.println(input.getCount());
-		System.out.println(generator.getCount());
+		System.out.println(training.getCount());
+		
+		TestingDataGenerator testing = new TestingDataGenerator(input);
+		
+		System.out.println("Looping");
+		while(testing.hasMoreSequences()) {
+			testing.nextSequence();
+		}
+		
+		System.out.println(input.getCount());
+		System.out.println(testing.getCount());
 		
 	}
 

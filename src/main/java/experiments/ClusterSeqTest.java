@@ -9,32 +9,28 @@ import java.util.Map;
 import java.util.Set;
 
 import org.deeplearning4j.models.embeddings.WeightLookupTable;
-
-
+import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
-import state2vec.State2Vec;
 import util.Constants;
 import util.CsvIterator;
 import util.HelpFunctions;
 
-public class ClusterTest {
+public class ClusterSeqTest {
+	
+	//TODO: write results to file
 
-	protected static final Logger logger = LoggerFactory.getLogger(ClusterTest.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ClusterSeqTest.class);
 
-	public static Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
+	public Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
 
-
-	public static void main(String[] args) throws Exception {
-
+	public ClusterSeqTest() throws IOException, InterruptedException {
 		readClusters();
-		checkClusters2();
-
 	}
 
-	private static void readClusters() throws IOException, InterruptedException {
+	private void readClusters() throws IOException, InterruptedException {
 		File file = new File("clusters/clusters.csv");
 
 		//skip first 5 lines
@@ -77,24 +73,19 @@ public class ClusterTest {
 			}
 		}
 
-		logger.info(clusters.toString());
-		String info = "" + clusters.size();
-		logger.info(info);
+		//logger.info(clusters.toString());
+		//String info = "" + clusters.size();
+		//logger.info(info);
 
 
 	}
 
-	private static void checkClusters1() throws Exception {
-		File file = new File(Constants.INPUT_CSV_TEST);
+	public void checkClusters1(SequenceVectors<StateImpl> sequenceVectors, int k) throws Exception {
 
-		State2Vec state2vec = new State2Vec();
-		state2vec.trainSequenceVectors(file);
+		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
 
-
-		WeightLookupTable<StateImpl> table = state2vec.getTrainedModel().getLookupTable();
-
-		String info = "" + table.getVocabCache().numWords();
-		logger.info(info);
+		//String info = "" + table.getVocabCache().numWords();
+		//logger.info(info);
 
 		for(StateImpl state: table.getVocabCache().vocabWords()) {
 			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
@@ -114,9 +105,7 @@ public class ClusterTest {
 
 			int initAmount = otherDiags.size();
 
-			int k = 10;
-
-			Collection<String> knn = state2vec.getTrainedModel().wordsNearest(state.getLabel(), k);
+			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
 
 
 			//logger.info(knn.toString());
@@ -138,8 +127,8 @@ public class ClusterTest {
 
 
 			if(amountInCluster != 0) {
-				info = "ClusterPercentage: " + clusterCovered;
-				logger.info(info);
+				//info = "ClusterPercentage: " + clusterCovered;
+				//logger.info(info);
 			}
 
 
@@ -149,14 +138,9 @@ public class ClusterTest {
 
 	}
 
-	private static void checkClusters2() throws Exception {
-		File file = new File(Constants.INPUT_CSV_TEST);
+	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, int k) throws Exception {
 
-		State2Vec state2vec = new State2Vec();
-		state2vec.trainSequenceVectors(file);
-
-
-		WeightLookupTable<StateImpl> table = state2vec.getTrainedModel().getLookupTable();
+		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
 
 		String info = "" + table.getVocabCache().numWords();
 		logger.info(info);
@@ -188,10 +172,7 @@ public class ClusterTest {
 			}
 
 
-			int k = 100;
-
-			Collection<String> knn = state2vec.getTrainedModel().wordsNearest(state.getLabel(), k);
-
+			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
 
 
 			for(String toConvert: knn) {
@@ -249,7 +230,7 @@ public class ClusterTest {
 
 	}
 
-	private static Double stringToDouble(String toConvert) {
+	private Double stringToDouble(String toConvert) {
 		StringBuilder sb = new StringBuilder();
 		for (char c : toConvert.toCharArray()) {
 			sb.append((int) c);

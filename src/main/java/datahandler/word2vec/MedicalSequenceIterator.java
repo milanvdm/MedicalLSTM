@@ -34,7 +34,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 
 	private DataNormaliser normaliser = null;
 	
-	private List<Integer> trainingData;
+	private List<Integer> trainingData = null;
 	private int currentCount = 0;
 	private int count = 0;
 
