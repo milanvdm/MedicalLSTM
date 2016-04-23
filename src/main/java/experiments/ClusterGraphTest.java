@@ -2,29 +2,24 @@ package experiments;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.deeplearning4j.graph.api.IGraph;
+import org.deeplearning4j.graph.api.Vertex;
 import org.deeplearning4j.graph.models.deepwalk.DeepWalk;
 import org.deeplearning4j.graph.models.embeddings.GraphVectorLookupTable;
-import org.deeplearning4j.models.embeddings.WeightLookupTable;
-import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import data.StateImpl;
-import util.Constants;
 import util.CsvIterator;
-import util.HelpFunctions;
 
 public class ClusterGraphTest {
 	
 	//TODO: write results to file
-	//TODO: Work out how you can retrieve the vocab cache from deepwalk after it is trained
 
 	protected static final Logger logger = LoggerFactory.getLogger(ClusterSeqTest.class);
 
@@ -84,154 +79,178 @@ public class ClusterGraphTest {
 
 	}
 
-	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, int k) throws Exception {
+	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k) throws Exception {
 
+		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
+		
 		GraphVectorLookupTable table = deepwalk.lookupTable();
+		
+		int id = 0;
+		while(id <= highestId) {
+			try {
+				table.getVector(id);
+				
+				Vertex<List<Double>> vertex = graph.getVertex(id);
+				Double icd10 = vertex.getValue().get(3);
+				
+				
+				Set<Double> otherDiags = new HashSet<Double>();
 
-		//String info = "" + table.getVocabCache().numWords();
-		//logger.info(info);
-
-		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
-
-			Set<Double> otherDiags = new HashSet<Double>();
-
-			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
-			{
-				if(entry.getValue().contains(icd10)) {
-					if(!entry.getKey().equals("None")) {
-						otherDiags.addAll(entry.getValue());
+				for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
+				{
+					if(entry.getValue().contains(icd10)) {
+						if(!entry.getKey().equals("None")) {
+							otherDiags.addAll(entry.getValue());
+						}
 					}
 				}
-			}
-			//otherDiags.remove(icd10);
+				//otherDiags.remove(icd10);
 
-			int initAmount = otherDiags.size();
+				int initAmount = otherDiags.size();
 
-			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
+				int[] knn = deepwalk.verticesNearest(id, k);
 
 
-			//logger.info(knn.toString());
+				//logger.info(knn.toString());
 
-			int amountInCluster = 0;
+				int amountInCluster = 0;
 
-			for(String toConvert: knn) {
-				double[] label = HelpFunctions.parse(toConvert);
+				for(int knnId: knn) {
+					Vertex<List<Double>> knnVertex = graph.getVertex(knnId);
 
-				Double toCheckIcd10 = new Double(label[3]);
+					Double toCheckIcd10 = knnVertex.getValue().get(3);
 
-				if(otherDiags.contains(toCheckIcd10)) {
-					amountInCluster++;
+					if(otherDiags.contains(toCheckIcd10)) {
+						amountInCluster++;
+					}
+
 				}
 
+				double clusterCovered = (double) amountInCluster / (double) k;
+
+
+				if(amountInCluster != 0) {
+					//info = "ClusterPercentage: " + clusterCovered;
+					//logger.info(info);
+				}
+
+				
 			}
-
-			double clusterCovered = (double) amountInCluster / (double) k;
-
-
-			if(amountInCluster != 0) {
-				//info = "ClusterPercentage: " + clusterCovered;
-				//logger.info(info);
+			catch(Exception e) {
+				
 			}
-
-
-		}
-
+			
+			id++;
+		}	
 
 
 	}
+	
+	public void checkClusters2(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k) throws Exception {
 
-	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, int k) throws Exception {
-
-		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
-
-		String info = "" + table.getVocabCache().numWords();
-		logger.info(info);
-
+		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
+		
+		GraphVectorLookupTable table = deepwalk.lookupTable();
+		
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
+		
+		int id = 0;
+		while(id <= highestId) {
+			try {
+				table.getVector(id);
+				
+				Vertex<List<Double>> vertex = graph.getVertex(id);
+				Double icd10 = vertex.getValue().get(3);
+				
+				
+				Set<Double> otherDiags = new HashSet<Double>();
 
-		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
+				for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
+				{
+					if(entry.getValue().contains(icd10)) {
+						if(!entry.getKey().equals("None")) {
+							otherDiags.addAll(entry.getValue());
+						}
 
-			Set<Double> otherDiags = new HashSet<Double>();
+					}
+				}
 
-			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
-			{
-				if(entry.getValue().contains(icd10)) {
-					if(!entry.getKey().equals("None")) {
-						otherDiags.addAll(entry.getValue());
+				if(icdCluster.containsKey(icd10)) {
+					icdCluster.get(icd10).addAll(otherDiags);
+				}
+				else {
+					icdCluster.put(icd10, new HashSet<Double>());
+					icdCluster.get(icd10).addAll(otherDiags);
+				}
+
+				int initAmount = otherDiags.size();
+
+				int[] knn = deepwalk.verticesNearest(id, k);
+
+
+				//logger.info(knn.toString());
+
+				int amountInCluster = 0;
+
+				for(int knnId: knn) {
+					Vertex<List<Double>> knnVertex = graph.getVertex(knnId);
+
+					Double toCheckIcd10 = knnVertex.getValue().get(3);
+
+					if(otherDiags.contains(toCheckIcd10)) {
+						if(icdClusterRemoved.containsKey(icd10)) {
+							icdClusterRemoved.get(icd10).add(toCheckIcd10);
+						}
+						else {
+							icdClusterRemoved.put(icd10, new HashSet<Double>());
+							icdClusterRemoved.get(icd10).add(toCheckIcd10);
+						}
 					}
 
 				}
-			}
 
-			if(icdCluster.containsKey(icd10)) {
-				icdCluster.get(icd10).addAll(otherDiags);
-			}
-			else {
-				icdCluster.put(icd10, new HashSet<Double>());
-				icdCluster.get(icd10).addAll(otherDiags);
-			}
+				for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
+				{
+					int originalSize = entry.getValue().size();
 
+					if(originalSize == 0) {
+						String info = "ClusterRatio - Nothing initial: " + 0.0;
 
-			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
+						//logger.info(info);
+						
+						continue;
+					}
 
+					if(icdClusterRemoved.containsKey(entry.getKey())) {
+						int removedSize = icdClusterRemoved.get(entry.getKey()).size();
 
-			for(String toConvert: knn) {
-				double[] label = HelpFunctions.parse(toConvert);
+						double ratio = (double) removedSize / (double) originalSize;
 
-				Double toCheckIcd10 = new Double(label[3]);
+						String info = "ClusterRatio: " + ratio;
 
-				if(otherDiags.contains(toCheckIcd10)) {
-					if(icdClusterRemoved.containsKey(icd10)) {
-						icdClusterRemoved.get(icd10).add(toCheckIcd10);
+						logger.info(info);
 					}
 					else {
-						icdClusterRemoved.put(icd10, new HashSet<Double>());
-						icdClusterRemoved.get(icd10).add(toCheckIcd10);
+						String info = "ClusterRatio - Nothing removed: " + 0.0;
+
+						logger.info(info);
 					}
 				}
 
-			}
-
-
-		}
-
-		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
-		{
-			int originalSize = entry.getValue().size();
-
-			if(originalSize == 0) {
-				info = "ClusterRatio - Nothing initial: " + 0.0;
-
-				//logger.info(info);
 				
-				continue;
 			}
-
-			if(icdClusterRemoved.containsKey(entry.getKey())) {
-				int removedSize = icdClusterRemoved.get(entry.getKey()).size();
-
-				double ratio = (double) removedSize / (double) originalSize;
-
-				info = "ClusterRatio: " + ratio;
-
-				logger.info(info);
+			catch(Exception e) {
+				
 			}
-			else {
-				info = "ClusterRatio - Nothing removed: " + 0.0;
-
-				logger.info(info);
-			}
-
-		}
-
-
-
+			
+			id++;
+		}	
 
 
 	}
+
+
 
 	private Double stringToDouble(String toConvert) {
 		StringBuilder sb = new StringBuilder();

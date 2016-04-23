@@ -16,8 +16,8 @@ public class GraphGenerator {
 
 	private int idx = 0;
 
-	List<StateVertex> vertices = new ArrayList<StateVertex>();
-	List<StateEdge> edges = new ArrayList<StateEdge>();
+	private List<StateVertex> vertices = new ArrayList<StateVertex>();
+	private List<StateEdge> edges = new ArrayList<StateEdge>();
 
 	public GraphGenerator(SequenceIterator<StateImpl> iterator) {
 		this.iterator = iterator; 
@@ -44,6 +44,10 @@ public class GraphGenerator {
 
 
 
+	}
+	
+	public int getHighestId() {
+		return idx;
 	}
 
 	private void createVerticesAndEdges() {

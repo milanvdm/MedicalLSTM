@@ -21,11 +21,13 @@ public class DeepWalkTest {
 		GraphGenerator graphGenerator = new GraphGenerator(trainingData);
 		
 		StateGraph graph = graphGenerator.createGraph();
+		int highestId = graphGenerator.getHighestId();
 		
 		StateDeepWalk deepwalk = new StateDeepWalk();
 		deepwalk.trainDeepWalk(graph, 5, 0.025, 50, 5); //TODO: test parameters
 		
-		
+		ClusterGraphTest clusterTest = new ClusterGraphTest();
+		//TODO: Define tests for cluster testing;
 		
 	}
 	

@@ -111,6 +111,10 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 	public int numVertices() {
 		return vertices.size();
 	}
+	
+	public List<Vertex<List<Double>>> getAllVertices() {
+		return vertices;
+	}
 
 
 

@@ -6,15 +6,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
+
 public class Test {
 
 	public static void main(String[] args) throws ParseException {
-		SimpleDateFormat parserSDF = new SimpleDateFormat("dd-MMM");
-		
-		Date date = parserSDF.parse("01-jul-2005");
 		
 		
-		System.out.println(decideSeason(date));
+		//SimpleDateFormat parserSDF = new SimpleDateFormat("dd-MMM");
+		
+		//Date date = parserSDF.parse("01-jul-2005");
+		
+		
+		//System.out.println(decideSeason(date));
 	}
 	
 	private static Double decideSeason(Date date) throws ParseException {
