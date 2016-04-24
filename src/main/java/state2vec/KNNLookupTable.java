@@ -23,7 +23,7 @@ public class KNNLookupTable<T extends SequenceElement> {
 	 * Use this class to feed in the data to the RNN!
 	 */
 	
-	private final String similarityMeasure = "euclidean";
+	private final String similarityMeasure;
 	
 	private SequenceVectors<StateImpl> vectors;
 	private int nearestNeighbours;
@@ -32,14 +32,17 @@ public class KNNLookupTable<T extends SequenceElement> {
 	private INDArray columnMeans;
     private INDArray columnStds;
     
-    VPTree tree = null;;
+    private VPTree tree = null;;
+    
+    private int index = 0;
 
 	
-	public KNNLookupTable(SequenceVectors<StateImpl> vectors, int nearestNeighbours) {
+	public KNNLookupTable(SequenceVectors<StateImpl> vectors, int nearestNeighbours, String similarityMeasure) {
 		this.vectors = vectors;
 		this.nearestNeighbours = nearestNeighbours;
 		this.weights = calculateWeights();
 		calculateMeanStd();
+		this.similarityMeasure = similarityMeasure;
 	}
 	
 	private void calculateMeanStd() {
@@ -91,18 +94,18 @@ public class KNNLookupTable<T extends SequenceElement> {
 		return toReturn;
 	}
 
-	public INDArray addSequenceElementVector(StateImpl sequenceElement) {
+	public boolean addSequenceElementVector(StateImpl sequenceElement) {
 		
 		String label = sequenceElement.getLabel();
 		INDArray result = null;
 		
 		if(!vectors.hasWord(label)) {
 			
-			logger.debug("Didn't find word in vocab!");
+			//logger.debug("Didn't find word in vocab!");
 			
 			List<DataPoint> kNearestNeighbours = nearestNeighbourLookup(sequenceElement); // KNN lookup 
 			
-			logger.debug(Integer.toString(kNearestNeighbours.size()));
+			//logger.debug(Integer.toString(kNearestNeighbours.size()));
 			
 			List<INDArray> wordVectors = new ArrayList<INDArray>();
 			for(DataPoint neighbour: kNearestNeighbours) {
@@ -136,17 +139,26 @@ public class KNNLookupTable<T extends SequenceElement> {
 				i++;
 			}
 			
+			if(result == null) {
+				System.out.println(tree.getItems().size());
+				System.out.println(sequenceElement.getState2vecLabelNormalized(columnMeans, columnStds));
+				System.out.println(sequenceElement.getLabel());
+				System.out.println(wordVectors.size());
+				System.out.println(kNearestNeighbours.toString());
+			}
 			// word met vector in lookuptable steken!
 			vectors.lookupTable().putVector(label, result);
+			
+			return true;
 			
 		}
 		else {
 			
-			logger.debug("Found word in vocab!");
-			result = vectors.getLookupTable().vector(label);
+			//logger.debug("Found word in vocab!");
+			//result = vectors.getLookupTable().vector(label);
 		}
 		
-		return result;
+		return false;
 		
 	}
 	
@@ -160,7 +172,6 @@ public class KNNLookupTable<T extends SequenceElement> {
 			
 			List<DataPoint> points = new ArrayList<>();
 			
-			int index = 0;
 			for(StateImpl state: vectors.getVocab().vocabWords()) {
 				INDArray ndarray = state.getState2vecLabelNormalized(columnMeans, columnStds);
 				
@@ -176,11 +187,14 @@ public class KNNLookupTable<T extends SequenceElement> {
 		}
 		
         List<DataPoint> results = new ArrayList<>();
-        List<Double> distances = new ArrayList<>();
         
-        DataPoint toSearch = new DataPoint(0, label.getState2vecLabelNormalized(columnMeans, columnStds), similarityMeasure);
+        //TODO: Add Datapoint to tree.
+        DataPoint toSearch = new DataPoint(index, label.getState2vecLabelNormalized(columnMeans, columnStds), similarityMeasure);
+        index++;
         
-        tree.search(toSearch, nearestNeighbours, results, distances);
+        tree.
+        
+        tree.search(toSearch, nearestNeighbours, results, new ArrayList<>());
         
         return results;
 		

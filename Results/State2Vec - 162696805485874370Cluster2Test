@@ -1,0 +1,12 @@
+STATE2VEC - EXPERIMENT
+
+==PARAMETERS==
+windowSize: 5
+learningRate: 0.025
+vectorLength: 50
+batchSize: 500
+epoch: 1
+
+==CLUSTERTEST 2==
+k: 1000
+

@@ -1,0 +1,71 @@
+STATE2VEC - EXPERIMENT
+
+==PARAMETERS==
+windowSize: 5
+learningRate: 0.025
+vectorLength: 50
+batchSize: 500
+epoch: 5
+
+==CLUSTERTEST 1==
+k: 5000
+
+==RESULTS==
+I35 - [0.0562]
+I35 - Average:  0.0562
+K29 - [0.0594]
+K29 - Average:  0.0594
+I46 - [0.0594]
+I46 - Average:  0.0594
+F10 - [0.0654]
+F10 - Average:  0.0654
+I50 - [0.0594]
+I50 - Average:  0.0594
+G45 - [2.0E-4]
+G45 - Average:  2.0E-4
+N17 - [0.0562]
+N17 - Average:  0.0562
+J96 - [0.0654]
+J96 - Average:  0.0654
+I48 - [0.0594]
+I48 - Average:  0.0594
+I73 - [0.0594]
+I73 - Average:  0.0594
+K59 - [0.0654]
+K59 - Average:  0.0654
+N25 - [0.0562]
+N25 - Average:  0.0562
+N30 - [0.1024]
+N30 - Average:  0.1024
+N18 - [0.0562]
+N18 - Average:  0.0562
+L98 - [0.0562]
+L98 - Average:  0.0562
+H43 - [0.0562]
+H43 - Average:  0.0562
+H35 - [0.0562]
+H35 - Average:  0.0562
+M81 - [0.0654]
+M81 - Average:  0.0654
+E87 - [0.1024]
+E87 - Average:  0.1024
+M06 - [0.0594]
+M06 - Average:  0.0594
+J45 - [0.0562]
+J45 - Average:  0.0562
+D50 - [0.0594]
+D50 - Average:  0.0594
+I11 - [0.0594]
+I11 - Average:  0.0594
+J44 - [0.0654]
+J44 - Average:  0.0654
+C79 - [0.0032]
+C79 - Average:  0.0032
+M10 - [0.0594]
+M10 - Average:  0.0594
+I21 - [0.0594]
+I21 - Average:  0.0594
+I20 - [0.1024]
+I20 - Average:  0.1024
+I25 - [0.0594]
+I25 - Average:  0.0594

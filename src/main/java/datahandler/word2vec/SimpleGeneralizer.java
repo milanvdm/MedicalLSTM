@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import util.CsvIterator;
+import util.HelpFunctions;
 
 public class SimpleGeneralizer implements Generalizer {
 
@@ -123,6 +124,10 @@ public class SimpleGeneralizer implements Generalizer {
 		}
 
 		Double toReturn = new Double(sb.toString());
+		
+		if(!HelpFunctions.icdDoubles.containsKey(toReturn)) {
+			HelpFunctions.icdDoubles.put(toReturn, toConvert);
+		}
 
 		return toReturn;
 	}

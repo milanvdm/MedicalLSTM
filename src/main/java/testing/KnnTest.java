@@ -26,7 +26,7 @@ public class KnnTest {
 		State2Vec state2vec = new State2Vec();
 		state2vec.trainSequenceVectors(file);
 		
-		KNNLookupTable<StateImpl> knnLookup = new KNNLookupTable<>(state2vec.getTrainedModel(), 3);
+		KNNLookupTable<StateImpl> knnLookup = new KNNLookupTable<>(state2vec.getTrainedModel(), 3, "euclidean");
 		
 		String newElement = "49,01-apr-2006,2,1951,8500,65,Condition Era,36416501,[[7;Drug Era - 30 day window;30;1503297;3]]";
 		String[] splitted = newElement.split(",");
@@ -37,8 +37,6 @@ public class KnnTest {
 		SequenceParser parser = new SequenceParserImpl();
 		Sequence<StateImpl> sequence = parser.getSequence(readSequence);
 		knnLookup.addSequenceElementVector(sequence.getElements().get(0));
-		
-		
 
 	}
 

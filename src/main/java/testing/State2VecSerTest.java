@@ -18,7 +18,6 @@ import datahandler.word2vec.MedicalSequenceIterator;
 import state2vec.State2Vec;
 import state2vec.StateCache;
 import util.Constants;
-import util.State2VecSerializer;
 
 public class State2VecSerTest {
 	

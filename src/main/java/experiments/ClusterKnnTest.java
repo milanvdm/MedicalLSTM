@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,17 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
-import util.Constants;
 import util.CsvIterator;
 import util.HelpFunctions;
 
-public class ClusterSeqTest {
+public class ClusterKnnTest {
 
-	protected static final Logger logger = LoggerFactory.getLogger(ClusterSeqTest.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ClusterKnnTest.class);
 
 	public Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
 
-	public ClusterSeqTest() throws IOException, InterruptedException {
+	public ClusterKnnTest() throws IOException, InterruptedException {
 		readClusters();
 	}
 
@@ -78,7 +78,7 @@ public class ClusterSeqTest {
 
 	}
 
-	public void checkClusters1(SequenceVectors<StateImpl> sequenceVectors, int k, ResultWriter writer) throws Exception {
+	public void checkClusters1(SequenceVectors<StateImpl> sequenceVectors, List<String> newLabels, int k, ResultWriter writer) throws Exception {
 		
 		writer.writeLine("==CLUSTERTEST 1==");
 		writer.writeLine("k: " + k);
@@ -91,8 +91,8 @@ public class ClusterSeqTest {
 		
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 
-		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
+		for(String newLabel: newLabels) {
+			Double icd10 = HelpFunctions.parse(newLabel)[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
@@ -109,7 +109,7 @@ public class ClusterSeqTest {
 
 			int initAmount = otherDiags.size();
 
-			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
+			Collection<String> knn = sequenceVectors.wordsNearest(newLabel, k);
 
 
 			//logger.info(knn.toString());
@@ -164,7 +164,7 @@ public class ClusterSeqTest {
 
 	}
 
-	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, int k, ResultWriter writer) throws Exception {
+	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, List<String> newLabels, int k, ResultWriter writer) throws Exception {
 		
 		writer.writeLine("==CLUSTERTEST 2==");
 		writer.writeLine("k: " + k);
@@ -178,8 +178,8 @@ public class ClusterSeqTest {
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
 
-		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
+		for(String newLabel: newLabels) {
+			Double icd10 = HelpFunctions.parse(newLabel)[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
@@ -202,7 +202,7 @@ public class ClusterSeqTest {
 			}
 
 
-			Collection<String> knn = sequenceVectors.wordsNearest(state.getLabel(), k);
+			Collection<String> knn = sequenceVectors.wordsNearest(newLabel, k);
 
 
 			for(String toConvert: knn) {

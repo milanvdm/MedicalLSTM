@@ -1,11 +1,17 @@
 package util;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class HelpFunctions {
 
+	public static Map<Double, String> icdDoubles;
+    static {
+        icdDoubles = new HashMap<Double, String>();
+    }
 
 	public static <T> T[] concatAll(T[] first, T[]... rest) {
 		int totalLength = first.length;

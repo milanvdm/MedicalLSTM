@@ -21,7 +21,7 @@ public class ClusterGraphTest {
 	
 	//TODO: write results to file
 
-	protected static final Logger logger = LoggerFactory.getLogger(ClusterSeqTest.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ClusterGraphTest.class);
 
 	public Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
 

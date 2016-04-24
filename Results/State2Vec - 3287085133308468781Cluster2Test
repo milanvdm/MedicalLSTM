@@ -1,0 +1,243 @@
+STATE2VEC - EXPERIMENT
+
+==PARAMETERS==
+windowSize: 5
+learningRate: 0.025
+vectorLength: 50
+batchSize: 500
+epoch: 1
+
+==CLUSTERTEST 2==
+k: 100
+
+==RESULTS==
+744851.0 - Nothing initial
+744850.0 - Nothing initial
+785554.0 - Nothing initial
+725649.0 - Nothing initial
+744849.0 - Nothing initial
+685456.0 - Nothing initial
+685457.0 - Nothing initial
+655250.0 - Nothing initial
+684951.0 - Nothing initial
+795548.0 - Nothing initial
+684955.0 - Nothing initial
+695454.0 - Nothing initial
+825752.0 - Nothing initial
+825753.0 - Nothing initial
+K59 - 0.27586206896551724
+N25 - 0.0625
+725148.0 - Nothing initial
+755356.0 - Nothing initial
+775555.0 - Nothing initial
+815750.0 - Nothing initial
+715648.0 - Nothing initial
+734853.0 - Nothing initial
+775557.0 - Nothing initial
+775051.0 - Nothing initial
+775049.0 - Nothing initial
+685449.0 - Nothing initial
+775053.0 - Nothing initial
+775052.0 - Nothing initial
+764851.0 - Nothing initial
+I35 - 0.15625
+795056.0 - Nothing initial
+675252.0 - Nothing initial
+775349.0 - Nothing initial
+F10 - 0.27586206896551724
+775352.0 - Nothing initial
+745150.0 - Nothing initial
+745149.0 - Nothing initial
+745148.0 - Nothing initial
+735650.0 - Nothing initial
+895652.0 - Nothing initial
+825253.0 - Nothing initial
+H35 - 0.09375
+725152.0 - Nothing initial
+735655.0 - Nothing initial
+795553.0 - Nothing initial
+825250.0 - Nothing initial
+735652.0 - Nothing initial
+825251.0 - Nothing initial
+805548.0 - Nothing initial
+795052.0 - Nothing initial
+765355.0 - Nothing initial
+795053.0 - Nothing initial
+765354.0 - Nothing initial
+795054.0 - Nothing initial
+705448.0 - Nothing initial
+795048.0 - Nothing initial
+765650.0 - Nothing initial
+825557.0 - Nothing initial
+725457.0 - Nothing initial
+724948.0 - Nothing initial
+724954.0 - Nothing initial
+665051.0 - Nothing initial
+825054.0 - Nothing initial
+735455.0 - Nothing initial
+665054.0 - Nothing initial
+665055.0 - Nothing initial
+895448.0 - Nothing initial
+765148.0 - Nothing initial
+755649.0 - Nothing initial
+745152.0 - Nothing initial
+805057.0 - Nothing initial
+M06 - 0.10344827586206896
+745157.0 - Nothing initial
+685253.0 - Nothing initial
+685256.0 - Nothing initial
+725449.0 - Nothing initial
+725448.0 - Nothing initial
+825551.0 - Nothing initial
+655050.0 - Nothing initial
+725453.0 - Nothing initial
+815348.0 - Nothing initial
+715251.0 - Nothing initial
+785649.0 - Nothing initial
+685553.0 - Nothing initial
+785655.0 - Nothing initial
+725750.0 - Nothing initial
+744950.0 - Nothing initial
+804850.0 - Nothing initial
+785653.0 - Nothing initial
+G45 - 0.0
+755450.0 - Nothing initial
+655352.0 - Nothing initial
+685054.0 - Nothing initial
+804856.0 - Nothing initial
+685055.0 - Nothing initial
+N30 - 0.24528301886792453
+705251.0 - Nothing initial
+M81 - 0.2413793103448276
+705249.0 - Nothing initial
+794848.0 - Nothing initial
+715751.0 - Nothing initial
+I11 - 0.2413793103448276
+775653.0 - Nothing initial
+715748.0 - Nothing initial
+734948.0 - Nothing initial
+C79 - 0.16666666666666666
+775652.0 - Nothing initial
+705256.0 - Nothing initial
+775149.0 - Nothing initial
+675053.0 - Nothing initial
+664850.0 - Nothing initial
+824853.0 - Nothing initial
+824854.0 - Nothing initial
+695056.0 - Nothing initial
+664849.0 - Nothing initial
+824855.0 - Nothing initial
+765456.0 - Nothing initial
+735255.0 - Nothing initial
+824848.0 - Nothing initial
+I46 - 0.1724137931034483
+795154.0 - Nothing initial
+705050.0 - Nothing initial
+J96 - 0.13793103448275862
+675355.0 - Nothing initial
+775450.0 - Nothing initial
+705048.0 - Nothing initial
+I48 - 0.27586206896551724
+745752.0 - Nothing initial
+775448.0 - Nothing initial
+895257.0 - Nothing initial
+824857.0 - Nothing initial
+775453.0 - Nothing initial
+745756.0 - Nothing initial
+H43 - 0.0625
+825349.0 - Nothing initial
+795654.0 - Nothing initial
+825350.0 - Nothing initial
+725248.0 - Nothing initial
+825351.0 - Nothing initial
+725255.0 - Nothing initial
+654853.0 - Nothing initial
+725254.0 - Nothing initial
+695556.0 - Nothing initial
+795148.0 - Nothing initial
+765451.0 - Nothing initial
+695050.0 - Nothing initial
+795150.0 - Nothing initial
+795151.0 - Nothing initial
+765448.0 - Nothing initial
+815157.0 - Nothing initial
+684849.0 - Nothing initial
+655157.0 - Nothing initial
+665655.0 - Nothing initial
+684855.0 - Nothing initial
+825650.0 - Nothing initial
+825651.0 - Nothing initial
+N17 - 0.1875
+825148.0 - Nothing initial
+795448.0 - Nothing initial
+I73 - 0.10344827586206896
+725055.0 - Nothing initial
+725054.0 - Nothing initial
+795450.0 - Nothing initial
+725053.0 - Nothing initial
+N18 - 0.0625
+L98 - 0.0625
+805157.0 - Nothing initial
+774951.0 - Nothing initial
+774950.0 - Nothing initial
+755750.0 - Nothing initial
+J45 - 0.21875
+D50 - 0.3103448275862069
+J44 - 0.20689655172413793
+M10 - 0.2413793103448276
+815151.0 - Nothing initial
+785448.0 - Nothing initial
+655148.0 - Nothing initial
+775250.0 - Nothing initial
+775249.0 - Nothing initial
+685654.0 - Nothing initial
+775254.0 - Nothing initial
+785750.0 - Nothing initial
+715354.0 - Nothing initial
+785755.0 - Nothing initial
+785753.0 - Nothing initial
+715352.0 - Nothing initial
+745048.0 - Nothing initial
+775256.0 - Nothing initial
+804953.0 - Nothing initial
+665155.0 - Nothing initial
+694851.0 - Nothing initial
+665152.0 - Nothing initial
+665153.0 - Nothing initial
+705350.0 - Nothing initial
+825153.0 - Nothing initial
+825154.0 - Nothing initial
+705349.0 - Nothing initial
+I21 - 0.41379310344827586
+I20 - 0.18867924528301888
+I25 - 0.41379310344827586
+824948.0 - Nothing initial
+824949.0 - Nothing initial
+795254.0 - Nothing initial
+805750.0 - Nothing initial
+K29 - 0.3793103448275862
+755056.0 - Nothing initial
+824951.0 - Nothing initial
+I50 - 0.3103448275862069
+664955.0 - Nothing initial
+765048.0 - Nothing initial
+795256.0 - Nothing initial
+775550.0 - Nothing initial
+664956.0 - Nothing initial
+895355.0 - Nothing initial
+765052.0 - Nothing initial
+705149.0 - Nothing initial
+795748.0 - Nothing initial
+755554.0 - Nothing initial
+755553.0 - Nothing initial
+785249.0 - Nothing initial
+725350.0 - Nothing initial
+E87 - 0.3584905660377358
+695652.0 - Nothing initial
+755049.0 - Nothing initial
+755048.0 - Nothing initial
+654956.0 - Nothing initial
+765550.0 - Nothing initial
+765549.0 - Nothing initial
+765548.0 - Nothing initial
+825451.0 - Nothing initial
