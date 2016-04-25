@@ -114,7 +114,7 @@ public class KnnTest {
 									
 									endTime = System.currentTimeMillis();
 
-									System.out.println("Cluster 1" + (endTime - startTime) + " milliseconds");
+									System.out.println("Cluster 1: " + (endTime - startTime) + " milliseconds");
 
 									ResultWriter writer2 = new ResultWriter("Knn - ", "Cluster2Test");
 									writer2.writeLine("KNN - EXPERIMENT");
@@ -136,7 +136,7 @@ public class KnnTest {
 									
 									endTime = System.currentTimeMillis();
 
-									System.out.println("Cluster 2" + (endTime - startTime) + " milliseconds");
+									System.out.println("Cluster 2: " + (endTime - startTime) + " milliseconds");
 								}
 
 
