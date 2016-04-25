@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.deeplearning4j.models.embeddings.WeightLookupTable;
-import org.deeplearning4j.models.sequencevectors.SequenceVectors;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
+import state2vec.KDTree.SearchResult;
+import state2vec.KNNLookupTable;
 import util.CsvIterator;
 import util.HelpFunctions;
 
@@ -78,21 +78,19 @@ public class ClusterKnnTest {
 
 	}
 
-	public void checkClusters1(SequenceVectors<StateImpl> sequenceVectors, List<String> newLabels, int k, ResultWriter writer) throws Exception {
+	public void checkClusters1(KNNLookupTable<StateImpl> lookupTable, Map<String, INDArray> newLabels, int k, ResultWriter writer) throws Exception {
 		
 		writer.writeLine("==CLUSTERTEST 1==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
-
-		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
 
 		//String info = "" + table.getVocabCache().numWords();
 		//logger.info(info);
 		
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 
-		for(String newLabel: newLabels) {
-			Double icd10 = HelpFunctions.parse(newLabel)[3];
+		for (Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
+			Double icd10 = HelpFunctions.parse(labelPair.getKey())[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
@@ -105,19 +103,16 @@ public class ClusterKnnTest {
 
 				}
 			}
-			//otherDiags.remove(icd10);
-
-			int initAmount = otherDiags.size();
-
-			Collection<String> knn = sequenceVectors.wordsNearest(newLabel, k);
-
-
-			//logger.info(knn.toString());
+			
+			Collection<SearchResult<String>> knn = lookupTable.nearestNeighboursVector(labelPair.getValue(), k);
 
 			int amountInCluster = 0;
 
-			for(String toConvert: knn) {
-				double[] label = HelpFunctions.parse(toConvert);
+			for(SearchResult<String> toConvert: knn) {
+				if(toConvert.payload == null) {
+					continue;
+				}
+				double[] label = HelpFunctions.parse(toConvert.payload);
 
 				Double toCheckIcd10 = new Double(label[3]);
 
@@ -164,22 +159,17 @@ public class ClusterKnnTest {
 
 	}
 
-	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, List<String> newLabels, int k, ResultWriter writer) throws Exception {
+	public void checkClusters2(KNNLookupTable<StateImpl> lookupTable, Map<String, INDArray> newLabels, int k, ResultWriter writer) throws Exception {
 		
 		writer.writeLine("==CLUSTERTEST 2==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
 
-		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
-
-		String info = "" + table.getVocabCache().numWords();
-		//logger.info(info);
-
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
 
-		for(String newLabel: newLabels) {
-			Double icd10 = HelpFunctions.parse(newLabel)[3];
+		for (Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
+			Double icd10 = HelpFunctions.parse(labelPair.getKey())[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
@@ -202,11 +192,14 @@ public class ClusterKnnTest {
 			}
 
 
-			Collection<String> knn = sequenceVectors.wordsNearest(newLabel, k);
+			Collection<SearchResult<String>> knn = lookupTable.nearestNeighboursVector(labelPair.getValue(), k);
 
 
-			for(String toConvert: knn) {
-				double[] label = HelpFunctions.parse(toConvert);
+			for(SearchResult<String> toConvert: knn) {
+				if(toConvert.payload == null) {
+					continue;
+				}
+				double[] label = HelpFunctions.parse(toConvert.payload);
 
 				Double toCheckIcd10 = new Double(label[3]);
 
