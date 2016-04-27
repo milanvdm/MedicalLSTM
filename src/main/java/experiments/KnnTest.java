@@ -1,13 +1,11 @@
 package experiments;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deeplearning4j.models.sequencevectors.SequenceVectors;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.slf4j.Logger;
@@ -34,18 +32,15 @@ public class KnnTest {
 		List<Double> percentages = Arrays.asList(0.80, 0.90, 0.95);
 		List<Integer> ksLookup = Arrays.asList(10, 50, 100);
 
-
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
-
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
 				for(int vectorLength: vectorLengths) {
 					for(int epoch: epochs) {
 						for(double percentage: percentages) {
-							TrainingDataGenerator trainingData = new TrainingDataGenerator(input, percentage);
+							TrainingDataGenerator trainingData = new TrainingDataGenerator(input, percentage); //TODO: extra test because of random shuffle
 							TestingDataGenerator testData = new TestingDataGenerator(input);
 
-							sequenceIterator.reset();
+							input.reset();
 
 							logger.info("KNN - EXPERIMENT");
 							logger.info("");
@@ -55,6 +50,7 @@ public class KnnTest {
 							logger.info("vectorLength: " + vectorLength);
 							logger.info("batchSize: " + batchsize);
 							logger.info("epoch: " + epoch);
+							logger.info("percentage: " + percentage);
 							logger.info("");
 
 							State2Vec state2vec = new State2Vec();
@@ -64,8 +60,6 @@ public class KnnTest {
 								KNNLookupTable<StateImpl> knnLookup = new KNNLookupTable<>(state2vec.getTrainedModel(), kLookup);
 
 								Map<String, INDArray> newLabels = new HashMap<String, INDArray>();
-
-								long startTime = System.currentTimeMillis();
 
 								
 								while(testData.hasMoreSequences()) {
@@ -80,9 +74,6 @@ public class KnnTest {
 
 								}
 								
-								long endTime = System.currentTimeMillis();
-
-								System.out.println("Made lookup in " + (endTime - startTime) + " milliseconds");
 								
 								if(newLabels.size() == 0) {
 									logger.debug("NO NEW LABELS");
@@ -107,14 +98,9 @@ public class KnnTest {
 									writer1.writeLine("clusterK: " + kLookup);
 									writer1.writeLine("newLabels: " + newLabels.size());
 									writer1.writeLine("");
-
-									startTime = System.currentTimeMillis();
 									
 									clusterTest.checkClusters1(knnLookup, newLabels, k, writer1);
-									
-									endTime = System.currentTimeMillis();
-
-									System.out.println("Cluster 1: " + (endTime - startTime) + " milliseconds");
+								
 
 									ResultWriter writer2 = new ResultWriter("Knn - ", "Cluster2Test");
 									writer2.writeLine("KNN - EXPERIMENT");
@@ -130,13 +116,9 @@ public class KnnTest {
 									writer2.writeLine("newLabels: " + newLabels.size());
 									writer2.writeLine("");
 
-									startTime = System.currentTimeMillis();
 									
 									clusterTest.checkClusters2(knnLookup, newLabels, k, writer2);
 									
-									endTime = System.currentTimeMillis();
-
-									System.out.println("Cluster 2: " + (endTime - startTime) + " milliseconds");
 								}
 
 

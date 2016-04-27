@@ -16,9 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import util.CsvIterator;
+import util.HelpFunctions;
 
 public class ClusterGraphTest {
-	
+
 	//TODO: write results to file
 
 	protected static final Logger logger = LoggerFactory.getLogger(ClusterGraphTest.class);
@@ -79,21 +80,27 @@ public class ClusterGraphTest {
 
 	}
 
-	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k) throws Exception {
+	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k, ResultWriter writer) throws Exception {
+
+		writer.writeLine("==CLUSTERTEST 1==");
+		writer.writeLine("k: " + k);
+		writer.writeLine("");
 
 		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
-		
+
 		GraphVectorLookupTable table = deepwalk.lookupTable();
-		
+
+		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
+
 		int id = 0;
 		while(id <= highestId) {
 			try {
 				table.getVector(id);
-				
+
 				Vertex<List<Double>> vertex = graph.getVertex(id);
 				Double icd10 = vertex.getValue().get(3);
-				
-				
+
+
 				Set<Double> otherDiags = new HashSet<Double>();
 
 				for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
@@ -130,40 +137,68 @@ public class ClusterGraphTest {
 
 
 				if(amountInCluster != 0) {
-					//info = "ClusterPercentage: " + clusterCovered;
-					//logger.info(info);
+					if(icdCluster.containsKey(icd10)) {
+						icdCluster.get(icd10).add(clusterCovered);
+					}
+					else {
+						icdCluster.put(icd10, new HashSet<Double>());
+						icdCluster.get(icd10).add(clusterCovered);
+					}
 				}
 
-				
+
+
 			}
 			catch(Exception e) {
-				
+
 			}
-			
+
 			id++;
 		}	
 
+		writer.writeLine("==RESULTS==");
+
+		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
+		{
+
+			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + entry.getValue().toString());
+
+			double total = 0;
+			for(double value: entry.getValue()) {
+				total = total + value;
+			}
+
+			double average = total / (double) entry.getValue().size();
+
+			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - Average:  " + average);
+
+		}
+
 
 	}
-	
-	public void checkClusters2(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k) throws Exception {
+
+	public void checkClusters2(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k, ResultWriter writer) throws Exception {
+
+		writer.writeLine("==CLUSTERTEST 2==");
+		writer.writeLine("k: " + k);
+		writer.writeLine("");
 
 		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
-		
+
 		GraphVectorLookupTable table = deepwalk.lookupTable();
-		
+
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
-		
+
 		int id = 0;
 		while(id <= highestId) {
 			try {
 				table.getVector(id);
-				
+
 				Vertex<List<Double>> vertex = graph.getVertex(id);
 				Double icd10 = vertex.getValue().get(3);
-				
-				
+
+
 				Set<Double> otherDiags = new HashSet<Double>();
 
 				for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
@@ -210,42 +245,52 @@ public class ClusterGraphTest {
 
 				}
 
-				for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
-				{
-					int originalSize = entry.getValue().size();
 
-					if(originalSize == 0) {
-						String info = "ClusterRatio - Nothing initial: " + 0.0;
-
-						//logger.info(info);
-						
-						continue;
-					}
-
-					if(icdClusterRemoved.containsKey(entry.getKey())) {
-						int removedSize = icdClusterRemoved.get(entry.getKey()).size();
-
-						double ratio = (double) removedSize / (double) originalSize;
-
-						String info = "ClusterRatio: " + ratio;
-
-						logger.info(info);
-					}
-					else {
-						String info = "ClusterRatio - Nothing removed: " + 0.0;
-
-						logger.info(info);
-					}
-				}
-
-				
 			}
 			catch(Exception e) {
-				
+
 			}
-			
+
 			id++;
 		}	
+
+		writer.writeLine("==RESULTS==");
+
+		double total = 0.0;
+		int n = 0;
+
+		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
+		{
+			int originalSize = entry.getValue().size();
+
+			if(originalSize == 0) {
+
+				//writer.writeLine("" + entry.getKey() + " - " + "Nothing initial");
+
+				continue;
+			}
+
+			if(icdClusterRemoved.containsKey(entry.getKey())) {
+				int removedSize = icdClusterRemoved.get(entry.getKey()).size();
+
+				double ratio = (double) removedSize / (double) originalSize;
+
+
+				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + ratio);
+
+				total = total + ratio;
+
+			}
+			else {
+				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + 0.0);
+			}
+
+			n++;
+
+		}
+
+		writer.writeLine("");
+		writer.writeLine("Average: " + total / (double) n);
 
 
 	}

@@ -16,8 +16,6 @@ import datahandler.word2vec.MedicalSequenceIterator;
 
 public class State2Vec {
 
-	//TODO: Safe model to file
-
 	protected static final Logger logger = LoggerFactory.getLogger(State2Vec.class);
 
 	private SequenceVectors<StateImpl> trainedVectors;

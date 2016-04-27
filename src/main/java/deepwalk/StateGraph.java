@@ -18,9 +18,9 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
 
 	@SuppressWarnings("unchecked")
-	public StateGraph(){
+	public StateGraph(int amountOfVertices){
 		this.vertices = new ArrayList<>();
-		this.edges = (List<Edge<Integer>>[]) Array.newInstance(List.class,vertices.size());
+		this.edges = (List<Edge<Integer>>[]) Array.newInstance(List.class, amountOfVertices);
 	}
 
 	public void addVertex(Vertex<List<Double>> vertex) {
@@ -35,6 +35,13 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 
 	@Override
 	public void addEdge(Edge<Integer> edge) {
+		
+		List<Edge<Integer>> fromList = edges[edge.getFrom()];
+        if(fromList == null){
+            fromList = new ArrayList<>();
+            edges[edge.getFrom()] = fromList;
+        }
+		
 		edges[edge.getFrom()].add(edge);
 
 	}

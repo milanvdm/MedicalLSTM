@@ -13,17 +13,21 @@ public class MainTest {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Started Main Test Version 1.0");
+		logger.info("Started Main Test Version 1.1");
 
 		File file = new File(Constants.INPUT_CSV_TEST);
 
-		logger.info("Starting State2Vec Tests");
+		//logger.info("Starting State2Vec Tests");
 
 		//new State2VecTest(file);
 
-		logger.info("Starting Knn Tests");
+		//logger.info("Starting Knn Tests");
 
-		new KnnTest(file);
+		//new KnnTest(file);
+		
+		logger.info("Starting Deepwalk Tests");
+
+		new DeepWalkTest(file); //TODO: fix Deepwalk
 	}
 
 

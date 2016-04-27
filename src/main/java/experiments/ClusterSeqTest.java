@@ -29,7 +29,7 @@ public class ClusterSeqTest {
 	}
 
 	private void readClusters() throws IOException, InterruptedException {
-		File file = new File("clusters/clusters.csv");
+		File file = new File("clusters.csv");
 
 		//skip first 5 lines
 		CsvIterator iterator = new CsvIterator(file);

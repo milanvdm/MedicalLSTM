@@ -20,7 +20,7 @@ public class TrainingDataTest {
 		
 		System.out.println("Looping");
 		while(training.hasMoreSequences()) {
-			training.nextSequence();
+			System.out.println(training.nextSequence().getElements().size());
 		}
 		
 		System.out.println(input.getCount());
