@@ -15,15 +15,29 @@ public class State2VecTest {
 	
 	protected static final Logger logger = LoggerFactory.getLogger(State2VecTest.class);
 	
-	public State2VecTest(File file) throws Exception {
+	public State2VecTest(File file, String run) throws Exception {
 		
+		List<Integer> windowSizes;
 		
+		if(run.equals("0")){
+			logger.info("Run 0");
+			windowSizes = Arrays.asList(5);
+		}
+		else if(run.equals("1")) {
+			logger.info("Run 1");
+			windowSizes = Arrays.asList(10);
+		}
+		else {
+			logger.info("Run " + run);
+			windowSizes = Arrays.asList(15);
+		}
 		
-		List<Integer> windowSizes = Arrays.asList(5, 10, 15);
-		List<Double> learningRates = Arrays.asList(0.025, 0.05, 0.1);
-		List<Integer> vectorLengths = Arrays.asList(50, 75, 100);
+		//List<Integer> windowSizes = Arrays.asList(5, 10, 15);
+		List<Double> learningRates = Arrays.asList(0.025, 0.1);
+		List<Integer> vectorLengths = Arrays.asList(50, 100);
+		List<Integer> minWordFreqs = Arrays.asList(5, 10);
 		int batchsize = 500;
-		List<Integer> epochs = Arrays.asList(1, 3, 5);
+		int epoch = 1;
 		
 		
 		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
@@ -31,7 +45,7 @@ public class State2VecTest {
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
 				for(int vectorLength: vectorLengths) {
-					for(int epoch: epochs) {
+					for(int minWordFreq: minWordFreqs) {
 						
 						logger.info("STATE2VEC - EXPERIMENT");
 						logger.info("");
@@ -41,13 +55,14 @@ public class State2VecTest {
 						logger.info("vectorLength: " + vectorLength);
 						logger.info("batchSize: " + batchsize);
 						logger.info("epoch: " + epoch);
+						logger.info("minWordFreq: " + minWordFreq);
 						logger.info("");
 						
 						sequenceIterator.reset();
 
 						State2Vec state2vec = new State2Vec();
 						
-						state2vec.trainSequenceVectors(sequenceIterator, windowSize, learningRate, vectorLength, batchsize, epoch);
+						state2vec.trainSequenceVectors(sequenceIterator, windowSize, learningRate, vectorLength, batchsize, epoch, minWordFreq);
 						
 						List<Integer> ks = Arrays.asList(100, 1000, 5000);
 						
@@ -66,6 +81,7 @@ public class State2VecTest {
 							writer1.writeLine("vectorLength: " + vectorLength);
 							writer1.writeLine("batchSize: " + batchsize);
 							writer1.writeLine("epoch: " + epoch);
+							writer1.writeLine("minWordFreq: " + minWordFreq);
 							writer1.writeLine("");
 							
 							
@@ -83,6 +99,7 @@ public class State2VecTest {
 							writer2.writeLine("vectorLength: " + vectorLength);
 							writer2.writeLine("batchSize: " + batchsize);
 							writer2.writeLine("epoch: " + epoch);
+							writer2.writeLine("minWordFreq: " + minWordFreq);
 							writer2.writeLine("");
 							
 							clusterTest.checkClusters2(state2vec.getTrainedModel(), k, writer2);

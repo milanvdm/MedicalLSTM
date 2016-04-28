@@ -1,18 +1,19 @@
 package deepwalk;
 
-import java.util.List;
+
+import data.StateImpl;
 
 public class StateVertex {
 	
 	private int idx;
-	private List<Double> value;
+	private StateImpl value;
 
-	public StateVertex(int idx, List<Double> value) {
+	public StateVertex(int idx, StateImpl value) {
 		this.idx = idx;
 		this.value = value;
 	}
 	
-	public List<Double> getValue() {
+	public StateImpl getValue() {
 		return this.value;
 	}
 	
@@ -29,7 +30,7 @@ public class StateVertex {
         if (!(o instanceof StateVertex)) return false;
         StateVertex v = (StateVertex) o;
         if ((this.value == null && v.getValue() != null) || (this.value != null && v.getValue() == null)) return false;
-        return this.value == null || this.value.equals(v.getValue());
+        return this.value == null || this.value.getLabel().equals(v.getValue().getLabel());
     }
 	
 	

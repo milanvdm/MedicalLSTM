@@ -20,27 +20,36 @@ public class KnnTest {
 
 	protected static final Logger logger = LoggerFactory.getLogger(KnnTest.class);
 
-	public KnnTest(File file) throws Exception {		
+	public KnnTest(File trainingFile, File testFile, String run) throws Exception {		
 
-		MedicalSequenceIterator<StateImpl> input = new MedicalSequenceIterator<StateImpl>(file, false);
+		List<Integer> windowSizes;
 
-		List<Integer> windowSizes = Arrays.asList(5, 10, 15);
-		List<Double> learningRates = Arrays.asList(0.025, 0.05, 0.1);
-		List<Integer> vectorLengths = Arrays.asList(50, 75, 100);
+		if(run.equals("0")){
+			logger.info("Run 0");
+			windowSizes = Arrays.asList(5);
+		}
+		else if(run.equals("1")) {
+			logger.info("Run 1");
+			windowSizes = Arrays.asList(10);
+		}
+		else {
+			logger.info("Run " + run);
+			windowSizes = Arrays.asList(15);
+		}
+
+		//List<Integer> windowSizes = Arrays.asList(5, 10, 15);
+		List<Double> learningRates = Arrays.asList(0.025, 0.1);
+		List<Integer> vectorLengths = Arrays.asList(50, 100);
+		List<Integer> minWordFreqs = Arrays.asList(5, 10);
 		int batchsize = 500;
-		List<Integer> epochs = Arrays.asList(1, 3, 5);
-		List<Double> percentages = Arrays.asList(0.80, 0.90, 0.95);
-		List<Integer> ksLookup = Arrays.asList(10, 50, 100);
+		int epoch = 1;
 
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
 				for(int vectorLength: vectorLengths) {
-					for(int epoch: epochs) {
-						for(double percentage: percentages) {
-							TrainingDataGenerator trainingData = new TrainingDataGenerator(input, percentage); //TODO: extra test because of random shuffle
-							TestingDataGenerator testData = new TestingDataGenerator(input);
-
-							input.reset();
+					for(int minWordFreq: minWordFreqs) {
+							MedicalSequenceIterator<StateImpl> trainingData = new MedicalSequenceIterator<StateImpl>(trainingFile, false);
+							MedicalSequenceIterator<StateImpl> testData = new MedicalSequenceIterator<StateImpl>(testFile, false);
 
 							logger.info("KNN - EXPERIMENT");
 							logger.info("");
@@ -50,18 +59,21 @@ public class KnnTest {
 							logger.info("vectorLength: " + vectorLength);
 							logger.info("batchSize: " + batchsize);
 							logger.info("epoch: " + epoch);
-							logger.info("percentage: " + percentage);
+							logger.info("minWordFreq: " + minWordFreq);
 							logger.info("");
 
 							State2Vec state2vec = new State2Vec();
-							state2vec.trainSequenceVectors(trainingData, windowSize, learningRate, vectorLength, batchsize, epoch);
+							state2vec.trainSequenceVectors(trainingData, windowSize, learningRate, vectorLength, batchsize, epoch, minWordFreq);
 
+
+							List<Integer> ksLookup = Arrays.asList(10, 50, 100);
+							
 							for(int kLookup: ksLookup) {
 								KNNLookupTable<StateImpl> knnLookup = new KNNLookupTable<>(state2vec.getTrainedModel(), kLookup);
 
 								Map<String, INDArray> newLabels = new HashMap<String, INDArray>();
 
-								
+
 								while(testData.hasMoreSequences()) {
 									Sequence<StateImpl> sequence = testData.nextSequence();
 
@@ -73,8 +85,8 @@ public class KnnTest {
 									}
 
 								}
-								
-								
+
+
 								if(newLabels.size() == 0) {
 									logger.debug("NO NEW LABELS");
 									continue;
@@ -94,13 +106,13 @@ public class KnnTest {
 									writer1.writeLine("vectorLength: " + vectorLength);
 									writer1.writeLine("batchSize: " + batchsize);
 									writer1.writeLine("epoch: " + epoch);
-									writer1.writeLine("percentage: " + percentage);
+									writer1.writeLine("minWordFreq: " + minWordFreq);
 									writer1.writeLine("clusterK: " + kLookup);
 									writer1.writeLine("newLabels: " + newLabels.size());
 									writer1.writeLine("");
-									
+
 									clusterTest.checkClusters1(knnLookup, newLabels, k, writer1);
-								
+
 
 									ResultWriter writer2 = new ResultWriter("Knn - ", "Cluster2Test");
 									writer2.writeLine("KNN - EXPERIMENT");
@@ -111,14 +123,14 @@ public class KnnTest {
 									writer2.writeLine("vectorLength: " + vectorLength);
 									writer2.writeLine("batchSize: " + batchsize);
 									writer2.writeLine("epoch: " + epoch);
-									writer2.writeLine("percentage: " + percentage);
+									writer2.writeLine("minWordFreq: " + minWordFreq);
 									writer2.writeLine("clusterK: " + kLookup);
 									writer2.writeLine("newLabels: " + newLabels.size());
 									writer2.writeLine("");
 
-									
+
 									clusterTest.checkClusters2(knnLookup, newLabels, k, writer2);
-									
+
 								}
 
 
@@ -134,6 +146,6 @@ public class KnnTest {
 
 
 
-	}
+	
 
 }

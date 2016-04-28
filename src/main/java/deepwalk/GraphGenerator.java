@@ -1,12 +1,15 @@
 package deepwalk;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.deeplearning4j.graph.api.Edge;
 import org.deeplearning4j.graph.api.Vertex;
 import org.deeplearning4j.models.sequencevectors.interfaces.SequenceIterator;
 import org.deeplearning4j.models.sequencevectors.sequence.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
 
@@ -16,22 +19,33 @@ public class GraphGenerator {
 
 	private List<StateVertex> vertices = new ArrayList<StateVertex>();
 	private List<StateEdge> edges = new ArrayList<StateEdge>();
+	
+	protected static final Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
 
 	public GraphGenerator(SequenceIterator<StateImpl> iterator) {
 		this.iterator = iterator; 
 	}
 
 	public StateGraph createGraph() {
+		
+		logger.info("Making Vertices and Edges from SequenceIterator");
 
 		createVerticesAndEdges();
+		
+		logger.info("Making StateGraph");
+		
+		StateVertex dummy = new StateVertex(vertices.size(), new StateImpl(Arrays.asList(-1.0, -1.0, -1.0, -1.0, -1.0, -1.0).toString()));
+		vertices.add(dummy);
 		
 		StateGraph graph = new StateGraph(vertices.size());
 
 
 		for(StateVertex vertex: vertices) {
-			Vertex<List<Double>> toAdd = new Vertex<List<Double>>(vertex.getIdx(), vertex.getValue());
+			Vertex<StateImpl> toAdd = new Vertex<StateImpl>(vertex.getIdx(), vertex.getValue());
 			graph.addVertex(toAdd);
 		}
+		
+		
 
 		int total = 0;
 		for(StateEdge edge: edges) {
@@ -42,22 +56,7 @@ public class GraphGenerator {
 			total = total + edge.getWeight();
 		}
 		
-		System.out.println(vertices.size());
-		System.out.println(total);
-		
-		int j = 0;
-		int i = 0;
-		while(i < vertices.size()) {
-			if(graph.getVertexDegree(i) == 0) {
-				j++;
-			}
-			
-			i++;
-		
-		}
-		
-		System.out.println(j);
-
+		graph.removeZeroDegrees();
 
 		return graph;
 
@@ -77,12 +76,16 @@ public class GraphGenerator {
 		while(iterator.hasMoreSequences()) {
 			Sequence<StateImpl> sequence = iterator.nextSequence();
 
+			if(sequence.getElements().size() == 1) {
+				continue;
+			}
+			
 			int i = 0;
 			while(i <  sequence.getElements().size()) {
 
 				StateImpl state = sequence.getElements().get(i);
 
-				StateVertex dummy = new StateVertex(-1, state.getState2vecLabel());
+				StateVertex dummy = new StateVertex(-1, state);
 				
 				int dummyId = vertices.indexOf(dummy);
 

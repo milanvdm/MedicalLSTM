@@ -29,12 +29,12 @@ public class State2Vec {
 		 */
 		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<>(file, false);
 		
-		trainSequenceVectors(sequenceIterator, 10, 0.025, 50, 250, 1);
+		trainSequenceVectors(sequenceIterator, 10, 0.025, 50, 250, 1, 5);
 
 	}
 
 	
-	public void trainSequenceVectors(SequenceIterator<StateImpl> sequenceIterator, int windowSize, double lr, int vectorLength, int batchSize, int epochs) throws Exception {
+	public void trainSequenceVectors(SequenceIterator<StateImpl> sequenceIterator, int windowSize, double lr, int vectorLength, int batchSize, int epochs, int minWordFrequency) throws Exception {
 		
 		
 		/*
@@ -49,7 +49,7 @@ public class State2Vec {
 		logger.info("Building Vocab");
 
 		VocabConstructor<StateImpl> constructor = new VocabConstructor.Builder<StateImpl>()
-				.addSource(sequenceIterator, windowSize)
+				.addSource(sequenceIterator, minWordFrequency)
 				.setTargetVocabCache(stateCache)
 				.build();
 
@@ -79,7 +79,6 @@ public class State2Vec {
 		SequenceVectors<StateImpl> vectors = new SequenceVectors.Builder<StateImpl>(new VectorsConfiguration())
 				// minimum number of occurencies for each element in training corpus. All elements below this value will be ignored
 				// Please note: this value has effect only if resetModel() set to TRUE, for internal model building. Otherwise it'll be ignored, and actual vocabulary content will be used
-
 
 				// WeightLookupTable
 				.lookupTable(lookupTable)

@@ -15,6 +15,7 @@ import org.deeplearning4j.graph.models.embeddings.GraphVectorLookupTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import deepwalk.StateGraph;
 import util.CsvIterator;
 import util.HelpFunctions;
 
@@ -80,13 +81,11 @@ public class ClusterGraphTest {
 
 	}
 
-	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k, ResultWriter writer) throws Exception {
+	public void checkClusters1(DeepWalk<List<Double>, Integer> deepwalk, StateGraph graph,  int highestId, int k, ResultWriter writer) throws Exception {
 
 		writer.writeLine("==CLUSTERTEST 1==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
-
-		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
 
 		GraphVectorLookupTable table = deepwalk.lookupTable();
 
@@ -95,11 +94,13 @@ public class ClusterGraphTest {
 		int id = 0;
 		while(id <= highestId) {
 			try {
+				
+				System.out.println(id);
+					
 				table.getVector(id);
 
 				Vertex<List<Double>> vertex = graph.getVertex(id);
 				Double icd10 = vertex.getValue().get(3);
-
 
 				Set<Double> otherDiags = new HashSet<Double>();
 
@@ -116,7 +117,6 @@ public class ClusterGraphTest {
 				int initAmount = otherDiags.size();
 
 				int[] knn = deepwalk.verticesNearest(id, k);
-
 
 				//logger.info(knn.toString());
 
@@ -150,12 +150,14 @@ public class ClusterGraphTest {
 
 			}
 			catch(Exception e) {
-
+				e.printStackTrace();
 			}
 
 			id++;
 		}	
 
+		System.out.println("printing");
+		
 		writer.writeLine("==RESULTS==");
 
 		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
@@ -177,13 +179,11 @@ public class ClusterGraphTest {
 
 	}
 
-	public void checkClusters2(DeepWalk<List<Double>, Integer> deepwalk, int highestId, int k, ResultWriter writer) throws Exception {
+	public void checkClusters2(DeepWalk<List<Double>, Integer> deepwalk, StateGraph graph, int highestId, int k, ResultWriter writer) throws Exception {
 
 		writer.writeLine("==CLUSTERTEST 2==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
-
-		IGraph<List<Double>, Integer> graph = deepwalk.getGraph();
 
 		GraphVectorLookupTable table = deepwalk.lookupTable();
 
@@ -248,7 +248,7 @@ public class ClusterGraphTest {
 
 			}
 			catch(Exception e) {
-
+				e.printStackTrace();
 			}
 
 			id++;

@@ -9,6 +9,8 @@ import datahandler.word2vec.MedicalSequenceIterator;
 
 public class TrainingDataGenerator implements SequenceIterator<StateImpl> {
 	
+	//TOO SLOW
+	
 	private MedicalSequenceIterator<StateImpl> input;
 	
 	private double percentage;

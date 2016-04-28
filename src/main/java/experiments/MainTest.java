@@ -13,21 +13,25 @@ public class MainTest {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Started Main Test Version 1.1");
+		logger.info("Started Main Test Version 1.7");
 
+		//File file = new File("conditions_sorted.csv");
 		File file = new File(Constants.INPUT_CSV_TEST);
+		//File trainingFile = new File("training.csv");
+		//File testFile = new File("test.csv");
 
 		//logger.info("Starting State2Vec Tests");
 
-		//new State2VecTest(file);
+		//new State2VecTest(file, "0");
+		//new State2VecTest(file, args[0]);
 
 		//logger.info("Starting Knn Tests");
 
-		//new KnnTest(file);
+		//new KnnTest(trainingFile, testFile, args[0]);
 		
 		logger.info("Starting Deepwalk Tests");
 
-		new DeepWalkTest(file); //TODO: fix Deepwalk
+		new DeepWalkTest(file);
 	}
 
 

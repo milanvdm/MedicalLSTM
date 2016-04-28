@@ -11,10 +11,29 @@ import org.deeplearning4j.graph.api.Edge;
 import org.deeplearning4j.graph.api.Vertex;
 import org.deeplearning4j.graph.exception.NoEdgesException;
 
-public class StateGraph extends BaseGraph<List<Double>, Integer> {
+import data.StateImpl;
+
+public class StateGraph extends BaseGraph<StateImpl, Integer> {
 
 	private List<Edge<Integer>>[] edges;  //edge[i].get(j).to = k, then edge from i -> k
-	private List<Vertex<List<Double>>> vertices;
+	
+	private List<Vertex<StateImpl>> vertices;
+	
+	public void removeZeroDegrees() {
+		int i = 0;
+		while(i < vertices.size()) {
+			if(getVertexDegree(i) == 0) {
+				edges[i] = new ArrayList<>();
+				edges[i].add(new Edge<Integer>(i, vertices.size() - 1, 1, true));
+			}
+			
+			i++;
+		
+		}
+		
+		edges[vertices.size() - 1] = new ArrayList<>();
+		edges[vertices.size() - 1].add(new Edge<Integer>(vertices.size() - 1, vertices.size() - 1, 1, true));
+	}
 
 
 	@SuppressWarnings("unchecked")
@@ -23,7 +42,7 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 		this.edges = (List<Edge<Integer>>[]) Array.newInstance(List.class, amountOfVertices);
 	}
 
-	public void addVertex(Vertex<List<Double>> vertex) {
+	public void addVertex(Vertex<StateImpl> vertex) {
 		if(vertices.contains(vertex)) {
 			return;
 		}
@@ -58,11 +77,11 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 	}
 
 	@Override
-	public List<Vertex<List<Double>>> getConnectedVertices(int vertex) {
+	public List<Vertex<StateImpl>> getConnectedVertices(int vertex) {
 		if(vertex < 0 || vertex >= vertices.size()) throw new IllegalArgumentException("Invalid vertex index: " + vertex);
 
         if(edges[vertex] == null) return Collections.emptyList();
-        List<Vertex<List<Double>>> list = new ArrayList<>(edges[vertex].size());
+        List<Vertex<StateImpl>> list = new ArrayList<>(edges[vertex].size());
         for(Edge<Integer> edge : edges[vertex]){
             list.add(vertices.get(edge.getTo()));
         }
@@ -76,7 +95,7 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 	}
 
 	@Override
-	public Vertex<List<Double>> getRandomConnectedVertex(int vertex, Random rng) throws NoEdgesException {
+	public Vertex<StateImpl> getRandomConnectedVertex(int vertex, Random rng) throws NoEdgesException {
 		if(vertex < 0 || vertex >= vertices.size() ) throw new IllegalArgumentException("Invalid vertex index: " + vertex);
         if(edges[vertex] == null || edges[vertex].size() == 0)
             throw new NoEdgesException("Cannot generate random connected vertex: vertex " + vertex + " has no outgoing/undirected edges");
@@ -87,7 +106,7 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 	}
 
 	@Override
-	public Vertex<List<Double>> getVertex(int idx) {
+	public Vertex<StateImpl> getVertex(int idx) {
 		if(idx < 0 || idx >= vertices.size() ) throw new IllegalArgumentException("Invalid index: " + idx);
 		return vertices.get(idx);
 	}
@@ -99,17 +118,17 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 	}
 
 	@Override
-	public List<Vertex<List<Double>>> getVertices(int[] indexes) {
-		List<Vertex<List<Double>>> out = new ArrayList<>(indexes.length);
+	public List<Vertex<StateImpl>> getVertices(int[] indexes) {
+		List<Vertex<StateImpl>> out = new ArrayList<>(indexes.length);
 		for(int i : indexes) out.add(getVertex(i));
 		return out;
 	}
 
 	@Override
-	public List<Vertex<List<Double>>> getVertices(int from, int to) {
+	public List<Vertex<StateImpl>> getVertices(int from, int to) {
 		if(to < from || from < 0 || to >= vertices.size())
 			throw new IllegalArgumentException("Invalid range: from="+from + ", to="+to);
-		List<Vertex<List<Double>>> out = new ArrayList<>(to-from+1);
+		List<Vertex<StateImpl>> out = new ArrayList<>(to-from+1);
 		for(int i=from; i<=to; i++ ) out.add(getVertex(i));
 		return out;
 	}
@@ -119,7 +138,7 @@ public class StateGraph extends BaseGraph<List<Double>, Integer> {
 		return vertices.size();
 	}
 	
-	public List<Vertex<List<Double>>> getAllVertices() {
+	public List<Vertex<StateImpl>> getAllVertices() {
 		return vertices;
 	}
 

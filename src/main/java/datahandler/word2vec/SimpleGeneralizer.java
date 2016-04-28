@@ -20,7 +20,8 @@ public class SimpleGeneralizer implements Generalizer {
 
 	private static final String MAPPING_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/mapping.csv";
 	private static final String ICD_PATH = "/media/milan/Data/Thesis/Datasets/TagCloud/care_icd10_en.csv";
-
+	//private static final String MAPPING_PATH = "mapping.csv";
+	//private static final String ICD_PATH = "care_icd10_en.csv";
 
 	public Double getGeneralTimeDifference(double timeDifference) {
 		if(timeDifference <= 0) {

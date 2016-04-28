@@ -29,7 +29,8 @@ public class ClusterSeqTest {
 	}
 
 	private void readClusters() throws IOException, InterruptedException {
-		File file = new File("clusters.csv");
+		//File file = new File("clusters.csv");
+		File file = new File("clusters/clusters.csv");
 
 		//skip first 5 lines
 		CsvIterator iterator = new CsvIterator(file);
@@ -92,7 +93,7 @@ public class ClusterSeqTest {
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 
 		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
+			Double icd10 = state.getState2vecLabel().get(3);
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
@@ -179,7 +180,7 @@ public class ClusterSeqTest {
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
 
 		for(StateImpl state: table.getVocabCache().vocabWords()) {
-			Double icd10 = (Double) state.getCompleteState().get(Constants.CONDITION_COLUMN);
+			Double icd10 = state.getState2vecLabel().get(3);
 
 			Set<Double> otherDiags = new HashSet<Double>();
 

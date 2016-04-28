@@ -1,11 +1,9 @@
 package experiments;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.deeplearning4j.graph.models.deepwalk.DeepWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,23 +20,21 @@ public class DeepWalkTest {
 
 	public DeepWalkTest(File file) throws Exception {
 
-		MedicalSequenceIterator<StateImpl> input = new MedicalSequenceIterator<StateImpl>(file, false);
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
 
 		List<Integer> windowSizes = Arrays.asList(5, 10, 15);
-		List<Double> learningRates = Arrays.asList(0.025, 0.05, 0.1);
-		List<Integer> vectorLengths = Arrays.asList(50, 75, 100);
-		List<Double> percentages = Arrays.asList(0.80, 0.90, 0.95);
+		List<Double> learningRates = Arrays.asList(0.025, 0.1);
+		List<Integer> vectorLengths = Arrays.asList(50, 100);
+		List<Integer> minWordFreqs = Arrays.asList(5, 10);
+		int batchsize = 500;
+		int epoch = 1;
 		List<Integer> walkLengths = Arrays.asList(5, 10, 15);
 
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
 				for(int vectorLength: vectorLengths) {
-					for(double percentage: percentages) {
+					for(int minWordFreq: minWordFreqs) {
 						for(int walkLength: walkLengths) {
-							TrainingDataGenerator trainingData = new TrainingDataGenerator(input, percentage); //TODO: extra test because of random shuffle
-							//TestingDataGenerator testData = new TestingDataGenerator(input);
-
-							input.reset();
 
 							logger.info("DEEPWALK - EXPERIMENT");
 							logger.info("");
@@ -46,24 +42,23 @@ public class DeepWalkTest {
 							logger.info("windowSize: " + windowSize);
 							logger.info("learningRate: " + learningRate);
 							logger.info("vectorLength: " + vectorLength);
-							logger.info("percentage: " + percentage);
+							logger.info("batchSize: " + batchsize);
+							logger.info("epoch: " + epoch);
+							logger.info("minWordFreq: " + minWordFreq);
 							logger.info("walklength: " + walkLength);
 							logger.info("");
 
 
-							GraphGenerator graphGenerator = new GraphGenerator(trainingData);
+							GraphGenerator graphGenerator = new GraphGenerator(sequenceIterator);
 
 							StateGraph graph = graphGenerator.createGraph();
-							int highestId = graphGenerator.getHighestId();
 
 							StateDeepWalk deepwalk = new StateDeepWalk();
-							deepwalk.trainDeepWalk(graph, windowSize, learningRate, vectorLength, walkLength); 
+							deepwalk.trainDeepWalk(graph, windowSize, learningRate, vectorLength, walkLength, batchsize, epoch, minWordFreq); 
 							
-							DeepWalk<List<Double>, Integer> model = deepwalk.getTrainedModel();
-
 							List<Integer> ks = Arrays.asList(100, 1000, 5000);
 							
-							ClusterGraphTest clusterTest = new ClusterGraphTest();
+							ClusterSeqTest clusterTest = new ClusterSeqTest();
 							
 
 							for(int k: ks) {
@@ -74,11 +69,13 @@ public class DeepWalkTest {
 								writer1.writeLine("windowSize: " + windowSize);
 								writer1.writeLine("learningRate: " + learningRate);
 								writer1.writeLine("vectorLength: " + vectorLength);
-								writer1.writeLine("percentage: " + percentage);
+								writer1.writeLine("batchSize: " + batchsize);
+								writer1.writeLine("epoch: " + epoch);
+								writer1.writeLine("minWordFreq: " + minWordFreq);
 								writer1.writeLine("walklength: " + walkLength);
 								writer1.writeLine("");
 								
-								clusterTest.checkClusters1(model, highestId, k, writer1);
+								clusterTest.checkClusters1(deepwalk.getTrainedModel(), k, writer1);
 							
 
 								ResultWriter writer2 = new ResultWriter("Deepwalk - ", "Cluster2Test");
@@ -88,12 +85,14 @@ public class DeepWalkTest {
 								writer2.writeLine("windowSize: " + windowSize);
 								writer2.writeLine("learningRate: " + learningRate);
 								writer2.writeLine("vectorLength: " + vectorLength);
-								writer2.writeLine("percentage: " + percentage);
+								writer2.writeLine("batchSize: " + batchsize);
+								writer2.writeLine("epoch: " + epoch);
+								writer2.writeLine("minWordFreq: " + minWordFreq);
 								writer2.writeLine("walklength: " + walkLength);
 								writer2.writeLine("");
 
 								
-								clusterTest.checkClusters2(model, highestId, k, writer2);
+								clusterTest.checkClusters1(deepwalk.getTrainedModel(), k, writer2);
 								
 							}
 						}
