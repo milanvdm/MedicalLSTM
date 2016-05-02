@@ -13,25 +13,42 @@ public class MainTest {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Started Main Test Version 1.7");
+		logger.info("Started Main Test Version 1.8");
 
-		//File file = new File("conditions_sorted.csv");
-		File file = new File(Constants.INPUT_CSV_TEST);
-		//File trainingFile = new File("training.csv");
-		//File testFile = new File("test.csv");
-
-		//logger.info("Starting State2Vec Tests");
-
-		//new State2VecTest(file, "0");
-		//new State2VecTest(file, args[0]);
-
-		//logger.info("Starting Knn Tests");
-
-		//new KnnTest(trainingFile, testFile, args[0]);
 		
-		logger.info("Starting Deepwalk Tests");
+		//File file = new File(Constants.INPUT_CSV_TEST);
+		
+		
+		
+		if(args[0].equals("state2vec")) {
+			File file = new File("conditions_sorted.csv");
+			
+			logger.info("Starting State2Vec Tests");
 
-		new DeepWalkTest(file);
+			//new State2VecTest(file, "0");
+			new State2VecTest(file, args[1]);
+		}
+		if(args[0].equals("knn")) {
+			File trainingFile = new File("training.csv");
+			File testFile = new File("test.csv");
+			
+			logger.info("Starting Knn Tests");
+
+			new KnnTest(trainingFile, testFile, args[1]);
+		}
+		if(args[0].equals("deepwalk")) {
+			File deepwalkFile = new File("deepwalk.csv");
+			
+			logger.info("Starting Deepwalk Tests");
+
+			new DeepWalkTest(deepwalkFile, args[1]);
+		}
+
+		
+
+		
+		
+		
 	}
 
 

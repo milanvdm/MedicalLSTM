@@ -2,9 +2,11 @@ package experiments;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
-import util.Constants;
 import util.CsvIterator;
 import util.HelpFunctions;
 
@@ -29,8 +30,8 @@ public class ClusterSeqTest {
 	}
 
 	private void readClusters() throws IOException, InterruptedException {
-		//File file = new File("clusters.csv");
-		File file = new File("clusters/clusters.csv");
+		File file = new File("clusters.csv");
+		//File file = new File("clusters/clusters.csv");
 
 		//skip first 5 lines
 		CsvIterator iterator = new CsvIterator(file);
@@ -80,7 +81,7 @@ public class ClusterSeqTest {
 	}
 
 	public void checkClusters1(SequenceVectors<StateImpl> sequenceVectors, int k, ResultWriter writer) throws Exception {
-		
+
 		writer.writeLine("==CLUSTERTEST 1==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
@@ -89,24 +90,30 @@ public class ClusterSeqTest {
 
 		//String info = "" + table.getVocabCache().numWords();
 		//logger.info(info);
-		
-		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
+
+		Map<Double, List<Double>> icdCluster = new HashMap<Double, List<Double>>();
 
 		for(StateImpl state: table.getVocabCache().vocabWords()) {
 			Double icd10 = state.getState2vecLabel().get(3);
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
+			boolean toContinue = false;
 			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
 			{
 				if(entry.getValue().contains(icd10)) {
 					if(!entry.getKey().equals("None")) {
+						toContinue = true;
 						otherDiags.addAll(entry.getValue());
 					}
 
 				}
 			}
 			//otherDiags.remove(icd10);
+
+			if(toContinue == false) {
+				continue;
+			}
 
 			int initAmount = otherDiags.size();
 
@@ -128,36 +135,34 @@ public class ClusterSeqTest {
 
 			}
 
-			
-			
+
+
 			double clusterCovered = (double) amountInCluster / (double) k;
 
-			if(amountInCluster != 0) {
-				if(icdCluster.containsKey(icd10)) {
-					icdCluster.get(icd10).add(clusterCovered);
-				}
-				else {
-					icdCluster.put(icd10, new HashSet<Double>());
-					icdCluster.get(icd10).add(clusterCovered);
-				}
+			if(icdCluster.containsKey(icd10)) {
+				icdCluster.get(icd10).add(clusterCovered);
+			}
+			else {
+				icdCluster.put(icd10, new ArrayList<Double>());
+				icdCluster.get(icd10).add(clusterCovered);
 			}
 
 		}
-		
+
 		writer.writeLine("==RESULTS==");
-		
-		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
+
+		for (Map.Entry<Double, List<Double>> entry : icdCluster.entrySet())
 		{
-			
+
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + entry.getValue().toString());
-			
+
 			double total = 0;
 			for(double value: entry.getValue()) {
 				total = total + value;
 			}
-			
+
 			double average = total / (double) entry.getValue().size();
-			
+
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - Average:  " + average);
 
 		}
@@ -166,15 +171,12 @@ public class ClusterSeqTest {
 	}
 
 	public void checkClusters2(SequenceVectors<StateImpl> sequenceVectors, int k, ResultWriter writer) throws Exception {
-		
+
 		writer.writeLine("==CLUSTERTEST 2==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
 
 		WeightLookupTable<StateImpl> table = sequenceVectors.getLookupTable();
-
-		String info = "" + table.getVocabCache().numWords();
-		//logger.info(info);
 
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
@@ -184,14 +186,20 @@ public class ClusterSeqTest {
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
+			boolean toContinue = false;
 			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
 			{
 				if(entry.getValue().contains(icd10)) {
 					if(!entry.getKey().equals("None")) {
+						toContinue = true;
 						otherDiags.addAll(entry.getValue());
 					}
 
 				}
+			}
+			
+			if(toContinue == false) {
+				continue;
 			}
 
 			if(icdCluster.containsKey(icd10)) {
@@ -225,12 +233,12 @@ public class ClusterSeqTest {
 
 
 		}
-		
+
 		writer.writeLine("==RESULTS==");
 
 		double total = 0.0;
 		int n = 0;
-		
+
 		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
 		{
 			int originalSize = entry.getValue().size();
@@ -238,7 +246,7 @@ public class ClusterSeqTest {
 			if(originalSize == 0) {
 
 				//writer.writeLine("" + entry.getKey() + " - " + "Nothing initial");
-				
+
 				continue;
 			}
 
@@ -247,16 +255,16 @@ public class ClusterSeqTest {
 
 				double ratio = (double) removedSize / (double) originalSize;
 
-				
+
 				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + ratio);
-				
+
 				total = total + ratio;
 
 			}
 			else {
 				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + 0.0);
 			}
-			
+
 			n++;
 
 		}

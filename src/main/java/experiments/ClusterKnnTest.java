@@ -2,9 +2,11 @@ package experiments;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +31,8 @@ public class ClusterKnnTest {
 	}
 
 	private void readClusters() throws IOException, InterruptedException {
-		File file = new File("clusters/clusters.csv");
+		//File file = new File("clusters/clusters.csv");
+		File file = new File("clusters.csv");
 
 		//skip first 5 lines
 		CsvIterator iterator = new CsvIterator(file);
@@ -79,31 +82,37 @@ public class ClusterKnnTest {
 	}
 
 	public void checkClusters1(KNNLookupTable<StateImpl> lookupTable, Map<String, INDArray> newLabels, int k, ResultWriter writer) throws Exception {
-		
+
 		writer.writeLine("==CLUSTERTEST 1==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
 
 		//String info = "" + table.getVocabCache().numWords();
 		//logger.info(info);
-		
-		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
+
+		Map<Double, List<Double>> icdCluster = new HashMap<Double, List<Double>>();
 
 		for (Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
 			Double icd10 = HelpFunctions.parse(labelPair.getKey())[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
+			boolean toContinue = false;
 			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
 			{
 				if(entry.getValue().contains(icd10)) {
 					if(!entry.getKey().equals("None")) {
+						toContinue = true;
 						otherDiags.addAll(entry.getValue());
 					}
 
 				}
 			}
-			
+
+			if(toContinue == false) {
+				continue;
+			}
+
 			Collection<SearchResult<String>> knn = lookupTable.nearestNeighboursVector(labelPair.getValue(), k);
 
 			int amountInCluster = 0;
@@ -122,36 +131,34 @@ public class ClusterKnnTest {
 
 			}
 
-			
-			
+
+
 			double clusterCovered = (double) amountInCluster / (double) k;
 
-			if(amountInCluster != 0) {
-				if(icdCluster.containsKey(icd10)) {
-					icdCluster.get(icd10).add(clusterCovered);
-				}
-				else {
-					icdCluster.put(icd10, new HashSet<Double>());
-					icdCluster.get(icd10).add(clusterCovered);
-				}
+			if(icdCluster.containsKey(icd10)) {
+				icdCluster.get(icd10).add(clusterCovered);
+			}
+			else {
+				icdCluster.put(icd10, new ArrayList<Double>());
+				icdCluster.get(icd10).add(clusterCovered);
 			}
 
 		}
-		
+
 		writer.writeLine("==RESULTS==");
-		
-		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
+
+		for (Map.Entry<Double, List<Double>> entry : icdCluster.entrySet())
 		{
-			
+
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + entry.getValue().toString());
-			
+
 			double total = 0;
 			for(double value: entry.getValue()) {
 				total = total + value;
 			}
-			
+
 			double average = total / (double) entry.getValue().size();
-			
+
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - Average:  " + average);
 
 		}
@@ -160,7 +167,7 @@ public class ClusterKnnTest {
 	}
 
 	public void checkClusters2(KNNLookupTable<StateImpl> lookupTable, Map<String, INDArray> newLabels, int k, ResultWriter writer) throws Exception {
-		
+
 		writer.writeLine("==CLUSTERTEST 2==");
 		writer.writeLine("k: " + k);
 		writer.writeLine("");
@@ -168,19 +175,25 @@ public class ClusterKnnTest {
 		Map<Double, Set<Double>> icdCluster = new HashMap<Double, Set<Double>>();
 		Map<Double, Set<Double>> icdClusterRemoved = new HashMap<Double, Set<Double>>();
 
-		for (Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
+		for(Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
 			Double icd10 = HelpFunctions.parse(labelPair.getKey())[3];
 
 			Set<Double> otherDiags = new HashSet<Double>();
 
+			boolean toContinue = false;
 			for (Map.Entry<String, Set<Double>> entry : clusters.entrySet())
 			{
 				if(entry.getValue().contains(icd10)) {
 					if(!entry.getKey().equals("None")) {
+						toContinue = true;
 						otherDiags.addAll(entry.getValue());
 					}
 
 				}
+			}
+
+			if(toContinue == false) {
+				continue;
 			}
 
 			if(icdCluster.containsKey(icd10)) {
@@ -217,12 +230,12 @@ public class ClusterKnnTest {
 
 
 		}
-		
+
 		writer.writeLine("==RESULTS==");
 
 		double total = 0.0;
 		int n = 0;
-		
+
 		for (Map.Entry<Double, Set<Double>> entry : icdCluster.entrySet())
 		{
 			int originalSize = entry.getValue().size();
@@ -230,7 +243,7 @@ public class ClusterKnnTest {
 			if(originalSize == 0) {
 
 				//writer.writeLine("" + entry.getKey() + " - " + "Nothing initial");
-				
+
 				continue;
 			}
 
@@ -239,16 +252,16 @@ public class ClusterKnnTest {
 
 				double ratio = (double) removedSize / (double) originalSize;
 
-				
+
 				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + ratio);
-				
+
 				total = total + ratio;
 
 			}
 			else {
 				writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + 0.0);
 			}
-			
+
 			n++;
 
 		}

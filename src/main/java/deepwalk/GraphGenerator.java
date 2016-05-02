@@ -2,7 +2,9 @@ package deepwalk;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.deeplearning4j.graph.api.Edge;
 import org.deeplearning4j.graph.api.Vertex;
@@ -17,8 +19,9 @@ public class GraphGenerator {
 
 	private SequenceIterator<StateImpl> iterator;
 
-	private List<StateVertex> vertices = new ArrayList<StateVertex>();
-	private List<StateEdge> edges = new ArrayList<StateEdge>();
+	private Map<String, StateVertex> labelToState = new HashMap<String, StateVertex>();
+	private List<StateVertex> vertices = new ArrayList<StateVertex>(); //TODO: make hashmaps for fast lookup
+	private List<StateEdge> edges = new ArrayList<StateEdge>(); //TODO: make hashmaps for fast lookup
 	
 	protected static final Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
 
@@ -84,15 +87,21 @@ public class GraphGenerator {
 			while(i <  sequence.getElements().size()) {
 
 				StateImpl state = sequence.getElements().get(i);
+				String label = state.getLabel();
+				
+				int dummyId = -1;
+				if(labelToState.containsKey(label)) {
+					dummyId = labelToState.get(label).getIdx();
+				}
 
 				StateVertex dummy = new StateVertex(-1, state);
-				
-				int dummyId = vertices.indexOf(dummy);
+				 
 
 				if(dummyId == -1) {
 					dummy.setIdx(vertices.size());
 					dummyId = vertices.size();
-					vertices.add(dummy);
+					vertices.add(dummy); 
+					labelToState.put(label, dummy);
 
 				}
 				else {

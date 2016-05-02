@@ -18,17 +18,52 @@ public class DeepWalkTest {
 	protected static final Logger logger = LoggerFactory.getLogger(DeepWalkTest.class);
 
 
-	public DeepWalkTest(File file) throws Exception {
+	public DeepWalkTest(File file, String run) throws Exception {
 
-		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
+		List<Integer> windowSizes;
+		List<Double> learningRates;
+		
+		if(run.equals("0")){
+			logger.info("Run 0");
+			windowSizes = Arrays.asList(5);
+			learningRates = Arrays.asList(0.025, 0.1);
+		}
+		else if(run.equals("1")) {
+			logger.info("Run 1");
+			windowSizes = Arrays.asList(5);
+			learningRates = Arrays.asList(0.1);
+		}
+		else if(run.equals("2")) {
+			logger.info("Run 2");
+			windowSizes = Arrays.asList(10);
+			learningRates = Arrays.asList(0.025);
+		}
+		else if(run.equals("3")) {
+			logger.info("Run 3");
+			windowSizes = Arrays.asList(10);
+			learningRates = Arrays.asList(0.1);
+		}
+		else if(run.equals("4")) {
+			logger.info("Run 4");
+			windowSizes = Arrays.asList(15);
+			learningRates = Arrays.asList(0.025);
+		}
+		else {
+			logger.info("Run " + run);
+			windowSizes = Arrays.asList(15);
+			learningRates = Arrays.asList(0.1);
+		}
 
-		List<Integer> windowSizes = Arrays.asList(5, 10, 15);
-		List<Double> learningRates = Arrays.asList(0.025, 0.1);
+		//List<Integer> windowSizes = Arrays.asList(5, 10, 15);
+		//List<Double> learningRates = Arrays.asList(0.025, 0.1);
 		List<Integer> vectorLengths = Arrays.asList(50, 100);
 		List<Integer> minWordFreqs = Arrays.asList(5, 10);
 		int batchsize = 500;
 		int epoch = 1;
+
 		List<Integer> walkLengths = Arrays.asList(5, 10, 15);
+		
+		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
 
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
@@ -55,11 +90,13 @@ public class DeepWalkTest {
 
 							StateDeepWalk deepwalk = new StateDeepWalk();
 							deepwalk.trainDeepWalk(graph, windowSize, learningRate, vectorLength, walkLength, batchsize, epoch, minWordFreq); 
-							
+
 							List<Integer> ks = Arrays.asList(100, 1000, 5000);
-							
+
+							logger.info("Started Tests");
+
 							ClusterSeqTest clusterTest = new ClusterSeqTest();
-							
+
 
 							for(int k: ks) {
 								ResultWriter writer1 = new ResultWriter("Deepwalk - ", "Cluster1Test");
@@ -74,9 +111,9 @@ public class DeepWalkTest {
 								writer1.writeLine("minWordFreq: " + minWordFreq);
 								writer1.writeLine("walklength: " + walkLength);
 								writer1.writeLine("");
-								
+
 								clusterTest.checkClusters1(deepwalk.getTrainedModel(), k, writer1);
-							
+
 
 								ResultWriter writer2 = new ResultWriter("Deepwalk - ", "Cluster2Test");
 								writer2.writeLine("DEEPWALK - EXPERIMENT");
@@ -91,9 +128,9 @@ public class DeepWalkTest {
 								writer2.writeLine("walklength: " + walkLength);
 								writer2.writeLine("");
 
-								
-								clusterTest.checkClusters1(deepwalk.getTrainedModel(), k, writer2);
-								
+
+								clusterTest.checkClusters2(deepwalk.getTrainedModel(), k, writer2);
+
 							}
 						}
 					}

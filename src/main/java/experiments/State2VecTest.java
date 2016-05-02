@@ -18,22 +18,41 @@ public class State2VecTest {
 	public State2VecTest(File file, String run) throws Exception {
 		
 		List<Integer> windowSizes;
+		List<Double> learningRates;
 		
 		if(run.equals("0")){
 			logger.info("Run 0");
 			windowSizes = Arrays.asList(5);
+			learningRates = Arrays.asList(0.025, 0.1);
 		}
 		else if(run.equals("1")) {
 			logger.info("Run 1");
+			windowSizes = Arrays.asList(5);
+			learningRates = Arrays.asList(0.1);
+		}
+		else if(run.equals("2")) {
+			logger.info("Run 2");
 			windowSizes = Arrays.asList(10);
+			learningRates = Arrays.asList(0.025);
+		}
+		else if(run.equals("3")) {
+			logger.info("Run 3");
+			windowSizes = Arrays.asList(10);
+			learningRates = Arrays.asList(0.1);
+		}
+		else if(run.equals("4")) {
+			logger.info("Run 4");
+			windowSizes = Arrays.asList(15);
+			learningRates = Arrays.asList(0.025);
 		}
 		else {
 			logger.info("Run " + run);
 			windowSizes = Arrays.asList(15);
+			learningRates = Arrays.asList(0.1);
 		}
 		
 		//List<Integer> windowSizes = Arrays.asList(5, 10, 15);
-		List<Double> learningRates = Arrays.asList(0.025, 0.1);
+		//List<Double> learningRates = Arrays.asList(0.025, 0.1);
 		List<Integer> vectorLengths = Arrays.asList(50, 100);
 		List<Integer> minWordFreqs = Arrays.asList(5, 10);
 		int batchsize = 500;

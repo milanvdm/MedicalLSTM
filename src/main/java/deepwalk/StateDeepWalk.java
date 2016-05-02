@@ -1,7 +1,5 @@
 package deepwalk;
 
-import java.util.List;
-
 import org.deeplearning4j.models.embeddings.WeightLookupTable;
 import org.deeplearning4j.models.embeddings.inmemory.InMemoryLookupTable;
 import org.deeplearning4j.models.embeddings.loader.VectorsConfiguration;
@@ -11,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.StateImpl;
-import deepwalk.graph.walkers.impl.RandomWalker;
+import deepwalk.graph.enums.WalkDirection;
+import deepwalk.graph.walkers.impl.WeightedWalker;
 import deepwalk.transformers.impl.GraphTransformer;
-import state2vec.State2Vec;
 import state2vec.StateCache;
 
 public class StateDeepWalk {
@@ -32,15 +30,16 @@ public class StateDeepWalk {
 		
 		logger.info("Making RandomWalker");
 		
-		RandomWalker<StateImpl> randomWalker = new RandomWalker.Builder<StateImpl>(graph)
+		WeightedWalker<StateImpl> weightedWalker = new WeightedWalker.Builder<StateImpl>(graph)
 				.setRestartProbability(0.05)
 				.setWalkLength(walkLength)
+				.setWalkDirection(WalkDirection.RANDOM)
 				.build();
 		
 		logger.info("Transforming graph");
 		
 		GraphTransformer<StateImpl> transformer = new GraphTransformer.Builder<StateImpl>(graph)
-				.setGraphWalker(randomWalker)
+				.setGraphWalker(weightedWalker)
 				.build();
 		
 		GraphSequenceIterator sequenceIterator = new GraphSequenceIterator(transformer);

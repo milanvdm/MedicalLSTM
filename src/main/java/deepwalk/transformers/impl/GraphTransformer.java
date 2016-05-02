@@ -90,7 +90,6 @@ public class GraphTransformer<T extends SequenceElement> implements Iterable<Seq
             public Sequence<T> next() {
                 Sequence<T> sequence = walker.next();
                 sequence.setSequenceId(counter.getAndIncrement());
-
                 
                 return sequence;
             }

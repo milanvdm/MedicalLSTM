@@ -146,8 +146,8 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 		//Get amount of Sequences
 		int size = 0;
 		while(this.hasMoreSequences()) {
-			Sequence<T> sequence = this.nextSequence();
-			size = size + sequence.getElements().size();
+			this.nextSequence();
+			size++;
 		}
 		this.reset();
 		
