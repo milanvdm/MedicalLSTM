@@ -24,6 +24,7 @@ public class ClusterSeqTest {
 	protected static final Logger logger = LoggerFactory.getLogger(ClusterSeqTest.class);
 
 	public Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
+	public Map<Double, Integer> allDiseasesInClusters = new HashMap<Double, Integer>();
 
 	public ClusterSeqTest() throws IOException, InterruptedException {
 		readClusters();
@@ -71,6 +72,11 @@ public class ClusterSeqTest {
 				diags.add(stringToDouble(diag3));
 				diags.add(stringToDouble(diag4));
 			}
+			
+			allDiseasesInClusters.put(stringToDouble(diag1), 0);
+			allDiseasesInClusters.put(stringToDouble(diag2), 0);
+			allDiseasesInClusters.put(stringToDouble(diag3), 0);
+			allDiseasesInClusters.put(stringToDouble(diag4), 0);
 		}
 
 		//logger.info(clusters.toString());
@@ -92,6 +98,7 @@ public class ClusterSeqTest {
 		//logger.info(info);
 
 		Map<Double, List<Double>> icdCluster = new HashMap<Double, List<Double>>();
+		Map<Double, List<Integer>> totalAmounts = new HashMap<Double, List<Integer>>();
 
 		for(StateImpl state: table.getVocabCache().vocabWords()) {
 			Double icd10 = state.getState2vecLabel().get(3);
@@ -134,17 +141,33 @@ public class ClusterSeqTest {
 				}
 
 			}
+			
+			int totalAmountInCluster = 0;
+			
+			for(String toConvert: knn) {
+				double[] label = HelpFunctions.parse(toConvert);
+
+				Double toCheckIcd10 = new Double(label[3]);
+
+				if(allDiseasesInClusters.containsKey(toCheckIcd10)) {
+					totalAmountInCluster++;
+				}
+
+			}
 
 
-
-			double clusterCovered = (double) amountInCluster / (double) k;
+			double clusterCovered = (double) amountInCluster / (double) totalAmountInCluster;
 
 			if(icdCluster.containsKey(icd10)) {
 				icdCluster.get(icd10).add(clusterCovered);
+				totalAmounts.get(icd10).add(totalAmountInCluster);
 			}
 			else {
 				icdCluster.put(icd10, new ArrayList<Double>());
 				icdCluster.get(icd10).add(clusterCovered);
+				
+				totalAmounts.put(icd10, new ArrayList<Integer>());
+				totalAmounts.get(icd10).add(totalAmountInCluster);
 			}
 
 		}
@@ -154,6 +177,7 @@ public class ClusterSeqTest {
 		for (Map.Entry<Double, List<Double>> entry : icdCluster.entrySet())
 		{
 
+			writer.writeLine("TotalsInClusters: " + totalAmounts.get(entry.getKey()).toString());
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + entry.getValue().toString());
 
 			double total = 0;

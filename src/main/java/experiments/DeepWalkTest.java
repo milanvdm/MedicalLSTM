@@ -64,6 +64,10 @@ public class DeepWalkTest {
 		List<Integer> walkLengths = Arrays.asList(5, 10, 15);
 		
 		MedicalSequenceIterator<StateImpl> sequenceIterator = new MedicalSequenceIterator<StateImpl>(file, false);
+		
+		GraphGenerator graphGenerator = new GraphGenerator(sequenceIterator);
+
+		StateGraph graph = graphGenerator.createGraph();
 
 		for(int windowSize: windowSizes) {
 			for(double learningRate: learningRates) {
@@ -82,11 +86,6 @@ public class DeepWalkTest {
 							logger.info("minWordFreq: " + minWordFreq);
 							logger.info("walklength: " + walkLength);
 							logger.info("");
-
-
-							GraphGenerator graphGenerator = new GraphGenerator(sequenceIterator);
-
-							StateGraph graph = graphGenerator.createGraph();
 
 							StateDeepWalk deepwalk = new StateDeepWalk();
 							deepwalk.trainDeepWalk(graph, windowSize, learningRate, vectorLength, walkLength, batchsize, epoch, minWordFreq); 

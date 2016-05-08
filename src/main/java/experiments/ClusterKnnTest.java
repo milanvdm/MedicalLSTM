@@ -26,6 +26,8 @@ public class ClusterKnnTest {
 
 	public Map<String, Set<Double>> clusters = new HashMap<String, Set<Double>>();
 
+	public Map<Double, Integer> allDiseasesInClusters = new HashMap<Double, Integer>();
+
 	public ClusterKnnTest() throws IOException, InterruptedException {
 		readClusters();
 	}
@@ -72,6 +74,11 @@ public class ClusterKnnTest {
 				diags.add(stringToDouble(diag3));
 				diags.add(stringToDouble(diag4));
 			}
+			
+			allDiseasesInClusters.put(stringToDouble(diag1), 0);
+			allDiseasesInClusters.put(stringToDouble(diag2), 0);
+			allDiseasesInClusters.put(stringToDouble(diag3), 0);
+			allDiseasesInClusters.put(stringToDouble(diag4), 0);
 		}
 
 		//logger.info(clusters.toString());
@@ -91,6 +98,7 @@ public class ClusterKnnTest {
 		//logger.info(info);
 
 		Map<Double, List<Double>> icdCluster = new HashMap<Double, List<Double>>();
+		Map<Double, List<Integer>> totalAmounts = new HashMap<Double, List<Integer>>();
 
 		for (Map.Entry<String, INDArray> labelPair : newLabels.entrySet()) {
 			Double icd10 = HelpFunctions.parse(labelPair.getKey())[3];
@@ -130,17 +138,38 @@ public class ClusterKnnTest {
 				}
 
 			}
+			
+			int totalAmountInCluster = 0;
+			
+			for(SearchResult<String> toConvert: knn) {
+				if(toConvert.payload == null) {
+					continue;
+				}
+				
+				double[] label = HelpFunctions.parse(toConvert.payload);
+
+				Double toCheckIcd10 = new Double(label[3]);
+
+				if(allDiseasesInClusters.containsKey(toCheckIcd10)) {
+					totalAmountInCluster++;
+				}
+
+			}
 
 
 
-			double clusterCovered = (double) amountInCluster / (double) k;
+			double clusterCovered = (double) amountInCluster / (double) totalAmountInCluster;
 
 			if(icdCluster.containsKey(icd10)) {
 				icdCluster.get(icd10).add(clusterCovered);
+				totalAmounts.get(icd10).add(totalAmountInCluster);
 			}
 			else {
 				icdCluster.put(icd10, new ArrayList<Double>());
 				icdCluster.get(icd10).add(clusterCovered);
+				
+				totalAmounts.put(icd10, new ArrayList<Integer>());
+				totalAmounts.get(icd10).add(totalAmountInCluster);
 			}
 
 		}
@@ -150,6 +179,7 @@ public class ClusterKnnTest {
 		for (Map.Entry<Double, List<Double>> entry : icdCluster.entrySet())
 		{
 
+			writer.writeLine("TotalsInClusters: " + totalAmounts.get(entry.getKey()).toString());
 			writer.writeLine("" + HelpFunctions.icdDoubles.get(entry.getKey()) + " - " + entry.getValue().toString());
 
 			double total = 0;

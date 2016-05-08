@@ -19,8 +19,9 @@ public class GraphGenerator {
 
 	private SequenceIterator<StateImpl> iterator;
 
-	private Map<String, StateVertex> labelToState = new HashMap<String, StateVertex>();
+	private Map<String, StateVertex> vertexMap = new HashMap<String, StateVertex>();
 	private List<StateVertex> vertices = new ArrayList<StateVertex>(); //TODO: make hashmaps for fast lookup
+	private Map<String, StateEdge> edgeMap = new HashMap<String, StateEdge>();
 	private List<StateEdge> edges = new ArrayList<StateEdge>(); //TODO: make hashmaps for fast lookup
 	
 	protected static final Logger logger = LoggerFactory.getLogger(GraphGenerator.class);
@@ -76,10 +77,11 @@ public class GraphGenerator {
 
 		iterator.reset();
 
+		int count = 0;
 		while(iterator.hasMoreSequences()) {
 			Sequence<StateImpl> sequence = iterator.nextSequence();
 
-			if(sequence.getElements().size() == 1) {
+			if(sequence.getElements().size() == 1 || sequence.getElements().size() == 0) {
 				continue;
 			}
 			
@@ -90,8 +92,8 @@ public class GraphGenerator {
 				String label = state.getLabel();
 				
 				int dummyId = -1;
-				if(labelToState.containsKey(label)) {
-					dummyId = labelToState.get(label).getIdx();
+				if(vertexMap.containsKey(label)) {
+					dummyId = vertexMap.get(label).getIdx();
 				}
 
 				StateVertex dummy = new StateVertex(-1, state);
@@ -101,7 +103,7 @@ public class GraphGenerator {
 					dummy.setIdx(vertices.size());
 					dummyId = vertices.size();
 					vertices.add(dummy); 
-					labelToState.put(label, dummy);
+					vertexMap.put(label, dummy);
 
 				}
 				else {
@@ -119,7 +121,12 @@ public class GraphGenerator {
 
 			previousVertex = null;
 
+			
+			if(count % 100000 == 0) {
+				logger.info("Amount of states done: " + count);
+			}
 
+			count++;
 		}
 
 	}
@@ -128,14 +135,17 @@ public class GraphGenerator {
 		int from = previousVertex.getIdx();
 		
 		int to = currentVertex.getIdx();
+		
+		String key = from + "-" + to;
 
 		StateEdge dummy = new StateEdge(from, to, 1);
 
-		if(edges.contains(dummy)) {
-			edges.get(edges.indexOf(dummy)).increaseWeight();
+		if(edgeMap.containsKey(key)) {
+			edgeMap.get(key).increaseWeight();
 		}
 		else {
 			edges.add(dummy);
+			edgeMap.put(key, dummy);
 		}
 
 	}

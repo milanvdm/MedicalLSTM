@@ -13,11 +13,13 @@ public class MainTest {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Started Main Test Version 1.8");
+		logger.info("Started Main Test Version 2.0");
 
 		
-		//File file = new File(Constants.INPUT_CSV_TEST);
-		
+		//File file1 = new File(Constants.INPUT_CSV_TEST);
+		//logger.info("Starting State2Vec Tests");
+
+		//new State2VecTest(file1, "0");
 		
 		
 		if(args[0].equals("state2vec")) {
