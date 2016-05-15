@@ -19,41 +19,64 @@ Context: Depends on chosen problem (Extracting knowledge from EHR )
 
 \section{Electronic Health Records}
 
-An electronic health records (EHR) is a collection of data about a patient at a certain point in time. It is stored digitally and thus can be part of a large number of patients over a long time period.
+An electronic health record (EHR) is a collection of time-stamped data about a patient over a period point of time. It is stored digitally and thus can be established for a large number of patients over a long time period. \\
+The data stored in an EHR provides an overview of the patients health information. Health information like demographics, medical history, diagnoses, medications, and such, are stored \cite{HealthIT:online}. \\
+
+Large countries like the US and the UK, are each investing more than $20$ billion dollars into EHR systems \cite{EHRworld:article}. Those systems are adopted by around $70$\% of the physicians. Which means a large number of physicians are using other methods or systems. Also, each country develops his own system which results in a good nationwide coverage but introduces different system around the world. We focus on disease codes in the next section and introduce two standards: one used by mainly insurance companies and the other used by pharmaceutical companies.
+
 
 \subsection{Disease Codes}
 
-An important part of EHRs is applying methods which are uniform and well documented. This makes it easy to store and extract data from large-scale databases of EHRs. A part of an EHR consists of the diagnosis of the patient. It provides information about the disease trajectory of the patient and allows analysis on the health situation of a patient. With a uniform system for classifying diseases, it is possible to provide a general picture on health situations of populations.
+To make EHRs practical it is important to adhere to standards for data formatting. A well documented standard makes it easy to store and extract information from large-scale databases of EHRs. Without the possibility of extracting information, an EHR becomes a simple digital version of medical records on paper. \\
+A part of an EHR consists of the diagnosis of the patient. It provides information about his disease trajectory and allows analysis on his health situation. With a uniform system for classifying diseases, it is possible to provide a general picture on health situations of populations.
 
 \subsubsection{ICD-10}
 
-The International Statistical Classification if Diseases and Related Health Problems (ICD) is a medical classification list made by the World Health Organization (WHO). The ICD contains more than $14,400$ codes about diseases, disorders, injuries, and other related health conditions. It also provides hierarchical categories for those codes to allow a more general overview of diseases.
+The International Statistical Classification of Diseases and Related Health Problems (ICD) is a medical classification list made by the World Health Organization (WHO) \cite{WHO_ICD:online}. The ICD-10 contains more than $14,400$ codes about diseases, disorders, injuries, and other related health conditions. For example, the code for a sprained ankle is $S93.4$. It also provides hierarchical categories for those codes to allow a more general overview of diseases. ICD is mainly used by insurance companies.
 
 
 \subsubsection{MedDRA}
 
-The Medical Dictionary for Regulatory Activities (MedDRA) provides medical terminology in the form of disease codes. It doesn't provide hierarchical categories.
+The Medical Dictionary for Regulatory Activities (MedDRA) provides medical terminology in the form of disease codes \cite{MedDRA:online}. A MedDRA code is an eight digit numberic code where new terms are assigned sequentially. It does not provide clear hierarchical categories like ICD which can't be understand without a medical background. MedDRA is mainly used by pharmaceutical companies.
 
 \section{EHR Analytics}
 
-EHRs provide a massive amount of data which could be used to create useful insights. Those insights can be offered on an individual level, which means a right intervention to the right patient at the right time. EHR analytics can be used to have a personalized care for patients and benefits the healthcare system by cutting costs and improved outcomes. \\
+EHRs provide a massive amount of data which could be used to create useful insights. The data contains the medical history of a patient including medical measurements, diagnosis, prescribed drugs, and demographics. Based on those values, we could obtain the following insights:
+
+\begin{itemize}
+
+\item Effects of drugs
+\item Medical costs for certain diseases
+\item Duration and recovery percentage of certain diseases
+\item Correlation between demographics and certain diseases
+\item Link between current health state and health history
+\item Prediction of future health states based on history
+
+\end{itemize}
+
+Those insights can be offered on an individual level, which means a right intervention to the right patient at the right time. EHR analytics can be used to have a personalized care and benefits the healthcare system by cutting costs and improve outcomes. \\
 
 In the following sections we talk about current EHR analytic methods.
 
 
 \subsection{Querying}
 
-Analytics on EHRs is still done through querying a database. A specialist can have a certain idea about correlations between conditions or patients. He can support this idea by finding cases in EHRs for example. \\
-This method is based on the knowledge and experience of a specialist. The information has to be actively be sought after and thus a lot of other information is never found. Also complex relations aren't easily found and maybe too subtle to be found by a querying language.
+Analytics in epidemiology on EHRs is typically done through querying a database \cite{EHRquery:journal}. A specialist can have a certain idea about correlations between conditions or patients. He can support this idea by finding cases in EHRs and analyzing the results of his query. \\
+This method is based on the knowledge and experience of a specialist. The information has to be actively sought after and unexpected or complex correlations are not considered. Some complex relations cannot be found because of the limitations of the querying language. A query language is equivalent to first-order logic. Which means non-linear relations in the data cannot be found.
 
-\subsection{Recommender Systems}
+\subsection{Big Data Analytics}
 
-An EHR of a patient can be transformed into a matrix structure, see figure \ref{fig:matrixPatient}. On these matrix structures, feature extraction methods can be applied similar to recommender systems. This can, for example, be done by defining patient similarities. So when a patient is similar to a previous patient, his treatment can be based on previous experiences.
+More advanced methods are applied on EHR than querying. In general, they try to find patterns in the EHR data which then can be used to predict outcomes of treatments \cite{EHRbigdata:slides}. \\
+
+Several predictive methods can be used and show promising results \cite{EHRmining:article}. Those results are achieved by using non-optimized methods which are applied on the EHR data. We also note that methods used as Multi-layer Perceptron networks are not ideal for prediction of time-series, see section \ref{sec:PatientClassification}. We conclude that there is still a lot of room for improvement. \\
+ 
+More specialized approaches are also applied on EHR data \cite{EHRrecommender:article}. 
+An EHR of a patient can be transformed into a matrix structure, see figure \ref{fig:matrixPatient}. On these matrix structures, feature extraction methods can be applied similar to recommender systems. This can, for example, be done by defining patient similarities \cite{EHRsimilarity:article}. So when a patient is similar to a previous patient, his treatment can be based on previous experiences.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{matrixPatient.png}
-	\caption{An example of an EHR transformed into a matrix structure.}
+	\includegraphics[width=\textwidth]{matrixPatient.png}
+	\caption{Example of an EHR transformed into a matrix structure \cite{EHRrecommender:article}}
 	\label{fig:matrixPatient}
 \end{figure}
 
@@ -65,38 +88,10 @@ These techniques have been applied to Danish EHRs. The study identifies temporal
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{clusterGraphDanish.png}
-	\caption{A cerebrovascular disease trajectory cluster for the Danish population.}
+	\includegraphics[width=\textwidth]{clusterGraphDanish.png}
+	\caption{Cerebrovascular disease trajectory cluster for the Danish population \cite{Brunak:article}}
 	\label{fig:clusterGraphDanish}
 \end{figure}
-
-
-
-http://www.who.int/classifications/icd/en/
-
-http://arxiv.org/pdf/1112.1668v1.pdf
-
-https://en.wikipedia.org/wiki/Electronic\_health\_record\#Technical\_features
-
-file:///media/milan/Data/Chrome\%20Downloads/EHRAnalytics\_Stateoftheart\%20(1).pdf
-
-http://www.meddra.org/
-
-https://www.siam.org/meetings/sdm13/sun.pdf
-
-Jimeng Sun, Fei Wang, Jianying Hu, Shahram Edabollahi: Supervised patient similarity measure of
-heterogeneous patient records. SIGKDD Explorations 14(1): 16-24 (2012)
-
-https://books.google.co.uk/books?id=eZmjIVtVtucC\&pg=
-PA96\&lpg=PA96\&dq=querying+ehr\&source=bl\&ots=
-AM3VVXy\_n-\&sig=epPrp87M\_ZixVmikVJKto8IvyIM\&
-hl=nl\&sa=X\&ved=0ahUKEwjQ3MzouPrLAhXFhQ8KHaqs
-D5I4ChDoAQgbMAA\#v=onepage\&q=querying
-\%20ehr\&f=false
-
-Towards Heterogeneous Temporal Clinical Event Pattern
-Discovery:A Convolutional Approach
-
 
 http://www.nature.com/ncomms/2014/140617/ncomms5022/pdf/ncomms5022.pdf
 
