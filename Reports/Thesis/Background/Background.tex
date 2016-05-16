@@ -9,18 +9,24 @@ In this chapter
 
 
 \section{Background Knowledge}
-We assume a basic knowledge of general computer science concepts as algorithms, statistics, time complexity, linear algebra, basic graph theory, optimization, and heuristics.
 
-
-	\subsection{Machine Learning}
-Machine learning is a data driven approach with as goal to build a model which can be	used to make predictions or decisions. This task is done by algorithms which are able to learn models based on examples given by the designer. In machine learning there are $3$ types of problems, namely supervised learning, unsupervised learning, and reinforcement learning. \\
-Supervised learning is concerned with the learning task where there are examples given with their corresponding label. Unsupervised learning is similar to supervised learning only no labels are given. We won't go into reinforcement learning. \\
-We can also classify to problems according to the desired output of our model. Those main tasks consist of classification, regression, clustering, and dimension reduction.
-	
-	
 	\subsection{Time Series Analysis}
 A time series consists of data points over a certain time period. We refer to this as a sequence of states. Where a state represents a data point and can differ from a single value to more complex representations like pictures. \\
-The domain of time series analysis handles around extracting information or relations from a time series. It can have different goals like forecasting, classification, or exploratory.
+The domain of time series analysis handles around extracting information or relations from a time series. It can have different goals like forecasting, classification, or exploratory. \\
+
+A medical history of a patient can be seen as a time series. This means that methods applied on time series are also applicable on the medical data to find patterns.
+
+	\subsection{Machine Learning}
+Machine learning is a data driven approach with as goal to build a model which can be	used to make predictions or decisions, which can be used to predict outcomes of time series. This task is done by algorithms which are able to learn models based on examples given by the designer. Based on the examples, machine learning aims to tackle $3$ types of problems, namely supervised learning, unsupervised learning, and reinforcement learning. \\
+Supervised learning is concerned with the learning task where there are examples given with their corresponding label. Unsupervised learning is similar to supervised learning only no labels are given. We won't go into reinforcement learning. \\
+We can also classify the problems according to the desired output of our model. Those main tasks consist of classification, regression, and clustering. \\
+	
+We mention some used methods in the field of machine learning. These are used in all above mentioned problems. 
+\begin{itemize}[noitemsep]
+\item In the field of classification neural networks are used to achieve state of the art results.
+\item For regression, Support Vector Machines can be used. 
+\item One of the most popular methods for clustering is K-means.
+\end{itemize}
 	
 	
 	\subsection{Neural Networks}
@@ -42,17 +48,17 @@ output =
 	
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=4cm]{perceptron.png}
-	\caption{A simple presentation of a perceptron.}
+	\includegraphics[width=0.4\textwidth]{perceptron.png}
+	\caption{Simple presentation of a perceptron \cite{NNintro:online}}
 	\label{fig:perceptron}
 \end{figure}
 
-We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}. By building these networks, more complex decisions can be made.
+We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons, the network can find non-linear relations between the input and output.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{multiplePerceptrons.png}
-	\caption{A more complex network made by connecting multiple perceptrons.}
+	\includegraphics[width=0.8\textwidth]{multiplePerceptrons.png}
+	\caption{More complex network made by connecting multiple perceptrons \cite{NNintro:online}}
 	\label{fig:multiplePerceptrons}
 \end{figure}
 
@@ -61,20 +67,20 @@ In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on th
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{networkArchitecture.png}
-	\caption{General vocabulary for a multilayer network.}
+	\includegraphics[width=0.8\textwidth]{networkArchitecture.png}
+	\caption{General vocabulary for a multilayer network \cite{NNintro:online}}
 	\label{fig:networkArch}
 \end{figure} 		
 
 
 		\subsubsection{Training a network}
 		
-To train a neural network, we input an example with a known label. The network will have a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Of course, this change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous images could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen pictures but that the current picture is labeled correctly.
+To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous images could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen pictures but that the current picture is labeled correctly.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{smallChange.png}
-	\caption{A small change on the weights, only has a small impact on the output.}
+	\includegraphics[width=0.8\textwidth]{smallChange.png}
+	\caption{Small change on the weights, only has a small impact on the output \cite{NNintro:online}}
 	\label{fig:smallChange}
 \end{figure} 
 
@@ -102,8 +108,8 @@ We use $w^l_{jk}$ to denote the weight corresponding to the connection between t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{termNN.png}
-	\caption{Visual representation of the terminology for a neural network.}
+	\includegraphics[width=0.8\textwidth]{termNN.png}
+	\caption{Visual representation of the terminology for a neural network \cite{NNintro:online}}
 	\label{fig:termNN}
 \end{figure} 
 
@@ -115,7 +121,7 @@ a^l = \sigma (w^la^{l-1}+b^l)
 
 		\subsubsection{Cost function}
 		
-AS mentioned before, backpropagation has as goal to calculate the partial derivatives of the cost function $C$ with respect to each weight and bias. \\
+As mentioned before, backpropagation has as goal to calculate the partial derivatives of the cost function $C$ with respect to each weight and bias. \\
 The cost function has to fulfill certain criteria. The first one is that it needs to be possible to write it as a summation over cost functions for individual training examples. Secondly, it needs to be derivable. And lastly, the cost function is a function of the activations of the last layer. 
 
 
@@ -156,10 +162,6 @@ With those 2 equations we calculate the error in each layer of the neural networ
 When the derivatives are calculated, we can apply the gradient descent and update the weights and biases accordingly. This process represents the learning of a neural network.
 
 
-
-http://neuralnetworksanddeeplearning.com/chap1.html
-
-
 \section{Word2Vec}
 \label{sec:word2vec}
 
@@ -171,23 +173,27 @@ We could say in an informal way: a linguistic background is made which the learn
 
 \subsection{Skip-gram}
 
-One way of learning a word2vec representation of a corpus $Text$, is by using the skip-gram model. \\
+There are two main models used for word2vec \cite{w2vOriginal:article}, namely Continuous Bag-of-Words (CBOW) and the Skip-Gram model. \\
+The first one tries to predict a word if a context is given (ex. predict Paris when capital France is given). And the second one does the inverse of this approach \cite{w2vModels:article}. Empirical results have shown that the Skip-Gram model tends to do better on larger datasets \cite{w2vReason1:online} and gives a better representation for infrequent words \cite{w2vArchive:online}. In medical data there are often infrequent cases which are important. For those reasons, we choose to go further with the Skip-Gram model. \\
+
+So one way of learning a word2vec representation of a corpus $Text$, is by using the skip-gram model. \\
 Based on given words $w$ and their contexts $c$, we set the parameter $\theta$ of $p(c|w;\theta)$ to maximize:
 
 \begin{equation} 
 \arg \max_{\theta} \prod_{(w,c \in D} p(c|w;\theta)
 \end{equation}
 
-with $D$ the set of all word and context pairs we extract from the corpus. 
+with $D$ the set of all word and context pairs we extract from the corpus.\\
+Here we also note that $p(c|w)$ is indeed the chance of a context appearing after seeing a specific word as mentioned before.
 
 \subsubsection{Finding word-context pairs}
 
-Given a sequence of words, we define their context based on n-gram. In figure \ref{fig:ngram}, n-gram is explained on the sentence "This is a sentence". 
+Given a sequence of words, we define their context based on n-gram \cite{w2vNgram:article}. In figure \ref{fig:ngram}, n-gram is explained on the sentence "This is a sentence". 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{ngram.png}
-	\caption{Explanation of n-gram.}
+	\includegraphics[width=0.8\textwidth]{ngram.png}
+	\caption{Explanation of n-gram \cite{w2vNgram:online}}
 	\label{fig:ngram}
 \end{figure} 
 
@@ -210,7 +216,7 @@ where $v_c$ and $v_w$ are vector representations for $c$ and $w$, and $C$ is the
 
 \subsection{Negative Sampling}
 
-To compute the vectors using the Skip-gram model more efficiently, we introduce negative sampling. \\
+To compute the vectors using the Skip-gram model more efficiently, we introduce negative sampling \cite{w2vExplained:article}. \\
 Instead of calculating $\sum_{c' \in C}e^{v_{c'}*v_w}$ over all contexts, we make a set $D'$ which consists of randomly sampled word-context pairs. With this new set, we remove the costly term $\sum_{c' \in C}e^{v_{c'}*v_w}$ and replace it with $\sum_{(w,c) \in D'}e^{v_{c'}*v_w}$. \\
 
 In a less formal way: we are not making sure that if words appear in the same context, their vectors are more similar than all the other word vectors, but only of several vectors chosen randomly. This makes the Skip-gram model usable in terms of speed.
@@ -219,39 +225,24 @@ In a less formal way: we are not making sure that if words appear in the same co
 \subsection{Neural Networks}
 
 When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
-The trained 2-layer neural network can be placed in front of another neural network. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
+The trained 2-layer neural network can be placed in front of another neural network \cite{w2vNN:online}. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
 
-
-
-http://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf
-
-http://arxiv.org/pdf/1402.3722v1.pdf
-
-http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/
-
-http://homepages.inf.ed.ac.uk/ballison/pdf/lrec\_skipgrams.pdf
-
-http://recognize-speech.com/images/Antonio/Unigram.png
-
-http://stackoverflow.com/questions/27860652/word2vec-negative-sampling-in-layman-term
 
 \section{DeepWalk}
 
-DeepWalk is an approach where graph structured data is transformed into sequences of vertices. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. \\
+DeepWalk is an approach where graph structured data is transformed into sequences of vertices \cite{deepwalkMain:article}. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. \\
 
 In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{dwAlgo.png}
-	\caption{Overview of the DeepWalk algorithm.}
+	\includegraphics[width=0.8\textwidth]{dwAlgo.png}
+	\caption{Overview of the DeepWalk algorithm \cite{deepwalkMain:article}}
 	\label{fig:dwAlgo}
 \end{figure} 
 
 First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
 Secondly, those vertices are used for word2vec. This process is explained in section \ref{sec:word2vec}.
-
-http://arxiv.org/pdf/1403.6652v2.pdf
 
 
 \section{Conclusion}
