@@ -1,16 +1,19 @@
 \graphicspath{ {Background/Images/} }
 
 
-\chapter{Background}
+\chapter{Generalized Word2Vec}
 \label{cha:background}
 
 \section{Introduction}
-In this chapter we introduce important concepts which are needed to understand our approach. These concept can be used to solve problems described in chapter \ref{cha:context}. \\
+In this chapter we introduce important concepts which are needed to understand our approach. These concepts can be used to solve problems described in chapter \ref{cha:context}. \\
 
-We start with explaining some background knowledge as time series and machine learning. We then focus on neural networks, which is a machine learning approach. The main part to understand our approach is the introduction of Word2vec. This is then used to introduce Deepwalk as an extension on Word2Vec.
+We start with explaining some background knowledge in section \ref{sec:bk} such as time series and machine learning. We focus on basic concepts from machine learning and then focus more on neural networks. The main part to understand our approach is the introduction of Word2vec in section \ref{sec:word2vec}. This is then used to introduce Deepwalk as an extension on Word2Vec in section \ref{ref:deepwalk}. \\
+
+After introducing those concepts, we explain our generalized word2vec approaches in section \ref{sec:gw2v}.
 
 
 \section{Background Knowledge}
+\label{sec:bk}
 
 	\subsection{Time Series Analysis}
 A time series consists of data points over a certain time period. We refer to this as a sequence of states. Where a state represents a data point and can differ from a single value to more complex representations like pictures. \\
@@ -27,6 +30,10 @@ We mention some used methods in the field of machine learning. These are used in
 In the field of classification neural networks are used to achieve state of the art results. For regression, Support Vector Machines can be used. One of the most popular methods for clustering is K-means. 
 
 	\subsection{K-nearest Neighbors}
+	
+	
+	
+	\subsection{K-dimensional Tree}
 	
 	
 	\subsection{Neural Networks}
@@ -90,13 +97,13 @@ To achieve this effect, we change our known perceptrons to sigmoid neurons. A si
 \frac{1}{1+exp(-\sum_j w_jx_j-b)}
 \end{equation}
 
-The sigmoid function makes it possible to calculate the gradient and makes the output a linear combination of $\Delta w_j$ and $\Delta b$ as $\Delta output$ is approximated by 
+\noindent The sigmoid function makes it possible to calculate the gradient and makes the output a linear combination of $\Delta w_j$ and $\Delta b$ as $\Delta output$ is approximated by 
 
 \begin{equation} 
 \Delta output \approx \sum_j \frac{\partial output}{\partial w_j}\Delta w_j + \frac{\partial output}{\partial b}\Delta b
 \end{equation}
 
-Because of the linearity, it is now possible to choose changes for the weights and biases to achieve a correct output. By adjusting the weights, we will train our network to achieve a higher accuracy.
+\noindent Because of the linearity, it is now possible to choose changes for the weights and biases to achieve a correct output. By adjusting the weights, we will train our network to achieve a higher accuracy.
 		
 	\subsection{Backpropagation}
 	
@@ -137,19 +144,19 @@ First we calculate the error of each node which is based on how much the cost fu
 z_j^L = \sum_k w^L_{jk}a^{L-1}_k+b^L_j
 \end{equation}
 
-This can be written as a neat vector equation:
+\noindent This can be written as a neat vector equation:
 
 \begin{equation} 
 \delta^L = (a^L-y) \circ \sigma'(z_j^L)
 \end{equation}
 
-The next equation explains why the algorithm is called backpropagation. The equation calculates each layers error vector based on the layer after it, it propagates the error back over the layers:
+\noindent The next equation explains why the algorithm is called backpropagation. The equation calculates each layers error vector based on the layer after it, it propagates the error back over the layers:
 
 \begin{equation} 
 \delta^l = ((w^{l+1})^T\delta^{l+1}) \circ \sigma'(z_j^L)
 \end{equation}
 
-With those 2 equations we calculate the error in each layer of the neural network. Those errors can be used to calculate the derivatives of the cost function with respect to the weights and the biases:
+\noindent With those 2 equations we calculate the error in each layer of the neural network. Those errors can be used to calculate the derivatives of the cost function with respect to the weights and the biases:
 
 \begin{equation} 
 \frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j.
@@ -159,7 +166,7 @@ With those 2 equations we calculate the error in each layer of the neural networ
 \frac{\partial C}{\partial b^l_j} = \delta^l_j.
 \end{equation}
 
-When the derivatives are calculated, we can apply the gradient descent and update the weights and biases accordingly. This process represents the learning of a neural network.
+\noindent When the derivatives are calculated, we can apply the gradient descent and update the weights and biases accordingly. This process represents the learning of a neural network.
 
 
 \section{Word2Vec}
@@ -167,8 +174,10 @@ When the derivatives are calculated, we can apply the gradient descent and updat
 
 \subsection{Motivation}
 
-In natural language processing tasks, a good representation of words helps learning algorithms perform better. A representation is learned which maps words to vectors in a low-dimensional space compared to the vocabulary size. In this representation, we try to map context-similar words close to each other in the new vector space. \\
-We could say in an informal way: a linguistic background is made which the learning algorithm can use.
+We will explain Word2Vec in this section. It is explained from a linguistic point of view. This explanation is needed to introduce our generalized Word2Vec approach which can be applied to medical data. \\
+
+In natural language processing tasks, a good representation of words helps learning algorithms perform better. A representation is learned which maps words to vectors in a low-dimensional space compared to the vocabulary size. In this representation, we try to map context-similar words close to each other in the new vector space. The new representation is sometimes also called a 'word embedding'. \\
+We could say in an informal way: a linguistic background is made which the learning algorithm can use. \\
 
 
 \subsection{Skip-gram}
@@ -183,7 +192,7 @@ Based on given words $w$ and their contexts $c$, we set the parameter $\theta$ o
 \arg \max_{\theta} \prod_{(w,c \in D} p(c|w;\theta)
 \end{equation}
 
-with $D$ the set of all word and context pairs we extract from the corpus.\\
+\noindent with $D$ the set of all word and context pairs we extract from the corpus.\\
 Here we also note that $p(c|w)$ is indeed the chance of a context appearing after seeing a specific word as mentioned before.
 
 \subsubsection{Finding word-context pairs}
@@ -208,7 +217,7 @@ We start with rewriting the conditional probability using soft-max:
 p(c|w;\theta) = \frac{e^{v_x*v_w}}{\sum_{c' \in C}e^{v_{c'}*v_w}}
 \end{equation}
 
-where $v_c$ and $v_w$ are vector representations for $c$ and $w$, and $C$ is the set of all available contexts. This means that the parameters $\theta$ are $v_{c_i}$ and $v_{w_i}$. Computing the optimal parameters is very expensive because you need to calculate this over all contexts $c'$. We also switch from product to sum by taking the logs:
+\noindent where $v_c$ and $v_w$ are vector representations for $c$ and $w$, and $C$ is the set of all available contexts. This means that the parameters $\theta$ are $v_{c_i}$ and $v_{w_i}$. Computing the optimal parameters is very expensive because you need to calculate this over all contexts $c'$. We also switch from product to sum by taking the logs:
 
 \begin{equation} 
 \arg \max_{\theta} \sum_{(w,c) \in D} \log p(c|w;\theta) = \sum_{(w,c) \in D} (\log e^{v_c * v_w} - \log \sum_{c'} e^{v_{c'}*v_w})
@@ -227,10 +236,10 @@ In a less formal way: we are not making sure that if words appear in the same co
 When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
 The trained 2-layer neural network can be placed in front of another neural network \cite{w2vNN:online}. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
 
-\newpage
 \section{DeepWalk}
+\label{sec:deepwalk}
 
-DeepWalk is an approach where graph structured data is transformed into sequences of vertices \cite{deepwalkMain:article}. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. \\
+DeepWalk is an approach where graph structured data is transformed into sequences of vertices \cite{deepwalkMain:article}. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. We can say that it is an extension on the Word2Vec approach. \\
 
 In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
 
@@ -243,6 +252,16 @@ In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exi
 
 First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
 Secondly, those vertices are used for word2vec. This process is explained in section \ref{sec:word2vec}.
+
+
+\section{Generalized Word2Vec Approaches}
+\label{sec:gw2v}
+
+
+General approach 
+Knn
+KDtree
+Deepwalk
 
 
 \section{Conclusion}
