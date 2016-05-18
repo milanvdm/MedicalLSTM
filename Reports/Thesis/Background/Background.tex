@@ -27,14 +27,43 @@ Supervised learning is concerned with the learning task where there are examples
 We can also classify the problems according to the desired output of our model. Those main tasks consist of classification, regression, and clustering. \\
 	
 We mention some used methods in the field of machine learning. These are used in all above mentioned problems. \\
-In the field of classification neural networks are used to achieve state of the art results. For regression, Support Vector Machines can be used. One of the most popular methods for clustering is K-means. 
+In the field of classification neural networks are used to achieve state of the art results. For regression, support vector machines can be used. One of the most popular methods for clustering is K-means. 
 
 	\subsection{K-nearest Neighbors}
 	
+The k-Nearest Neighbors (knn) algorithm is a simple machine learning algorithm \cite{knn:article}. It will be used in our generalize Word2Vec approach. \\
+When you are in a supervised context, you have several instances with labels. When you retrieve a new instance, you want to predict its label. Based on a defined similarity measure (ex. Euclidean distance), you can look for the $k$ nearest labeled instances to the new instance. From those, you pick the most common label in the pool of the $k$ nearest instances. This label becomes your predicted label for the new instance.
 	
 	
 	\subsection{K-dimensional Tree}
 	
+A naive way to calculate the nearest neighbors for a new element in a vector space, is by comparing all members with the new element and keep track of those distances. \\
+A more efficient way is to use a k-dimensional tree (kd tree) \cite{kdtree:article}. In this section we explain the workings of this approach in more detail \cite{kdtreeIntro:atricle}. \\
+
+A kd tree is a way of storing k-dimensional points. It is a binary tree where each node represents an element in the vector space. The node also contains information on how the tree is split up. It keeps track of the plane it is split on and the left and right sub tree. In figure \ref{fig:kdtreeSplit} you can see an example on how a simple kd tree is made and how it splits up the x,y plane. In the figure above, the splitting plane is not mentioned, it is the $y=5$ plane for the $[2,5]$ and $x=3$ for $[3,8]$.
+	
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\textwidth]{kdtreeSplit.png}
+	\caption{Representation on how a binary kd tree splits up the plane  \cite{kdtreeIntro:atricle}}
+	\label{fig:kdtreeSplit}
+\end{figure}
+
+Now that we can construct the kd tree, we can use it to find the nearest neighbor for a certain input point. \\
+We start with root node and recursively go down the kd tree. At each node it goes to the left or right depending if the input is lesser or greater than the current node depending on the splitting plane. Once it reaches a leaf node, it marks this node as the current nearest neighbor. \\
+It unwinds the recursion and at each node it checks if the current node is closer than the
+The algorithm unwinds the recursion of the tree, performing the following steps at each node:
+\begin{itemize}
+
+\item If the current node is closer than the current best, then it becomes the current best.
+\item It checks if it is possible whether there is the possibility of closer points on the other side of the splitting plane. It makes a hypersphere around the current node with a radius equal to the current nearest distance. 
+\begin{itemize}
+\item If the hypersphere crosses the splitting plane, there could a closer point on the other side. This means the algorithm will move down the other branch of the current node.
+\item If the hypersphere does not cross the splitting plane, the whole other branch can be skipped.
+\end{itemize}
+\end{itemize}
+
+This algorithm is easily extended to find the k-nearest neighbors by keeping track of the k current bests.
 	
 	\subsection{Neural Networks}
 	
@@ -257,17 +286,15 @@ Secondly, those vertices are used for word2vec. This process is explained in sec
 \section{Generalized Word2Vec Approaches}
 \label{sec:gw2v}
 
-
 General approach 
 Knn
-KDtree
 Deepwalk
 
 
 \section{Conclusion}
 In this chapter we talked about general machine learning concepts and focused on Word2Vec. We conclude that Word2Vec is used to find good representation of words based on their context. It also causes that similar words will be close to each other in this new representation. \\
 
-With the concepts explained in this chapter, we can introduce our approach in the next chapter. This approach is used to find patterns in EHR data.
+With the concepts explained, we introduced our ...
 
 
 
