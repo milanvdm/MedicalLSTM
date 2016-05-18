@@ -25,16 +25,18 @@ We can also classify the problems according to the desired output of our model. 
 	
 We mention some used methods in the field of machine learning. These are used in all above mentioned problems. \\
 In the field of classification neural networks are used to achieve state of the art results. For regression, Support Vector Machines can be used. One of the most popular methods for clustering is K-means. 
+
+	\subsection{K-nearest Neighbors}
 	
 	
 	\subsection{Neural Networks}
 	
-A neural network is a machine learning approach based on biological neural networks. 
+A neural network is a machine learning approach based on biological neural networks. It can be used to find patterns and do prediction on time series. Those time series can be medical data.
 
 
 		\subsubsection{Perceptron}
 
-The basic component of a neural network is a perceptron. A perceptron takes multiple binary inputs and has a single binary output (see figure \ref{fig:perceptron}). Each input has a corresponding real numbered weight. The output is decided on the following equation:
+The basic component of a neural network is a perceptron \cite{perceptron:article}. A perceptron takes multiple binary inputs and has a single binary output (see figure \ref{fig:perceptron}). Each input has a corresponding real numbered weight. The output is decided on the following equation:
 
 \begin{equation} 
 output =
@@ -51,7 +53,7 @@ output =
 	\label{fig:perceptron}
 \end{figure}
 
-We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons, the network can find non-linear relations between the input and output.
+We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons (and non-linear activation functions), the network can find non-linear relations between the input and output \cite{nnNL:article}.
 
 \begin{figure}[H]
 	\centering
@@ -98,7 +100,7 @@ Because of the linearity, it is now possible to choose changes for the weights a
 		
 	\subsection{Backpropagation}
 	
-Backpropagation is an algorithm which is used to train neural networks. It calculates the gradient of a chosen cost function with respect to the individual weights. With the gradient, the weights are updated and the cost function is minimized.
+Backpropagation is an algorithm which is used to train neural networks \cite{bp:article}. It calculates the gradient of a chosen cost function with respect to the individual weights. With the gradient, the weights are updated and the cost function is minimized.
 
 		\subsubsection{Terminology}
 		
