@@ -42,7 +42,7 @@ A more efficient way is to use a k-dimensional tree (kd tree) \cite{kdtree:artic
 
 A kd tree is a way of storing k-dimensional points. It is a binary tree where each node represents an element in the vector space. The node also contains information on how the tree is split up. It keeps track of the plane it is split on and the left and right sub tree. In figure \ref{fig:kdtreeSplit} you can see an example on how a simple kd tree is made and how it splits up the x,y plane. In the figure above, the splitting plane is not mentioned, it is the $y=5$ plane for the $[2,5]$ and $x=3$ for $[3,8]$.
 	
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.4\textwidth]{kdtreeSplit.png}
 	\caption{Representation on how a binary kd tree splits up the plane  \cite{kdtreeIntro:atricle}}
@@ -82,7 +82,7 @@ output =
   \end{cases}
 \end{equation}
 	
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.4\textwidth]{perceptron.png}
 	\caption{Simple presentation of a perceptron \cite{NNintro:online}}
@@ -91,7 +91,7 @@ output =
 
 We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons (and non-linear activation functions), the network can find non-linear relations between the input and output \cite{nnNL:article}.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{multiplePerceptrons.png}
 	\caption{More complex network made by connecting multiple perceptrons \cite{NNintro:online}}
@@ -101,7 +101,7 @@ We can build a network by connecting multiple perceptrons (see figure \ref{fig:m
 Now we have seen how a general network is constructed, we look at some vocabulary. \\
 In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on the figure, we call the first layer the input layer, the last layer the output layer, and the layers in between are called hidden layers. Sometime multiple layer networks are referred to as multilayer perceptrons or MLPs.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{networkArchitecture.png}
 	\caption{General vocabulary for a multilayer network \cite{NNintro:online}}
@@ -113,7 +113,7 @@ In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on th
 		
 To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous images could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen pictures but that the current picture is labeled correctly.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{smallChange.png}
 	\caption{Small change on the weights, only has a small impact on the output \cite{NNintro:online}}
@@ -142,7 +142,7 @@ Backpropagation is an algorithm which is used to train neural networks \cite{bp:
 		
 We use $w^l_{jk}$ to denote the weight corresponding to the connection between the $k^{th}$ node in the $(l-1)^{th}$ layer to the $j^{th}$ node in the $l^{th}$ layer. We use $b^l_j$ for the bias of the $j^{th}$ node in the $l^{th}$ layer and $a^l_j$ for the activation of the $j^{th}$ node in the $l^{th}$ layer. See figure \ref{fig:termNN}.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{termNN.png}
 	\caption{Visual representation of the terminology for a neural network \cite{NNintro:online}}
@@ -228,7 +228,7 @@ Here we also note that $p(c|w)$ is indeed the chance of a context appearing afte
 
 Given a sequence of words, we define their context based on n-gram \cite{w2vNgram:article}. In figure \ref{fig:ngram}, n-gram is explained on the sentence "This is a sentence". 
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.8\textwidth]{ngram.png}
 	\caption{Explanation of n-gram \cite{w2vNgram:online}}
@@ -272,7 +272,7 @@ DeepWalk is an approach where graph structured data is transformed into sequence
 
 In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.7\textwidth]{dwAlgo.png}
 	\caption{Overview of the DeepWalk algorithm \cite{deepwalkMain:article}}
@@ -286,9 +286,29 @@ Secondly, those vertices are used for word2vec. This process is explained in sec
 \section{Generalized Word2Vec Approaches}
 \label{sec:gw2v}
 
-General approach 
-Knn
-Deepwalk
+In this section we explain our approach on how to find patterns in EHRs. For this, we use generalized Word2Vec approaches to learn disease embeddings. 
+
+\subsection{Data representation}
+
+Before we can start with explaining how Word2Vec can be applied on EHR data, we start with introducing our data representation. \\
+The medical history of a patient is a time series of EHRs. On certain timestamps, an EHR is available containing the medical state of that patient. We call this EHR the vector $m^p_t$, with $p$ a patient number and $t$ a timestamp. This means that each patient has a sequence of vectors $s^p = m^p_t, m^p_{t+1}, m^p_{t+3}, \ldots$. Each vector contains certain values depending on the EHRs. It can contain values for the timestamp, demographics, blood pressure, diagnoses, and others. 
+
+\subsection{Generalized Word2Vec}
+
+As explained in section \ref{sec:word2vec}, Word2Vec is applied on a large text corpus containing a large amount of sentences. After applying this method, an embedding is found that represents words in a new vector space. In this vector space the relationship between words is shown by the distance of the words from each other. \\
+
+A large medical dataset containing EHRs for different patients, can be seen as a large text corpus. It contains patients, each having a sequence $s^p$, which is equivalent to one sentence. All the different patients sequences, make the whole dataset similar to how sentences make a text corpus. Each vector $m^p_t$ is removed from its link to the patient and his timestamp to make it not unique anymore, we call this vector $m$. This is to make the link to words. Different sentences can contain the same words, similar to how the vectors $m$ are in the different sequences. \\
+
+With those links, it is possible to apply Word2Vec not only to simple objects like words, but also on more abstract objects like vectors. We call this a generalized Word2Vec approach. From this, we can learn an embedding for the vectors $m$ in the new vector space. In this new vector space, the relationships between the vectors $m$ are found based on their occurrences with others in the sequences.
+
+
+\subsection{K-Nearest Neighbors Word2Vec}
+
+
+
+
+\subsection{Generalized Deepwalk}
+
 
 
 \section{Conclusion}

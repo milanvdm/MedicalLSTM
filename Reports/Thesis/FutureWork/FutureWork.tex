@@ -21,7 +21,7 @@ Instead of dividing some attributes into specific intervals, we could apply norm
 
 \section{Distributed Word2Vec}
 
-Word2vec can be made distributed as the underlying idea is quite simplistic, it counts occurrences of n-grams. Counting occurrences based on labels, is a well known problem and is often solved by MapReduce algorithms. 
+Word2vec can be made distributed as the underlying idea is quite simplistic, it counts occurrences of n-grams. Counting occurrences based on labels, is a well known problem and is often solved by MapReduce algorithms \cite{mapreduce:article}. 
 
 
 \section{Patient Classification}
@@ -37,24 +37,24 @@ The medical data of multiple patients is a $3$ dimensional tensor, see figure \r
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{rnnData.png}
-	\caption{Overview of the data structure for medical data with a time aspect.}
+	\includegraphics[width=0.8\textwidth]{rnnData.png}
+	\caption{Overview of the data structure for medical data with a time aspect \cite{dl4jRnn:online}}
 	\label{fig:rnnData}
 \end{figure} 
 
 Medical data has some problems which we will discuss.\\
-It often consists of long time periods. This means there could be a long range of dependencies between events. In the context of training neural networks, this can cause a problem known as the vanishing gradient problem. \\
+It often consists of long time periods. This means there could be a long range of dependencies between events. In the context of training neural networks, this can cause a problem known as the vanishing gradient problem \cite{vanishingproblem:article}. \\
 Patients don't have regular intervals in their medical data. The irregular intervals need to be transformed to regular intervals otherwise the time aspect won't be consistent throughout the data. \\
 The standardization of the attributes needs to be taken into account. Preferably some sort of normalization should be applied as well. \\
-Medical data has a high dimensionality. A lot of parameters need to be taken into account to retrieve accurate results. This causes the well known problem: Curse of Dimensionality. It causes the data to be sparse and therefore, more data is needed. Especially in medical data where outliers are important. 
+Medical data has a high dimensionality. A lot of parameters need to be taken into account to retrieve accurate results. This causes the well known problem: Curse of Dimensionality \cite {curseofdim:book}. It causes the data to be sparse and therefore, more data is needed to cover all cases.. Especially in medical data where outliers are important. 
 
 
 \subsection{Approach}
 
 Here we describe our approaches for the problems mentioned in the previous section. \\
-We solve the vanishing gradient problem with a special for of recurrent neural network, see section \ref{sec:nn}. \\
+We solve the vanishing gradient problem with a special form of recurrent neural network, see section \ref{sec:lstm}. \\
 By applying our word2vec approach, the input is projected on another vector space using a lookup table. This vector space causes normalization. The standardization is also done in our word2vec approach. \\
-As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:nn} often handles high dimensional data. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus has a better method to handle the high dimensionality.
+As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:rnn} often handles high dimensional data \cite{nn1:article} \cite{nn2:article} \cite{nn3:article} \cite{nn4:article}. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus has a better method to handle the high dimensionality.
 
 \subsubsection{Padding and Masking}
 The transformation of the irregular interval to a regular one, is done with padding and masking. \\
@@ -66,8 +66,8 @@ Using padding, changes the data quite drastically and would case problems during
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{masking.png}
-	\caption{Multiple masking methods.}
+	\includegraphics[width=\textwidth]{masking.png}
+	\caption{Multiple masking methods \cite{dl4jRnn:online}}
 	\label{fig:masking}
 \end{figure} 
 
@@ -76,41 +76,43 @@ Using padding, changes the data quite drastically and would case problems during
 \subsection{Neural Network}
 \label{sec:nn}
 
-We mentioned the reasons on why we choose a Long Short Term Memory (LSTM) approach as a recurrent neural network solution. In this section we explain in more detail why LSTM handles the vanishing problem and long-term dependencies. \\
+In this section we explain in more detail why a Long-Short Term Memory (LSTM) \cite{lstmOrginin:article} networks handles the vanishing problem and long-term dependencies. \\
 
 First we shortly repeat the structure of a neural network in figure \ref{fig:nnStructure}. We see the input, different layers with their perceptrons, and $\sigma$ as the activation function. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{nnStructure.png}
-	\caption{A general structure of a neural network.}
+	\includegraphics[width=0.7\textwidth]{nnStructure.png}
+	\caption{General structure of a neural network \cite{IMECJaak}}
 	\label{fig:nnStructure}
 \end{figure} 
 
 \subsubsection{Recurrent Neural Network}
+\label{sec:rnn}
 
-A standard neural network don't have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
+A standard neural network don't have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{rnnLoops.png}
-	\caption{An unrolled recurrent neural network.}
+	\includegraphics[width=0.7\textwidth]{rnnLoops.png}
+	\caption{Unrolled recurrent neural network \cite{IMECJaak}}
 	\label{fig:rnnLoops}
 \end{figure} 
 
-The problem with RNNs is mainly that they have troubles learning long-term dependencies which is often essential in time series.
+The problem with RNNs is mainly that they have troubles learning long-term dependencies which is often essential in time series \cite{longDepRNN:article}.
 
 
 \subsubsection{Long Short Term Memory}
+\label{sec:lstm}
 
-A LSMT network is a specific RNN which is capable of learning long-term dependencies. We will explain the difference with a standard RNN and why a LSTM can learn these long-term dependencies. \\
+A LSMT network is a specific RNN which is capable of learning long-term dependencies \cite{lstmDep:thesis}. We will explain the difference with a standard RNN and why a LSTM can learn these long-term dependencies. \\
 
 A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure as a single $tanh$ layer, see figure \ref{fig:rnnTanh}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{rnnTanh.png}
-	\caption{An unrolled recurrent neural network with a single tanh layer.}
+	\includegraphics[width=0.7\textwidth]{rnnTanh.png}
+	\caption{Unrolled recurrent neural network with a single tanh layer \cite{lstmGood:online}}
 	\label{fig:rnnTanh}
 \end{figure} 
 
@@ -118,8 +120,8 @@ It is important to see the difference with a LSTM. The repeating network doesn't
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTMChain.png}
-	\caption{An unrolled LSTM network where each network has 4 layers.}
+	\includegraphics[width=0.7\textwidth]{LSTMChain.png}
+	\caption{Unrolled LSTM network where each network has 4 layers \cite{lstmGood:online}}
 	\label{fig:LSTMChain}
 \end{figure} 
 
@@ -127,8 +129,8 @@ The main idea behind LSTM is that each repeated network has its own cell state. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTMConveyor.png}
-	\caption{Representation of the cell state for a LSTM network.}
+	\includegraphics[width=0.7\textwidth]{LSTMConveyor.png}
+	\caption{Representation of the cell state for a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTMConveyor}
 \end{figure} 
 
@@ -138,8 +140,8 @@ We start with the forget gate layer of a LSTM. Based on $x_t$ and $h_{t-1}$, it 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTM1.png}
-	\caption{The forget layer of a LSTM network.}
+	\includegraphics[width=0.7\textwidth]{LSTM1.png}
+	\caption{Forget layer of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM1}
 \end{figure} 
 
@@ -147,8 +149,8 @@ Next we look to the input gate layer. This gate decides which values will be upd
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTM2.png}
-	\caption{The input layer of a LSTM network.}
+	\includegraphics[width=0.7\textwidth]{LSTM2.png}
+	\caption{Input layer of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM2}
 \end{figure} 
 
@@ -156,8 +158,8 @@ We can now combine the previous results and adjust the cell state. We multiply t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTM3.png}
-	\caption{Update process of the cell state of a LSTM network.}
+	\includegraphics[width=0.7\textwidth]{LSTM3.png}
+	\caption{Update process of the cell state of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM3}
 \end{figure} 
 
@@ -165,62 +167,16 @@ Finally, we need to output $h_t$ to the next network. This is based on the input
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=8cm]{LSTM4.png}
-	\caption{Decide the output of a LSTM network.}
+	\includegraphics[width=0.7\textwidth]{LSTM4.png}
+	\caption{Decide the output of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM4}
 \end{figure} 
 
 
 \subsubsection{Variants Long Short Term Memory}
 
-In [LSTM: SEARCH SPACE ODESEY], research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants don't have a large influence and mainly add a lot of extra complexity.
+In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants don't have a large influence and mainly add a lot of extra complexity.
 
-
-http://www-dsi.ing.unifi.it/\~paolo/ps/tnn-94-gradient.pdf
-
-
-http://karpathy.github.io/2015/05/21/rnn-effectiveness/
-
-http://deeplearning4j.org/usingrnns
-
-Supervised Sequence Labelling with Recurrent Neural
-Networks
-
-Phenotyping of Clinical Time Series with LSTM
-Recurrent Neural Networks
-
-IMEC Technical talk by Jaak Simm
-
-Missing covariate data in medical research: To impute
-is better than to ignore
-
-
-Development of a Database of Health Insurance
-Claims: Standardization of Disease Classifications and
-Anonymous Record Linkage
-
-Modeling Temporal Dependencies in High-
-Dimensional Sequences: Application to Polyphonic
-Music Generation and Transcription
-
-Long short-term memory neural network for traffic
-speed prediction using remote microwave sensor data
-
-
-Noisy Time Series Prediction using a Recurrent Neural
-Network and Grammatical Inference
-
-
-http://colah.github.io/posts/2015-08-Understanding-
-LSTMs
-
-A Critical Review of Recurrent Neural Networks
-for Sequence Learning
-
-
-LONG SHORT-TERM MEMORY
-
-LSTM: A Search Space Odyssey
 
 \section{Conclusion}
 The final section of the chapter gives an overview of the important results
