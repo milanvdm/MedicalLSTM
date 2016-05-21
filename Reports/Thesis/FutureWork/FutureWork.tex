@@ -44,7 +44,7 @@ The medical data of multiple patients is a $3$ dimensional tensor, see figure \r
 
 Medical data has some problems which we will discuss.\\
 It often consists of long time periods. This means there could be a long range of dependencies between events. In the context of training neural networks, this can cause a problem known as the vanishing gradient problem \cite{vanishingproblem:article}. \\
-Patients don't have regular intervals in their medical data. The irregular intervals need to be transformed to regular intervals otherwise the time aspect won't be consistent throughout the data. \\
+Patients do not have regular intervals in their medical data. The irregular intervals need to be transformed to regular intervals otherwise the time aspect won't be consistent throughout the data. \\
 The standardization of the attributes needs to be taken into account. Preferably some sort of normalization should be applied as well. \\
 Medical data has a high dimensionality. A lot of parameters need to be taken into account to retrieve accurate results. This causes the well known problem: Curse of Dimensionality \cite {curseofdim:book}. It causes the data to be sparse and therefore, more data is needed to cover all cases.. Especially in medical data where outliers are important. 
 
@@ -61,7 +61,7 @@ A lot of these problems are covered in an extensive work \cite{gravesLstm:thesis
 \subsubsection{Padding and Masking}
 The transformation of the irregular interval to a regular one, is done with padding and masking. \\
 
-If we don't use any masking and padding, our data can only be of equal length time series and at each time step a classification. Our data consists of several inputs, the different time steps of a time series, and has one output associated with it, namely the classification of the time series. \\
+If we do not use any masking and padding, our data can only be of equal length time series and at each time step a classification. Our data consists of several inputs, the different time steps of a time series, and has one output associated with it, namely the classification of the time series. \\
 
 The method of padding is simply by adding empty events (ex. zeros) to the shorter time series until all examples are of equal length for both input and output. \\
 Using padding, changes the data quite drastically and would case problems during the training because of that. For this problem we use the method of masking. With masking, we have two additional arrays which contain the information about whether an input or output is padding or not. See figure \ref{fig:masking}, picture $2$ on how the masking is done for a many to one case.
@@ -91,7 +91,7 @@ First we shortly repeat the structure of a neural network in figure \ref{fig:nnS
 \subsubsection{Recurrent Neural Network}
 \label{sec:rnn}
 
-A standard neural network don't have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
+A standard neural network do not have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
 
 \begin{figure}[H]
 	\centering
@@ -117,7 +117,7 @@ A recurrent network is, as we said, a chain of connected neural networks. Those 
 	\label{fig:rnnTanh}
 \end{figure} 
 
-It is important to see the difference with a LSTM. The repeating network doesn't have a single neural network layer, but has $4$ layers which each fulfills a specific goal, see figure \ref{fig:LSTMChain}.
+It is important to see the difference with a LSTM. The repeating network does not have a single neural network layer, but has $4$ layers which each fulfills a specific goal, see figure \ref{fig:LSTMChain}.
 
 \begin{figure}[H]
 	\centering
@@ -176,7 +176,7 @@ Finally, we need to output $h_t$ to the next network. This is based on the input
 
 \subsubsection{Variants Long Short Term Memory}
 
-In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants don't have a large influence and mainly add a lot of extra complexity.
+In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants do not have a large influence and mainly add a lot of extra complexity.
 
 
 \section{Conclusion}

@@ -30,12 +30,14 @@ We mention some used methods in the field of machine learning. These are used in
 In the field of classification neural networks are used to achieve state of the art results. For regression, support vector machines can be used. One of the most popular methods for clustering is K-means. 
 
 	\subsection{K-nearest Neighbors}
+	\label{sec:knn}
 	
 The k-Nearest Neighbors (knn) algorithm is a simple machine learning algorithm \cite{knn:article}. It will be used in our generalize Word2Vec approach. \\
 When you are in a supervised context, you have several instances with labels. When you retrieve a new instance, you want to predict its label. Based on a defined similarity measure (ex. Euclidean distance), you can look for the $k$ nearest labeled instances to the new instance. From those, you pick the most common label in the pool of the $k$ nearest instances. This label becomes your predicted label for the new instance.
 	
 	
 	\subsection{K-dimensional Tree}
+	\label{sec:kdtree}
 	
 A naive way to calculate the nearest neighbors for a new element in a vector space, is by comparing all members with the new element and keep track of those distances. \\
 A more efficient way is to use a k-dimensional tree (kd tree) \cite{kdtree:article}. In this section we explain the workings of this approach in more detail \cite{kdtreeIntro:atricle}. \\
@@ -304,17 +306,25 @@ With those links, it is possible to apply Word2Vec not only to simple objects li
 
 \subsection{K-Nearest Neighbors Word2Vec}
 
+A problem with using an embedding which is found on a certain dataset, is that it is possible that certain instances are not present in the dataset. In the case of a complete new instance, a Word2Vec model cannot find a representation for this instance. As we are working in the context of a generalized Word2Vec approach, where instances are represented by complex objects like vectors, the chances of this happening increases. It increases because there are a lot more possible combination of vectors possible than there are words in a dictionary for example. \\
 
+Therefore we introduce a K-Nearest Word2Vec approach. As we are working with more abstract objects, namely vectors, we can extend our generalized Word2Vec approach with a knn feature (see section \ref{sec:knn}). After the training of a Word2Vec model, we have learned a lookup table which maps a known vector $v_{old}$ to his new vector representation $v_{new}$. When a not-yet-seen vector $v_{unknown}$ needs to be mapped to his $v_{new}$, a normal Word2Vec is not capable of this. \\
+With our approach, the knn are found using a kd tree (see section \ref{sec:kdtree}). Those knn are found from all the known vectors in their old representation $v_{old}$ in the lookup table. From the new vector representations $v_{new}$ of the knn, a weighted average is taken to find the $v_{new}$ for $v_{unknown}$. \\
 
+In short: we look for the knn of the $v_{unknown}$ from all the known vectors in their original representation $v_{old}$. Based on the found knn, we take an weighted average of the new representation $v_{new}$ from those found knn. This weighted average is the $v_{new}$ for the $v_{unknown}$.
 
 \subsection{Generalized Deepwalk}
 
+Deepwalk itself is hard to apply on EHR data as it starts from a graph structure. It however provides an extra Word2Vec approach which can be generalized to more abstract objects like vectors. \\
+
+One application of Deepwalk is the need for less data to achieve a good Word2Vec model. When the EHR data becomes very large, it would take a considerable amount of time to train a Word2Vec model. Therefore it would be interesting to transform the EHR data into a weighted graph structure. The weights are based on the frequency of diagnoses following each other. \\
+After the graph transformation, the amount of weighted random walks can be limited to create a smaller set of sequences based on the original dataset. Those sequences can be used to train a Word2Vec model faster as there is fewer data. The same logic from the previous two sections is applicable to generalize deepwalk from words to more abstract objects.
 
 
 \section{Conclusion}
 In this chapter we talked about general machine learning concepts and focused on Word2Vec. We conclude that Word2Vec is used to find good representation of words based on their context. It also causes that similar words will be close to each other in this new representation. \\
 
-With the concepts explained, we introduced our ...
+With the concepts explained, we introduced our approaches. We extended Word2Vec so that it can handle more abstract object than words, namely vectors representing an EHR. We also extended Word2Vec to find a representation for a new instance based on knn. The same extension can be done for Deepwalk.
 
 
 
