@@ -14,7 +14,7 @@ RNN
 
 \section{Generalization}
 
-In our word2vec approach we applied generalization on the medical states. This was needed to retrieve more general n-grams. For this generalization, we divided some attributes into specific intervals.
+In our word2vec approach we applied generalization on the medical states. This was needed to retrieve more general n-grams. For this generalization, we divided some attributes into specific intervals. \\
 
 Instead of dividing some attributes into specific intervals, we could apply normalization to it. Based on the distribution of the data, we can make more sensible intervals and assign them to the attributes.
 
@@ -54,7 +54,9 @@ Medical data has a high dimensionality. A lot of parameters need to be taken int
 Here we describe our approaches for the problems mentioned in the previous section. \\
 We solve the vanishing gradient problem with a special form of recurrent neural network, see section \ref{sec:lstm}. \\
 By applying our word2vec approach, the input is projected on another vector space using a lookup table. This vector space causes normalization. The standardization is also done in our word2vec approach. \\
-As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:rnn} often handles high dimensional data \cite{nn1:article} \cite{nn2:article} \cite{nn3:article} \cite{nn4:article}. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus has a better method to handle the high dimensionality.
+As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:rnn} often handles high dimensional data \cite{nn1:article} \cite{nn2:article} \cite{nn3:article} \cite{nn4:article}. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus has a better method to handle the high dimensionality. \\
+
+A lot of these problems are covered in an extensive work \cite{gravesLstm:thesis} about using advanced neural networks to label sequences.
 
 \subsubsection{Padding and Masking}
 The transformation of the irregular interval to a regular one, is done with padding and masking. \\
@@ -70,7 +72,6 @@ Using padding, changes the data quite drastically and would case problems during
 	\caption{Multiple masking methods \cite{dl4jRnn:online}}
 	\label{fig:masking}
 \end{figure} 
-
 
 
 \subsection{Neural Network}
