@@ -15,4 +15,6 @@ public interface SequenceParser {
 	
 	public Sequence<StateImpl> getSequence(List<String []> states) throws ParseException, IOException, InterruptedException;
 
+	public void noGeneralizer();
+
 }

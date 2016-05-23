@@ -42,6 +42,15 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+    
+   		 <!-- http://mvnrepository.com/artifact/org.jfree/jfreechart -->
+		<dependency>
+		    <groupId>org.jfree</groupId>
+		    <artifactId>jfreechart</artifactId>
+		    <version>1.0.19</version>
+		</dependency>
+    
+    
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-nlp</artifactId>

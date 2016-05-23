@@ -2,12 +2,19 @@ package experiments;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.canova.api.io.data.DoubleWritable;
 import org.canova.api.io.data.Text;
@@ -28,10 +35,10 @@ public class OMOPMapping {
 
 	protected static final Logger logger = LoggerFactory.getLogger(OMOPMapping.class);
 
-	private static String OMOP_FILE = "tagcloud/CONCEPT.csv";
-	private static String ICD10_FILE = "tagcloud/care_icd10_en.csv";
+	private static String OMOP_FILE = "CONCEPT.csv";
+	private static String ICD10_FILE = "care_icd10_en.csv";
 
-	private static String OUTPUT_MAPPING = "tagcloud/mapping.csv";
+	private static String OUTPUT_MAPPING = "mapping.csv";
 
 	private static List<CodePair> omopData = new ArrayList<CodePair>();
 	private static List<CodePair> icdData = new ArrayList<CodePair>();
@@ -46,8 +53,10 @@ public class OMOPMapping {
 
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		
+
+		mapping();
 		getDistribution();
+		getAverageWordMapping();
 
 	}
 
@@ -56,12 +65,13 @@ public class OMOPMapping {
 
 		File file1 = new File(OUTPUT_MAPPING);
 
-		CsvIterator mapping = new CsvIterator(file1, ",");
+		CsvIterator mapping = new CsvIterator(file1, "~");
 
 		while(mapping.hasNext()) {
 			String[] line = mapping.next();
 
-
+			System.out.println(line[4]);
+			
 			try {
 				scores.put(Double.parseDouble(line[0]), Double.parseDouble(line[4]));
 			}
@@ -72,10 +82,10 @@ public class OMOPMapping {
 		}
 
 
-		File file2 = new File(Constants.INPUT_CSV_TEST);
+		File file2 = new File("conditions_sorted.csv");
 
 		CsvIterator currentIterator = new CsvIterator(file2);
-		
+
 		Map<Double, Double> distribution = new HashMap<Double, Double>();
 
 		int count = 0;
@@ -86,9 +96,9 @@ public class OMOPMapping {
 			double condition = Double.parseDouble(state[Constants.CONDITION_COLUMN]);
 
 			if(scores.containsKey(condition)) {
-				
+
 				double score = scores.get(condition);
-				
+
 				if(distribution.containsKey(score)) {
 					distribution.put(score, distribution.get(score) + 1);
 				}
@@ -97,15 +107,15 @@ public class OMOPMapping {
 				}
 			}
 
-			if(count % 100000 == 0) {
-				
+			if(count % 10000 == 0) {
+
 				Map<Double,Double> output = new HashMap<Double, Double>();
 				for (Map.Entry<Double, Double> entry : distribution.entrySet())
 				{
-					
+
 					output.put(entry.getKey(), entry.getValue() / (double) count);
 				}
-				
+
 				String info = output.toString();
 				logger.info(info);
 			}
@@ -120,14 +130,31 @@ public class OMOPMapping {
 			if(entry.getValue() / (double) count > 0.01) {
 				output.put(entry.getKey(), entry.getValue() / (double) count);
 			}
-			
-			
+
+
 		}
-		
-		
+
+
 		String info = "Final: " + output.toString();
 		logger.info(info);
-		
+
+
+		output = sortByComparator(output, false);
+
+		FileWriter writer = new FileWriter("mapping_distribution.txt"); 
+
+		writer.write("==DISTRIBUTION==" + "\n");
+
+		for (Map.Entry<Double, Double> entry : output.entrySet())
+		{
+			writer.write(entry.getKey() + " - " + entry.getValue() + "\n");
+		}
+
+		writer.flush();
+		writer.close();
+
+
+
 	}
 
 	private static void getAverageWordMapping() throws IOException, InterruptedException {
@@ -135,7 +162,7 @@ public class OMOPMapping {
 
 		File file1 = new File(OUTPUT_MAPPING);
 
-		CsvIterator mapping = new CsvIterator(file1, ",");
+		CsvIterator mapping = new CsvIterator(file1, "~");
 
 		while(mapping.hasNext()) {
 			String[] line = mapping.next();
@@ -145,13 +172,13 @@ public class OMOPMapping {
 				scores.put(Double.parseDouble(line[0]), Double.parseDouble(line[4]));
 			}
 			catch(Exception e) {
-
+				logger.info(e.toString());
 			}
 
 		}
 
 
-		File file2 = new File(Constants.INPUT_CSV);
+		File file2 = new File("conditions_sorted.csv");
 
 		CsvIterator currentIterator = new CsvIterator(file2);
 
@@ -181,6 +208,18 @@ public class OMOPMapping {
 		String info = "FinalAvg: " + (totalScore / (double) amount) + "   " + 
 				"totalAmount: " + amount;
 		logger.info(info);
+
+		FileWriter writer = new FileWriter("mapping_average.txt"); 
+
+		writer.write("==AVERAGE==" + "\n");
+
+
+
+		writer.write(info);
+
+
+		writer.flush();
+		writer.close();
 
 	}
 
@@ -294,6 +333,7 @@ public class OMOPMapping {
 			}
 
 			MatchedPair match = new MatchedPair(omopPair, bestMatch, averagedScore);
+			
 			matches.add(match);
 
 			if(count % 5000 == 0) {
@@ -379,8 +419,41 @@ public class OMOPMapping {
 	}
 
 	private static void makeCsvWriter() throws FileNotFoundException {
-		csvWriter = new CSVRecordWriter(new File(OUTPUT_MAPPING));
+		csvWriter = new CSVRecordWriter(new File(OUTPUT_MAPPING), false, Charset.forName("UTF-8"), "~");
 
+	}
+
+	private static Map<Double, Double> sortByComparator(Map<Double, Double> unsortMap, final boolean order)
+	{
+
+		List<Entry<Double, Double>> list = new LinkedList<Entry<Double, Double>>(unsortMap.entrySet());
+
+		// Sorting the list based on values
+		Collections.sort(list, new Comparator<Entry<Double, Double>>()
+		{
+			public int compare(Entry<Double, Double> o1,
+					Entry<Double, Double> o2)
+			{
+				if (order)
+				{
+					return o1.getValue().compareTo(o2.getValue());
+				}
+				else
+				{
+					return o2.getValue().compareTo(o1.getValue());
+
+				}
+			}
+		});
+
+		// Maintaining insertion order with the help of LinkedList
+		Map<Double, Double> sortedMap = new LinkedHashMap<Double, Double>();
+		for (Entry<Double, Double> entry : list)
+		{
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+
+		return sortedMap;
 	}
 
 }

@@ -21,7 +21,12 @@ public class SequenceParserImpl implements SequenceParser {
 	
 	Generalizer generalizer = new SimpleGeneralizer();
 	
+	boolean useGeneralizer = true;
 	
+	@Override
+	public void noGeneralizer() {
+		useGeneralizer = false;
+	}
  
 
 	@Override
@@ -105,14 +110,31 @@ public class SequenceParserImpl implements SequenceParser {
 		completeState.add(conditionId);
 		completeState.add(date);
 		completeState.add(patientNumber);
-		completeState.add(generalizer.getGeneralBirthYear(birthYear));
+		if(useGeneralizer) {
+			completeState.add(generalizer.getGeneralBirthYear(birthYear));
+		}
+		else {
+			completeState.add(birthYear);
+		}
+		
 		completeState.add(genderConcept);
 		completeState.add(conditionType);
 		completeState.add(conditionTypeDesc);
-		completeState.add(generalizer.decideICDCategory(condition)); 
+		if(useGeneralizer) {
+			completeState.add(generalizer.decideICDCategory(condition)); 
+		}
+		else {
+			completeState.add(condition); 
+		}
 		completeState.add(drugs);
 
-		completeState.add(generalizer.getGeneralTimeDifference(timeDifference));
+		if(useGeneralizer) {
+			completeState.add(generalizer.getGeneralTimeDifference(timeDifference));
+		}
+		else {
+			completeState.add(timeDifference);
+		}
+
 		completeState.add(generalizer.decideSeason(seasonDate));
 		
 		return new StateImpl(completeState);

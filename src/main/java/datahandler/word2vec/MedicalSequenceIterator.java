@@ -33,15 +33,28 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	private boolean useNormaliser;
 
 	private DataNormaliser normaliser = null;
-	
+
 	private List<Integer> trainingData = null;
 	private int currentCount = 0;
 	private int count = 0;
+
+	private boolean useGeneralizer = true;
 
 	public MedicalSequenceIterator(File file, boolean useNormaliser) throws IOException, InterruptedException {
 		logger.info("Made Sequence Iterator");
 
 		this.useNormaliser = useNormaliser;
+
+		this.underlyingIterable = file;
+		this.currentIterator = new CsvIterator(underlyingIterable);
+		currentIterator.next(); //ignore first line
+	}
+
+	public MedicalSequenceIterator(File file, boolean useNormaliser, boolean useGeneralizer) throws IOException, InterruptedException {
+		logger.info("Made Sequence Iterator");
+
+		this.useNormaliser = useNormaliser;
+		this.useGeneralizer = useGeneralizer;
 
 		this.underlyingIterable = file;
 		this.currentIterator = new CsvIterator(underlyingIterable);
@@ -76,7 +89,12 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 				sequenceParser.setGeneralizer(generalizer);
 			}
 			else {
+
 				sequenceParser = new SequenceParserImpl();
+
+				if(!useGeneralizer) {
+					sequenceParser.noGeneralizer();
+				}
 			}
 		}
 
@@ -101,7 +119,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 
 				previousId = currentId;
 				previousLine = nextLine;
-				
+
 
 				currentCount++;
 
@@ -119,9 +137,9 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 			logger.error(e.toString());
 			return null;
 		}
-		
+
 		currentCount++;
-		
+
 		return (Sequence<T>) currentSequence;
 	}
 
@@ -142,7 +160,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	public void generateTrainingData(double percentage) {
 
 		this.reset();
-		
+
 		//Get amount of Sequences
 		int size = 0;
 		while(this.hasMoreSequences()) {
@@ -150,7 +168,7 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 			size++;
 		}
 		this.reset();
-		
+
 		this.count = size;
 
 		//Get amount of samples needed based on percentage
@@ -171,11 +189,11 @@ public class MedicalSequenceIterator<T extends SequenceElement> implements Seque
 	public List<Integer> getTrainingData() {
 		return trainingData;
 	}
-	
+
 	public int getCurrentCount() {
 		return currentCount;
 	}
-	
+
 	public int getCount() {
 		return count;
 	}

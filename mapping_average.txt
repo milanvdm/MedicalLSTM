@@ -1,0 +1,2 @@
+==AVERAGE==
+FinalAvg: 0.6300636250819583   totalAmount: 99998
