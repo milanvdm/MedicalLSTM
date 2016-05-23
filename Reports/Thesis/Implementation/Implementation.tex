@@ -75,12 +75,23 @@ To see the effect of our generalization, see table \ref{tab:general}. You can se
 \subsection{Disease Code Mapping}
 \label{sec:mapping}
 
-In the section we discuss the method to generalize the disease codes used to label the diagnoses in the OMOP dataset. \\
+In the section we discuss the method to generalize the disease codes used to label the diagnoses in the OMOP dataset. The basic idea is that we want to generalize the diagnoses. For example, a bruise on your right leg is the same diagnoses as a bruise on your left leg. \\
 
+The OMOP dataset uses MedDRA disease codes for the diagnoses. We described the MedDRA disease codes in chapter \ref{cha:context}. We mentioned that MedDRA does not have a clear hierarchy. With a clear hierarchy, it would be trivial to generalize a disease code to its highest hierarchy. \\
+To solve this, we map the MedDRA disease codes to the ICD 10 disease codes. The reason behind this is that ICD 10 provides a clear and easy to use hierarchy. Besides the easy to use hierarchy, we also need the ICD 10 disease codes to make it possible to compare our results with Anders Boeck Jensen et. \cite{Brunak:article} as their results also use ICD 10 disease codes. \\
 
+The mapping is based on the description of each disease code. Both MedDRA and ICD 10 have a short medical description of each code. Each description is first filtered from stop words. Afterwards, the MedDRA code is matched to the ICD 10 code based on the matching of both description. The matching is done on the highest percentage of words matching. \\
 
--mapping -->TEST
+In figure \ref{fig:mappingStats}, we show the statistics of this mapping process. Note that we only take disease codes into account if they are also part of the OMOP dataset. In the figure, each bar represents the percentage of the words matching between descriptions. The height of the bars represent the percentage of all disease codes in the OMOP dataset who have this amount of matching percentage.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{mappingStats.jpeg}
+	\caption{Statistics of the mapping approach}
+	\label{fig:mappingStats}
+\end{figure}
+
+We have an average of $63$ \% of the words from the description that matches between MedDRA and ICD 10 descriptions. We also see that around $85$ \% of all the disease code mappings have a match of atleast $33$ \%. We assume this is already a good mapping as medical terms are quite specific and if $33$ \% matches, the upper hierarchy will be a good enough match. For the codes which have a zero percent match, the Damerau-Levenshtein algorithm \cite{edit:article} is applied. The algorithm calculates the edit distance between two strings using character insertion, character deletion, character replacement, and adjacent character swaps. The description with the lowest edit distance, is then chosen as best match.
 
 \section{Results}
 -what to test
