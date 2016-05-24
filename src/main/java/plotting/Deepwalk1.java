@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Deepwalk1 {
 
 	
@@ -40,7 +42,7 @@ public class Deepwalk1 {
 		       if(line.equals("")) {
 		    	   continue;
 		       }
-		       
+		 
 		       //PART 1
 		       if(line.contains("windowSize")) {
 		    	   windowSize = Integer.parseInt(line.split(": ")[1]);
@@ -65,24 +67,29 @@ public class Deepwalk1 {
 		       }
 		       
 		       //PART 2
-		       if(line.contains("CLUSTERTEST 1")) {
-		    	   clusterTest = true;
-		       }
 		       if(clusterTest) {
 		    	   k = Integer.parseInt(line.split(": ")[1]);
 		    	   clusterTest = false;
 		       }
 		       
-		       //PART 3
-		       if(line.contains("RESULTS")) {
-		    	   results = true;
+		       if(line.contains("CLUSTERTEST 1")) {
+		    	   clusterTest = true;
 		       }
+		       
+		       
+		       //PART 3
 		       if(results) {
-		    	   if(resultCounter == 0) {
-		    		   intParsed = parseIntList(line.split(": ")[1]);
-		    		   resultCounter++;
+		    	   if(resultCounter == 2) {
+		    		   String[] splitted = line.split(" - Average:  ");
+		    		   
+		    		   String disease = splitted[0];
+		    		   Double average = Double.parseDouble(splitted[1].replaceAll(" ", ""));
+		    		   
+		    		   averageClusters.put(disease, average);
+		    		   resultCounter = 0;
 		    	   }
-		    	   if(resultCounter == 1) {
+		    	   
+		    	   else if(resultCounter == 1) {
 		    		   String[] splitted = line.split(" - ");
 		    		   String disease = splitted[0];
 		    		   Double [] parsed = parseDoubleList(splitted[1]);
@@ -91,16 +98,19 @@ public class Deepwalk1 {
 		    		   matchesClusters.put(disease, Arrays.asList(parsed));
 		    		   resultCounter++;
 		    	   }
-		    	   if(resultCounter == 3) {
-		    		   String[] splitted = line.split(" - Average:  ");
-		    		   
-		    		   String disease = splitted[0];
-		    		   Double average = Double.parseDouble(splitted[1]);
-		    		   
-		    		   averageClusters.put(disease, average);
-		    		   resultCounter = 0;
+		    	   
+		    	   else if(resultCounter == 0) {
+		    		   intParsed = parseIntList(line.split(": ")[1]);
+		    		   resultCounter++;
 		    	   }
+		    	   
+		    	   
 		       }
+		       
+		       if(line.contains("RESULTS")) {
+		    	   results = true;
+		       }
+		      
 		    }
 		}
 	}
@@ -121,6 +131,69 @@ public class Deepwalk1 {
 			result[i] = Integer.parseInt(strings[i]);
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Deepwalk1))
+            return false;
+        if (o == this)
+            return true;
+
+        Deepwalk1 rhs = (Deepwalk1) o;
+        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        		this.vectorLength == rhs.vectorLength && this.walkLength == rhs.walkLength && 
+        		this.windowSize == rhs.windowSize) {
+        	
+        	return true;
+        }
+        else {
+        	return false;
+        }
+		
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+            // if deriving: appendSuper(super.hashCode()).
+            append(batchSize).
+            append(epoch).
+            append(learningRate).
+            append(minWordFreq).
+            append(vectorLength).
+            append(walkLength).
+            append(windowSize).
+            toHashCode();
+    }
+
+	public double getTotalAverage() {
+		double total = 0.0;
+		for(double toAdd: averageClusters.values()) {
+			total = total + toAdd;
+		}
+		return total / (double) averageClusters.values().size();
+	}
+
+	public double getMin() {
+		double min = Double.POSITIVE_INFINITY;
+		for(double toAdd: averageClusters.values()) {
+			if(min > toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
+	}
+	
+	public double getMax() {
+		double min = 0.0;
+		for(double toAdd: averageClusters.values()) {
+			if(min < toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
 	}
 	
 }
