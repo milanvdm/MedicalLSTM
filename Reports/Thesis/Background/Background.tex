@@ -263,15 +263,17 @@ In a less formal way: we are not making sure that if words appear in the same co
 
 \subsection{Neural Networks}
 
-When the Word2Vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
-The trained 2-layer neural network can be placed in front of another neural network \cite{w2vNN:online}. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
+When the Word2Vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as cost function the function described in the previous section. The training can be done with backpropagation for example. \\
+The trained 2-layer neural network can be placed in front of another neural network \cite{w2vNN:online}. It will convert the words to their vector representation and feed it into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
 
 \section{DeepWalk}
 \label{sec:deepwalk}
 
-DeepWalk is an approach where graph structured data is transformed into sequences of vertices \cite{deepwalkMain:article}. Word2vec is then applied on those sequences to learn a good vector representation for the vertices. We can say that it is an extension on the Word2Vec approach. \\
+DeepWalk is an approach where graph structured data is transformed into sequences of vertices \cite{deepwalkMain:article}. Word2Vec is then applied on those sequences to learn a good vector representation for the vertices. We can say that it is an extension on the Word2Vec approach. \\
 
-In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
+In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. \\
+First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
+Secondly, those vertices are used for Word2Vec. This process is explained in section \ref{sec:word2vec}.
 
 \begin{figure}[!htb]
 	\centering
@@ -279,10 +281,6 @@ In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exi
 	\caption{Overview of the DeepWalk algorithm \cite{deepwalkMain:article}}
 	\label{fig:dwAlgo}
 \end{figure} 
-
-First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
-Secondly, those vertices are used for Word2Vec. This process is explained in section \ref{sec:word2vec}.
-
 
 \section{Generalized Word2Vec Approaches}
 \label{sec:gw2v}
@@ -292,15 +290,17 @@ In this section we explain our approach on how to find patterns in EHRs. For thi
 \subsection{Data representation}
 
 Before we can start with explaining how Word2Vec can be applied on EHR data, we start with introducing our data representation. \\
-The medical history of a patient is a time series of EHRs. On certain timestamps, an EHR is available containing the medical state of that patient. We call this EHR the vector $m^p_t$, with $p$ a patient number and $t$ a timestamp. This means that each patient has a sequence of vectors $s^p = m^p_t, m^p_{t+1}, m^p_{t+3}, \ldots$. Each vector contains certain values depending on the EHRs. It can contain values for the timestamp, demographics, blood pressure, diagnoses, and others. 
+The medical history of a patient is a time series of EHRs. On certain timestamps, an EHR is available containing the medical state of that patient. We call this EHR the vector $m^p_t$, with $p$ a patient number and $t$ a timestamp. This means that each patient has a sequence of vectors $s^p = m^p_t, m^p_{t+1}, m^p_{t+3}, \ldots$ Each vector $m^p_t$ contains certain values depending on the EHR. It can contain values of the timestamp, demographics, blood pressure, diagnoses, and others. 
 
 \subsection{Generalized Word2Vec}
 
 As explained in section \ref{sec:word2vec}, Word2Vec is applied on a large text corpus containing a large amount of sentences. After applying this method, an embedding is found that represents words in a new vector space. In this vector space the relationship between words is shown by the distance of the words from each other. \\
 
-A large medical dataset containing EHRs for different patients, can be seen as a large text corpus. It contains patients, each having a sequence $s^p$, which is equivalent to one sentence. All the different patients sequences, make the whole dataset similar to how sentences make a text corpus. Each vector $m^p_t$ is removed from its link to the patient and his timestamp to make it not unique anymore, we call this vector $m$. This is to make the link to words. Different sentences can contain the same words, similar to how the vectors $m$ are in the different sequences. \\
+A large medical dataset containing EHRs from different patients, can be seen as a large text corpus. It contains patients, each having a sequence $s^p$, which is equivalent to one sentence. All the different patients sequences, make the whole dataset similar to how sentences make a text corpus. Each vector $m^p_t$ is removed from its link to the patient and his timestamp to make it not unique anymore, we call this vector $m$. This is to make the link to words. Different sentences can contain the same words, similar to how the vectors $m$ are in the different sequences. \\
 
-With those links, it is possible to apply Word2Vec not only to simple objects like words, but also on more abstract objects like vectors. We call this a generalized Word2Vec approach. From this, we can learn an embedding for the vectors $m$ in the new vector space. In this new vector space, the relationships between the vectors $m$ are found based on their occurrences with others in the sequences.
+With those links, it is possible to apply Word2Vec not only to simple objects like words, but also on more abstract objects like vectors. We call this a generalized Word2Vec approach. From this, we can learn an embedding for the vectors $m$ in the new vector space. In this new vector space, the relationships between the vectors $m$ are found based on their occurrences with others in the sequences. \\
+
+We can now apply Word2Vec to medical data. The vector $m$ is an EHR and by applying the generalized Word2Vec method, we find an embedding for the vectors $m$. The result is a disease embedding which projects the EHR data to a new vector space and projects EHRs which have a close relationship to each other, close to each other in the new vector space.
 
 
 \subsection{K-Nearest Neighbors Word2Vec}
@@ -308,22 +308,22 @@ With those links, it is possible to apply Word2Vec not only to simple objects li
 A problem with using an embedding which is found on a certain dataset, is that it is possible that certain instances are not present in the dataset. In the case of a complete new instance, a Word2Vec model cannot find a representation for this instance. As we are working in the context of a generalized Word2Vec approach, where instances are represented by complex objects like vectors, the chances of this happening increases. It increases because there are a lot more possible combination of vectors possible than there are words in a dictionary for example. \\
 
 Therefore we introduce a K-Nearest Word2Vec approach. As we are working with more abstract objects, namely vectors, we can extend our generalized Word2Vec approach with a knn feature (see section \ref{sec:knn}). After the training of a Word2Vec model, we have learned a lookup table which maps a known vector $v_{old}$ to his new vector representation $v_{new}$. When a not-yet-seen vector $v_{unknown}$ needs to be mapped to his $v_{new}$, a normal Word2Vec is not capable of this. \\
-With our approach, the knn are found using a kd tree (see section \ref{sec:kdtree}). Those knn are found from all the known vectors in their old representation $v_{old}$ in the lookup table. From the new vector representations $v_{new}$ of the knn, a weighted average is taken to find the $v_{new}$ for $v_{unknown}$. \\
+In our approach, we find the k-nearest neighbors of the $v_{unknown}$ from the old representations $v_{old}$ in the lookup table. We then take the new representations of the knn, and combine them using a weighted average to estimate the new representation $v_{new}$ for $v_{unknown}$. This way our approach is capable of handling complete new instances. \\
 
-In short: we look for the knn of the $v_{unknown}$ from all the known vectors in their original representation $v_{old}$. Based on the found knn, we take an weighted average of the new representation $v_{new}$ from those found knn. This weighted average is the $v_{new}$ for the $v_{unknown}$.
+In short: we look for the knn of the $v_{unknown}$ from all the known vectors in the lookup table in their original representation $v_{old}$. Based on the found knn, we take an weighted average of the old representations $v_{old}$. This weighted average is the $v_{new}$ for the $v_{unknown}$.
 
 \subsection{Generalized Deepwalk}
 
 Deepwalk itself is hard to apply on EHR data as it starts from a graph structure. It however provides an extra Word2Vec approach which can be generalized to more abstract objects like vectors. \\
 
-One application of Deepwalk is the need for less data to achieve a good Word2Vec model. When the EHR data becomes very large, it would take a considerable amount of time to train a Word2Vec model. Therefore it would be interesting to transform the EHR data into a weighted graph structure. The weights are based on the frequency of diagnoses following each other. \\
-After the graph transformation, the amount of weighted random walks can be limited to create a smaller set of sequences based on the original dataset. Those sequences can be used to train a Word2Vec model faster as there is fewer data. The same logic from the previous two sections is applicable to generalize deepwalk from words to more abstract objects.
+One application of Deepwalk is the need for less data to achieve a good Word2Vec model. When the EHR dataset becomes very large, it would take a considerable amount of time to train a Word2Vec model. Therefore it would be interesting to transform the EHR data into a weighted graph structure. The weights are based on the frequency of diagnoses following each other in all the sequences. \\
+After the graph transformation, the amount of weighted random walks can be limited to create a smaller set of sequences based on the original dataset. Those sequences can be used to train a Word2Vec model faster as there is fewer data. The same logic from the previous two sections is applicable to generalize DeepWalk from words to more abstract objects.
 
 
 \section{Conclusion}
 In this chapter we talked about general machine learning concepts and focused on Word2Vec. We conclude that Word2Vec is used to find good representation of words based on their context. It also causes that similar words will be close to each other in this new representation. \\
 
-With the concepts explained, we introduced our approaches. We extended Word2Vec so that it can handle more abstract object than words, namely vectors representing an EHR. We also extended Word2Vec to find a representation for a new instance based on knn. The same extension can be done for Deepwalk.
+With the concepts explained, we introduced our approaches. We extended Word2Vec so that it can handle more abstract objects than words, namely vectors representing an EHR. We also extended Word2Vec to find a representation for a new instance based on knn. Also DeepWalk is generalized to more abstract objects.
 
 
 
