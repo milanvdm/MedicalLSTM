@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class S2V2 {
 
 	
@@ -60,7 +62,7 @@ public class S2V2 {
 				if(line.contains("CLUSTERTEST 2")) {
 					clusterTest = true;
 				}
-				if(clusterTest) {
+				else if(clusterTest) {
 					k = Integer.parseInt(line.split(": ")[1]);
 					clusterTest = false;
 				}
@@ -69,7 +71,7 @@ public class S2V2 {
 				if(line.contains("RESULTS")) {
 					results = true;
 				}
-				if(results) {
+				else if(results) {
 					
 					if(line.contains("Average: ")) {
 						totalAverage = Double.parseDouble(line.split(": ")[1]);
@@ -89,6 +91,60 @@ public class S2V2 {
 				
 			}
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof S2V2))
+            return false;
+        if (o == this)
+            return true;
+
+        S2V2 rhs = (S2V2) o;
+        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        		this.vectorLength == rhs.vectorLength && 
+        		this.windowSize == rhs.windowSize) {
+        	
+        	return true;
+        }
+        else {
+        	return false;
+        }
+		
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+            // if deriving: appendSuper(super.hashCode()).
+            append(batchSize).
+            append(epoch).
+            append(learningRate).
+            append(minWordFreq).
+            append(vectorLength).
+            append(windowSize).
+            toHashCode();
+    }
+	
+	public double getMin() {
+		double min = Double.POSITIVE_INFINITY;
+		for(double toAdd: matches.values()) {
+			if(min > toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
+	}
+
+	public double getMax() {
+		double min = 0.0;
+		for(double toAdd: matches.values()) {
+			if(min < toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
 	}
 
 	public static Double[] parseDoubleList(String s) {

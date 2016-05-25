@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Knn1 {
 
 	
@@ -74,7 +76,7 @@ public class Knn1 {
 		       if(line.contains("CLUSTERTEST 1")) {
 		    	   clusterTest = true;
 		       }
-		       if(clusterTest) {
+		       else if(clusterTest) {
 		    	   k = Integer.parseInt(line.split(": ")[1]);
 		    	   clusterTest = false;
 		       }
@@ -83,12 +85,12 @@ public class Knn1 {
 		       if(line.contains("RESULTS")) {
 		    	   results = true;
 		       }
-		       if(results) {
+		       else if(results) {
 		    	   if(resultCounter == 0) {
 		    		   intParsed = parseIntList(line.split(": ")[1]);
 		    		   resultCounter++;
 		    	   }
-		    	   if(resultCounter == 1) {
+		    	   else if(resultCounter == 1) {
 		    		   String[] splitted = line.split(" - ");
 		    		   String disease = splitted[0];
 		    		   Double [] parsed = parseDoubleList(splitted[1]);
@@ -97,7 +99,7 @@ public class Knn1 {
 		    		   matchesClusters.put(disease, Arrays.asList(parsed));
 		    		   resultCounter++;
 		    	   }
-		    	   if(resultCounter == 3) {
+		    	   else if(resultCounter == 2) {
 		    		   String[] splitted = line.split(" - Average:  ");
 		    		   
 		    		   String disease = splitted[0];
@@ -110,6 +112,72 @@ public class Knn1 {
 		    }
 		}
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Knn1))
+            return false;
+        if (o == this)
+            return true;
+
+        Knn1 rhs = (Knn1) o;
+        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        		this.vectorLength == rhs.vectorLength && 
+        		this.windowSize == rhs.windowSize) {
+        	
+        	return true;
+        }
+        else {
+        	return false;
+        }
+		
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+            // if deriving: appendSuper(super.hashCode()).
+            append(batchSize).
+            append(epoch).
+            append(learningRate).
+            append(minWordFreq).
+            append(vectorLength).
+            append(windowSize).
+            toHashCode();
+    }
+	
+	public double getTotalAverage() {
+		double total = 0.0;
+		for(double toAdd: averageClusters.values()) {
+			if(Double.isNaN(toAdd)) {
+				continue;
+			}
+			total = total + toAdd;
+		}
+		return total / (double) averageClusters.values().size();
+	}
+
+	public double getMin() {
+		double min = Double.POSITIVE_INFINITY;
+		for(double toAdd: averageClusters.values()) {
+			if(min > toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
+	}
+	
+	public double getMax() {
+		double min = 0.0;
+		for(double toAdd: averageClusters.values()) {
+			if(min < toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
+	}
+	
 	
 	public static Double[] parseDoubleList(String s) {
 		String[] strings = s.replace("[", "").replace("]", "").split(", ");

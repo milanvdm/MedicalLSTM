@@ -28,7 +28,7 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
-public class MakePlots {
+public class MakePlotsBackup {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 

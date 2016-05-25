@@ -67,26 +67,26 @@ public class Deepwalk1 {
 		       }
 		       
 		       //PART 2
-		       if(clusterTest) {
-		    	   k = Integer.parseInt(line.split(": ")[1]);
-		    	   clusterTest = false;
-		       }
+		       
 		       
 		       if(line.contains("CLUSTERTEST 1")) {
 		    	   clusterTest = true;
 		       }
 		       
+		       else if(clusterTest) {
+		    	   k = Integer.parseInt(line.split(": ")[1]);
+		    	   clusterTest = false;
+		       }
 		       
 		       //PART 3
-		       if(results) {
-		    	   if(resultCounter == 2) {
-		    		   String[] splitted = line.split(" - Average:  ");
-		    		   
-		    		   String disease = splitted[0];
-		    		   Double average = Double.parseDouble(splitted[1].replaceAll(" ", ""));
-		    		   
-		    		   averageClusters.put(disease, average);
-		    		   resultCounter = 0;
+		       if(line.contains("RESULTS")) {
+		    	   results = true;
+		       }
+		       
+		       else if(results) {
+		    	   if(resultCounter == 0) {
+		    		   intParsed = parseIntList(line.split(": ")[1]);
+		    		   resultCounter++;
 		    	   }
 		    	   
 		    	   else if(resultCounter == 1) {
@@ -99,17 +99,20 @@ public class Deepwalk1 {
 		    		   resultCounter++;
 		    	   }
 		    	   
-		    	   else if(resultCounter == 0) {
-		    		   intParsed = parseIntList(line.split(": ")[1]);
-		    		   resultCounter++;
+		    	   else if(resultCounter == 2) {
+		    		   String[] splitted = line.split(" - Average:  ");
+		    		   
+		    		   String disease = splitted[0];
+		    		   Double average = Double.parseDouble(splitted[1].replaceAll(" ", ""));
+		    		   
+		    		   averageClusters.put(disease, average);
+		    		   resultCounter = 0;
 		    	   }
-		    	   
+		    	      
 		    	   
 		       }
 		       
-		       if(line.contains("RESULTS")) {
-		    	   results = true;
-		       }
+		       
 		      
 		    }
 		}
@@ -171,6 +174,9 @@ public class Deepwalk1 {
 	public double getTotalAverage() {
 		double total = 0.0;
 		for(double toAdd: averageClusters.values()) {
+			if(Double.isNaN(toAdd)) {
+				continue;
+			}
 			total = total + toAdd;
 		}
 		return total / (double) averageClusters.values().size();

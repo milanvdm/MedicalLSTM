@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Deepwalk2 {
 
 
@@ -63,7 +65,7 @@ public class Deepwalk2 {
 				if(line.contains("CLUSTERTEST 2")) {
 					clusterTest = true;
 				}
-				if(clusterTest) {
+				else if(clusterTest) {
 					k = Integer.parseInt(line.split(": ")[1]);
 					clusterTest = false;
 				}
@@ -72,11 +74,11 @@ public class Deepwalk2 {
 				if(line.contains("RESULTS")) {
 					results = true;
 				}
-				if(results) {
-					
+				else if(results) {
+
 					if(line.contains("Average: ")) {
 						totalAverage = Double.parseDouble(line.split(": ")[1]);
-						
+
 						continue;
 					}
 
@@ -88,10 +90,65 @@ public class Deepwalk2 {
 					matches.put(disease, average);
 
 				}
-				
-				
+
+
 			}
 		}
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Deepwalk2))
+            return false;
+        if (o == this)
+            return true;
+
+        Deepwalk2 rhs = (Deepwalk2) o;
+        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        		this.vectorLength == rhs.vectorLength && this.walkLength == rhs.walkLength && 
+        		this.windowSize == rhs.windowSize) {
+        	
+        	return true;
+        }
+        else {
+        	return false;
+        }
+		
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). // two randomly chosen prime numbers
+            // if deriving: appendSuper(super.hashCode()).
+            append(batchSize).
+            append(epoch).
+            append(learningRate).
+            append(minWordFreq).
+            append(vectorLength).
+            append(walkLength).
+            append(windowSize).
+            toHashCode();
+    }
+
+	public double getMin() {
+		double min = Double.POSITIVE_INFINITY;
+		for(double toAdd: matches.values()) {
+			if(min > toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
+	}
+
+	public double getMax() {
+		double min = 0.0;
+		for(double toAdd: matches.values()) {
+			if(min < toAdd) {
+				min = toAdd;
+			}
+		}
+		return min;
 	}
 
 	public static Double[] parseDoubleList(String s) {
