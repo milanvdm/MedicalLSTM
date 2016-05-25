@@ -19,21 +19,21 @@ After introducing those concepts, we explain our generalized word2vec approaches
 A time series consists of data points over a certain time period. We refer to this as a sequence of states. Where a state represents a data point and can differ from a single value to more complex representations like pictures. \\
 The domain of time series analysis handles around extracting information or relations from a time series. It can have different goals like forecasting, classification, or exploratory. \\
 
-A medical history of a patient can be seen as a time series. This means that methods applied on time series are also applicable on the medical data to find patterns.
+A medical history of a patient can be seen as a time series, namely a sequence of EHRs. This means that methods which are applied on time series, are also applicable on medical data to find patterns.
 
 	\subsection{Machine Learning}
 Machine learning is a data driven approach with as goal to build a model which can be	used to make predictions or decisions. Note that this model can be used to predict outcomes of time series. This task is done by algorithms which are able to learn models based on examples given by the designer. Based on the examples, machine learning aims to tackle $3$ types of problems, namely supervised learning, unsupervised learning, and reinforcement learning. \\
 Supervised learning is concerned with the learning task where there are examples given with their corresponding label. Unsupervised learning is similar to supervised learning only no labels are given. We won't go into reinforcement learning. \\
 We can also classify the problems according to the desired output of our model. Those main tasks consist of classification, regression, and clustering. \\
 	
-We mention some used methods in the field of machine learning. These are used in all above mentioned problems. \\
+We mention some used methods in the field of machine learning. These are used in above mentioned problems. \\
 In the field of classification neural networks are used to achieve state of the art results. For regression, support vector machines can be used. One of the most popular methods for clustering is K-means. 
 
 	\subsection{K-nearest Neighbors}
 	\label{sec:knn}
 	
-The k-Nearest Neighbors (knn) algorithm is a simple machine learning algorithm \cite{knn:article}. It will be used in our generalize Word2Vec approach. \\
-When you are in a supervised context, you have several instances with labels. When you retrieve a new instance, you want to predict its label. Based on a defined similarity measure (ex. Euclidean distance), you can look for the $k$ nearest labeled instances to the new instance. From those, you pick the most common label in the pool of the $k$ nearest instances. This label becomes your predicted label for the new instance.
+The k-Nearest Neighbors (knn) algorithm is a simple machine learning algorithm \cite{knn:article}. It will be used in our generalized Word2Vec approach. \\
+When you are in a supervised context, you have several instances with labels. When you retrieve a new instance, you want to predict its label. Based on a defined similarity measure (ex. Euclidean distance), you can look for the $k$ nearest labeled instances distanced to the new instance. From those, you pick the most common label in the pool of the $k$ nearest instances. This label becomes your predicted label for the new instance.
 	
 	
 	\subsection{K-dimensional Tree}
@@ -42,9 +42,9 @@ When you are in a supervised context, you have several instances with labels. Wh
 A naive way to calculate the nearest neighbors for a new element in a vector space, is by comparing all members with the new element and keep track of those distances. \\
 A more efficient way is to use a k-dimensional tree (kd tree) \cite{kdtree:article}. In this section we explain the workings of this approach in more detail \cite{kdtreeIntro:atricle}. \\
 
-A kd tree is a way of storing k-dimensional points. It is a binary tree where each node represents an element in the vector space. The node also contains information on how the tree is split up. It keeps track of the plane it is split on and the left and right sub tree. In figure \ref{fig:kdtreeSplit} you can see an example on how a simple kd tree is made and how it splits up the x,y plane. In the figure above, the splitting plane is not mentioned, it is the $y=5$ plane for the $[2,5]$ and $x=3$ for $[3,8]$.
+A kd tree is a way of storing k-dimensional points. It is a binary tree where each node represents an element in the vector space. The node also contains information on how the tree is split up. It keeps track of the plane it is split on and the left and right sub tree. In figure \ref{fig:kdtreeSplit} you can see an example on how a simple kd tree is made and how it splits up the x,y plane. In the upper figure, the splitting plane is not mentioned, it is the $y=5$ plane for the $[2,5]$ and $x=3$ for $[3,8]$. \\
 	
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.4\textwidth]{kdtreeSplit.png}
 	\caption{Representation on how a binary kd tree splits up the plane  \cite{kdtreeIntro:atricle}}
@@ -52,15 +52,14 @@ A kd tree is a way of storing k-dimensional points. It is a binary tree where ea
 \end{figure}
 
 Now that we can construct the kd tree, we can use it to find the nearest neighbor for a certain input point. \\
-We start with root node and recursively go down the kd tree. At each node it goes to the left or right depending if the input is lesser or greater than the current node depending on the splitting plane. Once it reaches a leaf node, it marks this node as the current nearest neighbor. \\
-It unwinds the recursion and at each node it checks if the current node is closer than the
+We start with root node and recursively go down the kd tree. At each node it goes to the left or right depending on if the input is lesser or greater than the current nodes value on the splitting plane. Once it reaches a leaf node, it marks this node as the current nearest neighbor. \\
 The algorithm unwinds the recursion of the tree, performing the following steps at each node:
 \begin{itemize}
 
 \item If the current node is closer than the current best, then it becomes the current best.
 \item It checks if it is possible whether there is the possibility of closer points on the other side of the splitting plane. It makes a hypersphere around the current node with a radius equal to the current nearest distance. 
 \begin{itemize}
-\item If the hypersphere crosses the splitting plane, there could a closer point on the other side. This means the algorithm will move down the other branch of the current node.
+\item If the hypersphere crosses the splitting plane, there could be a closer point on the other side. This means the algorithm will move down the other branch of the current node.
 \item If the hypersphere does not cross the splitting plane, the whole other branch can be skipped.
 \end{itemize}
 \end{itemize}
@@ -69,12 +68,12 @@ This algorithm is easily extended to find the k-nearest neighbors by keeping tra
 	
 	\subsection{Neural Networks}
 	
-A neural network is a machine learning approach based on biological neural networks. It can be used to find patterns and do prediction on time series. Those time series can be medical data.
+A neural network is a machine learning approach based on biological neural networks. It can be used to find patterns and do predictions on time series. Those time series can be medical data.
 
 
 		\subsubsection{Perceptron}
 
-The basic component of a neural network is a perceptron \cite{perceptron:article}. A perceptron takes multiple binary inputs and has a single binary output (see figure \ref{fig:perceptron}). Each input has a corresponding real numbered weight. The output is decided on the following equation:
+The basic component of a neural network is a perceptron \cite{perceptron:article}. A perceptron takes multiple binary inputs and has a single binary output (see figure \ref{fig:perceptron}). Each input has a corresponding real numbered weight $w_j$. The output is decided on the following equation: \\
 
 \begin{equation} 
 output =
@@ -84,16 +83,16 @@ output =
   \end{cases}
 \end{equation}
 	
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.4\textwidth]{perceptron.png}
 	\caption{Simple presentation of a perceptron \cite{NNintro:online}}
 	\label{fig:perceptron}
 \end{figure}
 
-We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons (and non-linear activation functions), the network can find non-linear relations between the input and output \cite{nnNL:article}.
+We can build a network by connecting multiple perceptrons (see figure \ref{fig:multiplePerceptrons}). By building these networks, more complex decisions can be made. The reason for this, is that once there are atleast $3$ layers of perceptrons (and non-linear activation functions), the network can find non-linear relations between the input and output \cite{nnNL:article}. \\
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.8\textwidth]{multiplePerceptrons.png}
 	\caption{More complex network made by connecting multiple perceptrons \cite{NNintro:online}}
@@ -101,28 +100,28 @@ We can build a network by connecting multiple perceptrons (see figure \ref{fig:m
 \end{figure}
 
 Now we have seen how a general network is constructed, we look at some vocabulary. \\
-In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on the figure, we call the first layer the input layer, the last layer the output layer, and the layers in between are called hidden layers. Sometime multiple layer networks are referred to as multilayer perceptrons or MLPs.
+In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on the figure, we call the first layer the input layer, the last layer the output layer, and the layers in between are called hidden layers. Sometimes a multiple layer network is referred to as multilayer perceptrons or MLP. 
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.8\textwidth]{networkArchitecture.png}
-	\caption{General vocabulary for a multilayer network \cite{NNintro:online}}
+	\caption{General vocabulary of a multilayer network \cite{NNintro:online}}
 	\label{fig:networkArch}
 \end{figure} 		
 
 
 		\subsubsection{Training a network}
 		
-To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous images could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen pictures but that the current picture is labeled correctly.
+To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous inputs could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen examples but that the current examples is labeled correctly. \\
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.8\textwidth]{smallChange.png}
 	\caption{Small change on the weights, only has a small impact on the output \cite{NNintro:online}}
 	\label{fig:smallChange}
 \end{figure} 
 
-To achieve this effect, we change our known perceptrons to sigmoid neurons. A sigmoid neuron has the same basics as a perceptron. It still has inputs but now it also has a bias $b$. The inputs still have weights but the weights can now range between $0$ and $1$. The output is now calculate with $\sigma(w*x+b)$ where $\sigma$ is the sigmoid function. This results in the following formula: 
+To achieve this effect, we change our above explained perceptrons to sigmoid neurons. A sigmoid neuron has the same basics as a perceptron. It still has inputs but now it also has a bias $b$. The inputs still have weights but the weights can now range between $0$ and $1$. The output is now calculate with $\sigma(w*x+b)$ where $\sigma$ is the sigmoid function. This results in the following formula: 
 
 \begin{equation} 
 \frac{1}{1+exp(-\sum_j w_jx_j-b)}
@@ -134,24 +133,24 @@ To achieve this effect, we change our known perceptrons to sigmoid neurons. A si
 \Delta output \approx \sum_j \frac{\partial output}{\partial w_j}\Delta w_j + \frac{\partial output}{\partial b}\Delta b
 \end{equation}
 
-\noindent Because of the linearity, it is now possible to choose changes for the weights and biases to achieve a correct output. By adjusting the weights, we will train our network to achieve a higher accuracy.
+\noindent Because of the linearity, it is now easier to choose changes for the weights and biases to achieve a correct output. By adjusting the weights, we will train our network to achieve a higher accuracy on the seen examples.
 		
 	\subsection{Backpropagation}
 	
-Backpropagation is an algorithm which is used to train neural networks \cite{bp:article}. It calculates the gradient of a chosen cost function with respect to the individual weights. With the gradient, the weights are updated and the cost function is minimized.
+Backpropagation is an algorithm which is used to train neural networks \cite{bp:article}. It calculates the gradient of a chosen cost function with respect to the individual weights. Based on the gradient, the weights are updated and the cost function is minimized.
 
 		\subsubsection{Terminology}
 		
-We use $w^l_{jk}$ to denote the weight corresponding to the connection between the $k^{th}$ node in the $(l-1)^{th}$ layer to the $j^{th}$ node in the $l^{th}$ layer. We use $b^l_j$ for the bias of the $j^{th}$ node in the $l^{th}$ layer and $a^l_j$ for the activation of the $j^{th}$ node in the $l^{th}$ layer. See figure \ref{fig:termNN}.
+We use $w^l_{jk}$ to denote the weight corresponding to the connection between the $k^{th}$ node in the $(l-1)^{th}$ layer and the $j^{th}$ node in the $l^{th}$ layer. We use $b^l_j$ for the bias of the $j^{th}$ node in the $l^{th}$ layer and $a^l_j$ for the activation of the $j^{th}$ node in the $l^{th}$ layer. See figure \ref{fig:termNN}. \\
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.8\textwidth]{termNN.png}
 	\caption{Visual representation of the terminology for a neural network \cite{NNintro:online}}
 	\label{fig:termNN}
 \end{figure} 
 
-We can now convert these notation to a vector representation. We remove the indexes for the node numbers which results in the following:
+\noindent We can now convert this notation to a vector representation. We remove the indexes for the node numbers which results in the following:
 
 \begin{equation} 
 a^l = \sigma (w^la^{l-1}+b^l)
@@ -274,7 +273,7 @@ DeepWalk is an approach where graph structured data is transformed into sequence
 
 In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exist of two parts. 
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{dwAlgo.png}
 	\caption{Overview of the DeepWalk algorithm \cite{deepwalkMain:article}}
