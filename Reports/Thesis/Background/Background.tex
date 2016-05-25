@@ -9,7 +9,7 @@ In this chapter we introduce important concepts which are needed to understand o
 
 We start with explaining some background knowledge in section \ref{sec:bk} such as time series and machine learning. We focus on basic concepts from machine learning and then focus more on neural networks. The main part to understand our approach is the introduction of Word2vec in section \ref{sec:word2vec}. This is then used to introduce Deepwalk as an extension on Word2Vec in section \ref{sec:deepwalk}. \\
 
-After introducing those concepts, we explain our generalized word2vec approaches in section \ref{sec:gw2v}.
+After introducing those concepts, we explain our generalized Word2Vec approaches in section \ref{sec:gw2v}.
 
 
 \section{Background Knowledge}
@@ -166,7 +166,7 @@ The cost function has to fulfill certain criteria. The first one is that it need
 
 Backpropagation has 4 equations. They allow us to calculate the error for each node and adjust the weights based on the gradient descent. \\
 
-First we calculate the error of each node which is based on how much the cost function is influenced by each activation and on how much the activation function is influenced by $z_j^L$:
+First we calculate the error of each node which is based on how much the cost function is influenced by each of its activation and on how much the activation function is influenced by $z_j^L$:
 
 \begin{equation} 
 \delta^L_j = \frac{\partial C}{\partial a^L_j} \sigma'(z_j^L)
@@ -207,19 +207,19 @@ z_j^L = \sum_k w^L_{jk}a^{L-1}_k+b^L_j
 We will explain Word2Vec in this section. It is explained from a linguistic point of view. This explanation is needed to introduce our generalized Word2Vec approach which can be applied to medical data. \\
 
 In natural language processing tasks, a good representation of words helps learning algorithms perform better. A representation is learned which maps words to vectors in a low-dimensional space compared to the vocabulary size. In this representation, we try to map context-similar words close to each other in the new vector space. The new representation is sometimes also called a 'word embedding'. \\
-We could say in an informal way: a linguistic background is made which the learning algorithm can use. \\
+We could say in an informal way: a linguistic background is made which the learning algorithm can use. 
 
 
 \subsection{Skip-gram}
 
-There are two main models used for word2vec \cite{w2vOriginal:article}, namely Continuous Bag-of-Words (CBOW) and the Skip-Gram model. \\
-The first one tries to predict a word if a context is given (ex. predict Paris when capital France is given). And the second one does the inverse of this approach \cite{w2vModels:article}. Empirical results have shown that the Skip-Gram model tends to do better on larger datasets \cite{w2vReason1:online} and gives a better representation for infrequent words \cite{w2vArchive:online}. In medical data there are often infrequent cases which are important. For those reasons, we choose to go further with the Skip-Gram model. \\
+There are two main models used for Word2Vec \cite{w2vOriginal:article}, namely Continuous Bag-of-Words (CBOW) and the Skip-Gram model. \\
+The first one tries to predict a word based on a given context (ex. predict Paris when capital France is given). And the second one does the inverse of this approach \cite{w2vModels:article}. Empirical results have shown that the Skip-Gram model tends to do better on larger datasets \cite{w2vReason1:online} and gives a better representation for infrequent words \cite{w2vArchive:online}. In medical data there are often infrequent cases which are important. For those reasons, we choose to go further with the Skip-Gram model. \\
 
-So one way of learning a word2vec representation of a corpus $Text$, is by using the skip-gram model. \\
+So one way of learning a Word2Vec representation of a corpus $Text$, is by using the Skip-Gram model. \\
 Based on given words $w$ and their contexts $c$, we set the parameter $\theta$ of $p(c|w;\theta)$ to maximize:
 
 \begin{equation} 
-\arg \max_{\theta} \prod_{(w,c \in D} p(c|w;\theta)
+\arg \max_{\theta} \prod_{(w,c \in D)} p(c|w;\theta)
 \end{equation}
 
 \noindent with $D$ the set of all word and context pairs we extract from the corpus.\\
@@ -227,7 +227,7 @@ Here we also note that $p(c|w)$ is indeed the chance of a context appearing afte
 
 \subsubsection{Finding word-context pairs}
 
-Given a sequence of words, we define their context based on n-gram \cite{w2vNgram:article}. In figure \ref{fig:ngram}, n-gram is explained on the sentence "This is a sentence". 
+Given a sequence of words, we define their context based on n-grams \cite{w2vNgram:article}. In figure \ref{fig:ngram}, n-grams are explained on the sentence "This is a sentence". 
 
 \begin{figure}[htbp]
 	\centering
@@ -236,7 +236,7 @@ Given a sequence of words, we define their context based on n-gram \cite{w2vNgra
 	\label{fig:ngram}
 \end{figure} 
 
-For the Skip-gram model, we define the context of a word $w_t$ as $w_{t+j}$ with $j$ between $-c$ and $c$. A larger $c$ results in more training examples and thus can lead to a higher accuracy but will have a longer training time.
+For the Skip-gram model, we define the context of a word $w_t$ as $w_{t+j}$ with $j$ between $-c$ and $c$. A larger $c$ results in more specific contexts for training examples and thus can lead to a higher accuracy if there is enough data to back this up. Because if there are not enough cases handling those specific contexts, the correlation between the word and his context is less significant.
 
 
 \subsubsection{Parameterization}
@@ -258,12 +258,12 @@ p(c|w;\theta) = \frac{e^{v_x*v_w}}{\sum_{c' \in C}e^{v_{c'}*v_w}}
 To compute the vectors using the Skip-gram model more efficiently, we introduce negative sampling \cite{w2vExplained:article}. \\
 Instead of calculating $\sum_{c' \in C}e^{v_{c'}*v_w}$ over all contexts, we make a set $D'$ which consists of randomly sampled word-context pairs. With this new set, we remove the costly term $\sum_{c' \in C}e^{v_{c'}*v_w}$ and replace it with $\sum_{(w,c) \in D'}e^{v_{c'}*v_w}$. \\
 
-In a less formal way: we are not making sure that if words appear in the same context, their vectors are more similar than all the other word vectors, but only of several vectors chosen randomly. This makes the Skip-gram model usable in terms of speed.
+In a less formal way: we are not making sure that if words appear in the same context, their vectors are more similar than all the other word vectors, but only more similar than several vectors chosen randomly. This makes the Skip-gram model usable in terms of computation.
 
 
 \subsection{Neural Networks}
 
-When the word2vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
+When the Word2Vec algorithm is trained using the Skip-gram model, one will have a lookup table. This table contains the mapping of words to their vector representation. This lookup table can be found by training a 2-layer neural network with as goal function the function described in the previous section. The training can be done with Gradient Descent for example. \\
 The trained 2-layer neural network can be placed in front of another neural network \cite{w2vNN:online}. It will convert the words to their vector representation and feed into the next neural network. It is empirically shown that this can improve the results of the neural network by putting the lookup table in front of it. As mentioned before, in a way, you offer background knowledge to the neural network.
 
 \section{DeepWalk}
@@ -281,7 +281,7 @@ In figure \ref{fig:dwAlgo}, we see an overview of the DeepWalk algorithm. It exi
 \end{figure} 
 
 First a random walk generator. For each vertex $v_i$ of the graph $G$, it will generate a random walk of length $t$. It will do this $\gamma$ times but the order to which the vertices are traversed, is randomly ordered each pass. With those walks, a sequence of vertices is generated. \\
-Secondly, those vertices are used for word2vec. This process is explained in section \ref{sec:word2vec}.
+Secondly, those vertices are used for Word2Vec. This process is explained in section \ref{sec:word2vec}.
 
 
 \section{Generalized Word2Vec Approaches}
