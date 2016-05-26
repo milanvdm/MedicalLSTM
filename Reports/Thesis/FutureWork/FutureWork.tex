@@ -30,6 +30,7 @@ Word2vec can be made distributed as the underlying idea is quite simplistic, it 
 As mentioned in section \ref{sec:word2vec}, a trained 2-layer neural network can be placed before another neural network and function as a lookup table. In this section, we discuss a possible neural network which allows us to further investigate the effectiveness of our Word2Vec approach to better classify patients. More concrete: we should check if a better accuracy is acquired with the lookup table in front of the neural network or without. 
 
 \subsection{Problem Definition}
+\label{sec:problem}
 
 The medical history of a patient is seen as a time series with as datapoints EHRs. Based on the time series, we want to classify it into different disease trajectories. A patient who is classified into a specific disease trajectory, can be treated more specifically as we would have a better view what the next stages of the trajectory could be. \\
 
@@ -77,11 +78,12 @@ Using padding, changes the data quite drastically and would cause problems durin
 \subsection{Neural Network}
 \label{sec:nn}
 
-In this section we explain in more detail why a Long-Short Term Memory (LSTM) \cite{lstmOrginin:article} networks handles the vanishing problem and long-term dependencies. \\
+We still have to solve $2$ problems mentioned in section \ref{sec:problem}. \\
+In this section we explain in more detail why Long-Short Term Memory (LSTM) \cite{lstmOrginin:article} networks handle the vanishing problem and long-term dependencies. \\
 
-First we shortly repeat the structure of a neural network in figure \ref{fig:nnStructure}. We see the input, different layers with their perceptrons, and $\sigma$ as the activation function. 
+First we shortly repeat the structure of a neural network in figure \ref{fig:nnStructure}. We see the input $x$, different layers with their perceptrons, $\sigma$ as the activation function, and $y$ as output. 
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{nnStructure.png}
 	\caption{General structure of a neural network \cite{IMECJaak}}
@@ -91,16 +93,16 @@ First we shortly repeat the structure of a neural network in figure \ref{fig:nnS
 \subsubsection{Recurrent Neural Network}
 \label{sec:rnn}
 
-A standard neural network do not have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about.
+A standard neural network does not have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{rnnLoops.png}
 	\caption{Unrolled recurrent neural network \cite{IMECJaak}}
 	\label{fig:rnnLoops}
 \end{figure} 
 
-The problem with RNNs is mainly that they have troubles learning long-term dependencies which is often essential in time series \cite{longDepRNN:article}.
+The problem with RNNs is mainly that they have trouble learning long-term dependencies which is often essential in time series \cite{longDepRNN:article}.
 
 
 \subsubsection{Long Short Term Memory}
@@ -108,65 +110,65 @@ The problem with RNNs is mainly that they have troubles learning long-term depen
 
 A LSMT network is a specific RNN which is capable of learning long-term dependencies \cite{lstmDep:thesis}. We will explain the difference with a standard RNN and why a LSTM can learn these long-term dependencies. \\
 
-A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure as a single $tanh$ layer, see figure \ref{fig:rnnTanh}.
+A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure like a single $tanh$ layer, see figure \ref{fig:rnnTanh}. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{rnnTanh.png}
 	\caption{Unrolled recurrent neural network with a single tanh layer \cite{lstmGood:online}}
 	\label{fig:rnnTanh}
 \end{figure} 
 
-It is important to see the difference with a LSTM. The repeating network does not have a single neural network layer, but has $4$ layers which each fulfills a specific goal, see figure \ref{fig:LSTMChain}.
+It is important to see the difference with a LSTM. The repeating network does not have a single neural network layer, but has $4$ layers which each fulfills a specific goal, see figure \ref{fig:LSTMChain}.\\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTMChain.png}
 	\caption{Unrolled LSTM network where each network has 4 layers \cite{lstmGood:online}}
 	\label{fig:LSTMChain}
 \end{figure} 
 
-The main idea behind LSTM is that each repeated network has its own cell state. It functions as a  memory which can be updated with each new input. On figure \ref{fig:LSTMConveyor}, you can see the cell state $C$ through time. It can be compared with a conveyor belt which interacts with the input at certain gates. This way the state is updated throughout several inputs.
+The main idea behind LSTM is that each repeated network has its own cell state. It functions as a  memory which can be updated with each new input. On figure \ref{fig:LSTMConveyor}, you can see the cell state $C$ through time. It can be compared with a conveyor belt which interacts with the input at certain gates. This way the state is updated throughout several inputs and this way a LSTM can keep track of long-term dependencies. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTMConveyor.png}
 	\caption{Representation of the cell state for a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTMConveyor}
 \end{figure} 
 
-In the following figures, we show the different gates and their functions in changing the cell state depending on the input and the output of the previous network. Next to each figure the formulas are shown on how the cell state is updated. There should be no surprises as they are not much different than the standard formulas of neural networks. \\
+In the following figures, we show the different gates and their functions in changing the cell state depending on the input and the output of the previous network. Next to each figure, the formulas are shown on how the cell state is updated. There should be no surprises as they are not much different than the standard formulas of neural networks. \\
 
-We start with the forget gate layer of a LSTM. Based on $x_t$ and $h_{t-1}$, it outputs a number between $0$ and $1$ for each number in the cell state $C_{t-1}$. This is shown in figure \ref{fig:LSTM1}.
+We start with the forget gate layer of a LSTM. Based on $x_t$ and $h_{t-1}$, it outputs a number between $0$ and $1$ for each number in the cell state $C_{t-1}$. This is shown in figure \ref{fig:LSTM1}. When the output is a $0$, the number in the cell state is completely erased. With the output $1$, the number does not change. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTM1.png}
 	\caption{Forget layer of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM1}
 \end{figure} 
 
-Next we look to the input gate layer. This gate decides which values will be updated in the cell state and outputs those in $i_t$. It is then combined with the vector $\widetilde{C}_t$, which contains the new candidate values based on the input $x_t$ and $h_{t-1}$. This is shown in figure \ref{fig:LSTM2}.
+Next we look to the input gate layer. This gate decides which values will be updated in the cell state and outputs those in $i_t$. It is then combined with the vector $\widetilde{C}_t$, which contains the new candidate values based on the input $x_t$ and $h_{t-1}$. This is shown in figure \ref{fig:LSTM2}. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTM2.png}
 	\caption{Input layer of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM2}
 \end{figure} 
 
-We can now combine the previous results and adjust the cell state. We multiply the old state with $f_t$ so we forget the needed elements. Then we add $i_t*\widetilde{C}_t$ which are the new candidate values multiplied by the amount on how much we want to update each state value. See figure \ref{fig:LSTM3}.
+We can now combine the previous results and adjust the cell state. We multiply the old state with $f_t$ so we forget the needed elements. Then we add $i_t*\widetilde{C}_t$ which are the new candidate values multiplied by the amount on how much we want to update each state value. See figure \ref{fig:LSTM3}. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTM3.png}
 	\caption{Update process of the cell state of a LSTM network \cite{lstmGood:online}}
 	\label{fig:LSTM3}
 \end{figure} 
 
-Finally, we need to output $h_t$ to the next network. This is based on the input and the cell state $C_t$. See figure \ref{fig:LSTM4}.
+Finally, we need to output $h_t$ to the next network. This is based on the input and the cell state $C_t$. See figure \ref{fig:LSTM4}. \\
 
-\begin{figure}[H]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{LSTM4.png}
 	\caption{Decide the output of a LSTM network \cite{lstmGood:online}}
@@ -176,7 +178,7 @@ Finally, we need to output $h_t$ to the next network. This is based on the input
 
 \subsubsection{Variants Long Short Term Memory}
 
-In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variant of LSTM networks. It was concluded that the forget gate and the activation function is the most important. Other variants do not have a large influence and mainly add a lot of extra complexity.
+In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variants of LSTM networks. It was concluded that the forget gate and the activation function are the most important. Other variants do not have a large influence and mainly add a lot of extra complexity.
 
 
 \section{Conclusion}
