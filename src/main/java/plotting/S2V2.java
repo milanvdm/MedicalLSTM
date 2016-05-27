@@ -101,10 +101,14 @@ public class S2V2 {
             return true;
 
         S2V2 rhs = (S2V2) o;
-        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
-        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
-        		this.vectorLength == rhs.vectorLength && 
-        		this.windowSize == rhs.windowSize) {
+        if(this.batchSize == rhs.batchSize && 
+        		this.epoch == rhs.epoch && 
+        		this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate &&
+        		this.minWordFreq == rhs.minWordFreq &&
+        		//this.vectorLength == rhs.vectorLength && 
+        		this.windowSize == rhs.windowSize
+        		) {
         	
         	return true;
         }
@@ -122,8 +126,9 @@ public class S2V2 {
             append(epoch).
             append(learningRate).
             append(minWordFreq).
-            append(vectorLength).
+            //append(vectorLength).
             append(windowSize).
+            append(k).
             toHashCode();
     }
 	

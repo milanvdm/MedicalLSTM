@@ -6,38 +6,36 @@
 
 \section{Introduction}
 
-In this chapter we explain the context in which we will be working for this thesis. \\
-
-In section \ref{sec:ehr} we explain what electronic health records are and how these are represented. In section \ref{sec:ehra}, we go further on how the electronic health records can be used to retrieve useful medical information. We also explain different approaches on how to retrieve this information from the health records.
+In section \ref{sec:ehr} we explain what electronic health records are and how these are represented. In section \ref{sec:ehra}, we explain how the electronic health records can be used to retrieve useful medical information. We also explain different approaches to retrieve this information from the health records. Those approaches range from querying databases to more advanced machine learning techniques.
 
 
 \section{Electronic Health Records}
 \label{sec:ehr}
 
 An electronic health record (EHR) is a collection of time-stamped data about a patient over a period point of time. It is stored digitally and thus can be established for a large number of patients over a long time period. \\
-The data stored in an EHR provides an overview of the patients health information. Health information like demographics, medical history, diagnoses, medications, and such, are stored \cite{HealthIT:online}. \\
+The data stored in an EHR provides an overview of the patients' health information. Health information like demographics, medical history, diagnoses, medications, and such, are stored \cite{HealthIT:online}. \\
 
-Large countries like the US and the UK, are each investing more than $20$ billion dollars into EHR systems \cite{EHRworld:article}. Those systems are adopted by around $70$\% of the physicians. Which means a large number of physicians are using other methods or systems. Also, each country develops his own system which results in a good nationwide coverage but introduces different system around the world. We focus on disease codes in the next section and introduce two standards: one used by mainly insurance companies and the other used by pharmaceutical companies.
+Recently large countries like the US and the UK, are each investing more than $20$ billion dollars into EHR systems \cite{EHRworld:article}. Those systems are adopted by around $70$\% of the physicians in the US, but of those systems a lot of different implementation are used. Which means a large number of physicians are using different methods or systems. This causes different ways of information representation and makes it harder to compare EHRs across different systems. We focus on disease codes in the next section and introduce two standards: one used by mainly insurance companies and the other used by pharmaceutical companies. 
 
 
 \subsection{Disease Codes}
 
-To make EHRs practical it is important to adhere to standards for data formatting. A well documented standard makes it easy to store and extract information from large-scale databases of EHRs. Without the possibility of extracting information, an EHR becomes a simple digital version of medical records on paper. \\
-A part of an EHR consists of the diagnosis of the patient. It provides information about his disease trajectory and allows analysis on his health situation. With a uniform system for classifying diseases nationwide, it is possible to provide a general picture on health situations of populations.
+To make EHRs practical it is important to adhere to standards for data formatting. A well-documented and consistently used standard makes it easy to store and extract information from large-scale databases of EHRs. Without the possibility of extracting information, an EHR becomes a simple digital version of medical records on paper. \\
+Part of an EHR consists of the diagnosis of the patient. It provides information about his disease trajectory and allows analysis on his health situation. With a uniform system for classifying diseases nationwide, it is possible to provide a general picture on health situations of populations. Several have been defined and their usage is scattered. We discuss the $2$ most relevant to our work.
 
 \subsubsection{ICD-10}
 
-The International Statistical Classification of Diseases and Related Health Problems (ICD) is a medical classification list made by the World Health Organization (WHO) \cite{WHO_ICD:online}. The ICD-10 contains more than $14,400$ codes about diseases, disorders, injuries, and other related health conditions. For example, the code for a sprained ankle is $S93.4$. It also provides hierarchical categories for those codes to allow a more general overview of diseases. ICD is mainly used by insurance companies.
+The International Statistical Classification of Diseases and Related Health Problems (ICD) is a medical classification list made by the World Health Organization (WHO) \cite{WHO_ICD:online}. Several variants are available like ICD-9, ICD-10, ICD-10 CM, and others. The ICD-10 contains more than $14,400$ codes about diseases, disorders, injuries, and other related health conditions. For example, the code for a sprained ankle is $S93.4$. It also provides hierarchical categories for those codes to allow a more general overview of diseases. ICD is mainly used by insurance companies.
 
 
 \subsubsection{MedDRA}
 
-The Medical Dictionary for Regulatory Activities (MedDRA) provides medical terminology in the form of disease codes \cite{MedDRA:online}. A MedDRA code is an eight digit numberic code where new terms are assigned sequentially. It does not provide clear hierarchical categories like ICD which are hard to understand without a medical background. MedDRA is mainly used by pharmaceutical companies.
+The Medical Dictionary for Regulatory Activities (MedDRA) provides medical terminology in the form of disease codes \cite{MedDRA:online}. A MedDRA code is an eight digit numeric code where the code itself has no meaning. The code functions as an unique identifier so new terms are just identified with the next available code. Note that this system does not provide a clear and easy to use system to retrieve a hierarchical structure of a code. MedDRA is mainly used by pharmaceutical companies.
 
 \section{EHR Analytics}
 \label{sec:ehra}
 
-EHRs provide a massive amount of data which could be used to create useful insights. The data contains the medical history of a patient including medical measurements, diagnoses, prescribed drugs, and demographics. Based on those values, we could obtain the following insights:
+EHRs provide a massive amount of data which in principle can be used to create useful insights. The data contains the medical history of a patient including medical measurements, diagnoses, prescribed drugs, and demographics (see figure \ref{fig:matrixPatient}, where procedures (CPTs), lab results (LABs), visits to primary care physician (PCP) and visits to specialists (SPEC) are part of the EHR). Based on those values, we could obtain the following insights:
 
 \begin{itemize}
 
@@ -46,28 +44,28 @@ EHRs provide a massive amount of data which could be used to create useful insig
 \item Duration and recovery percentage of certain diseases
 \item Correlation between demographics and certain diseases
 \item Link between current health state and health history
-\item Prediction of future health states based on history
+\item Classification and prediction of future health states based on history
 
 \end{itemize}
 
-Those insights can be offered on an individual level, which means a right intervention to the right patient at the right time. EHR analytics can be used to have a personalized care and benefits the healthcare system by cutting costs and improve outcomes. \\
+Those insights can be offered on an individual level, which means a right intervention to the right patient at the right time. EHR analytics can be used to have a personalized care and benefits the healthcare system by cutting costs and improve outcomes \cite{rand1:article}. \\
 
-In the following sections we talk about current EHR analytic methods.
+EHR analytics is an active research field as a lot of different problems need to be solved, like different codings, privacy, interpretation, and large amounts of data. In the following sections we talk about current EHR analytical methods.
 
 
 \subsection{Querying}
 
-Analytics in epidemiology on EHRs is typically done through querying a database \cite{EHRquery:journal}. A specialist can have a certain idea about correlations between conditions or patients. He can support this idea by finding cases in EHRs and analyzing the results of his query. \\
-This method is based on the knowledge and experience of a specialist. The information has to be actively sought after and unexpected or complex correlations are not considered. Some complex relations cannot be found because of the limitations of the querying language. A query language is equivalent to first-order logic. Which means non-linear relations in the data cannot be found.
+Analytics in epidemiology on EHRs is typically done through querying a database \cite{EHRquery:journal}. A specialist has a hypothesis about correlations between conditions or patients. He can support this idea by selecting cases in EHRs and analyzing the results of his query. \\
+This method is based on the knowledge and experience of a specialist. The information has to be actively sought after and unexpected or complex correlations are not always considered. Some complex relations cannot be found because of the limitations of the querying language, ex. a first-order logic query language. Currently The Health Improvement Network (THIN) research team at UCL conducts these kinds of research \cite{THIN:online}.
 
-\subsection{Big Data Analytics}
+\subsection{Data Analytics}
 
-More advanced methods are applied on EHRs than querying. In general, they try to find patterns in the EHR data which then can be used to predict outcomes of treatments \cite{EHRbigdata:slides}. \\
+More advanced methods are applied to EHRs than querying. In general, the goal is to find patterns in the EHR data which then can be used to predict outcomes of treatments or classify a patient's disease trajectory \cite{EHRbigdata:slides}. \\
 
-Several predictive methods from machine learning can be used and show promising results \cite{EHRmining:article}. Those results are achieved by using non-optimized methods which are applied on the EHR data. We also note that methods used as Multi-layer Perceptron networks are not ideal for prediction of time-series, see section \ref{sec:PatientClassification}. We conclude that there is still a lot of room for improvement. \\
+Several predictive/classification methods from machine learning can be used and show promising results \cite{EHRmining:article}. Those results are achieved by using exploratory methods which are applied to the EHR data. We also note that methods in \cite{EHRmining:article} as Multi-layer Perceptron networks are not ideal for prediction of time-series like medical data, see section \ref{sec:PatientClassification}. We conclude that there is still a lot of room for improvement. \\
  
-More specialized approaches are also applied on EHR data \cite{EHRrecommender:article} besides the above mentioned machine learning techniques. 
-An EHR of a patient can be transformed into a matrix structure, see figure \ref{fig:matrixPatient}. On these matrix structures, large-scale data mining algorithms can be applied. Those make it possible to mine temporal patterns in EHR data. The found patterns can be used for prediction later on.
+More specialized approaches are also applied to EHR data \cite{EHRrecommender:article} besides the above mentioned machine learning techniques. 
+An EHR of a patient can be transformed into a matrix structure, see figure \ref{fig:matrixPatient}. On these matrix structures, large-scale data mining algorithms can be applied. Those make it possible to mine patterns in EHR data. The patterns found can be used as the basis for predictive models.
 
 \begin{figure}[!htb]
 	\centering
@@ -76,20 +74,12 @@ An EHR of a patient can be transformed into a matrix structure, see figure \ref{
 	\label{fig:matrixPatient}
 \end{figure}
 
-It is also possible to define patient similarities \cite{EHRsimilarity:article}. So when a patient is similar to a previous known case, his treatment can be based on those previous experiences. This is a similar approach as in recommender systems \cite{recommender:article}.
+It is also possible to define patient similarities \cite{EHRsimilarity:article}. So when a patient is similar to a previous known case, his treatment can be based on those previous experiences. In a way, it could be seen as a similar approach as a recommender system \cite{recommender:article}.
 
 
-\subsection{Statistical Analysis}
+\subsection{Data Mining}
 
-A more statistical approach is used to find patterns in EHR data on a dataset of the Danish population \cite{Brunak:article}. \\
-
-First we describe the dataset. The dataset which is used to apply the statistical analysis on, are EHRs collected over $15$ years on over $6$ million patients in Denmark. The size of this dataset makes it possible to retrieve significant results. \\
-
-They start with finding pairs of diagnoses which have a strong correlation between them. After finding the correlated pairs, a test for directionality is applied. From this, only the pairs with a high enough indication for a direction are kept. \\
-
-The directed pairs are then connected into longer trajectories when they have overlapping diagnoses. The found trajectories are then clustered. From the clusters, diagnoses can be found which are key in the disease progression. Those key diagnoses could be used to predict future disease progression of patients. \\
-
-The found clusters will be used to validate our approach described in chapter \ref{cha:background}. You can find an example of a clustered trajectory in figure \ref{fig:clusterGraphDanish}.
+In 2015, a more data mining approach is used to find patterns in EHR data on a dataset of the Danish population \cite{Brunak:article}. The results from \cite{Brunak:article} are clusters of disease trajectories which will be used to validate our approach described in chapter \ref{cha:background}. Their results are used because it is currently the largest study performed on EHRs. You can find an example of a clustered trajectory in figure \ref{fig:clusterGraphDanish}. \\
 
 \begin{figure}[!htb]
 	\centering
@@ -98,13 +88,23 @@ The found clusters will be used to validate our approach described in chapter \r
 	\label{fig:clusterGraphDanish}
 \end{figure}
 
+The dataset which is used to apply the data analysis on, consist of EHRs collected over $15$ years on over $6$ million patients in Denmark. The size of this dataset makes it possible to retrieve statistically significant results. \\
+
+They start with finding pairs of patients' diagnoses which have a strong temporal correlation between them. After finding the correlated pairs, a test for directionality is applied. From this, only the pairs with a high enough indication for a direction are kept, ie which often appear one after the other within a certain time span. \\
+
+The directed pairs are then connected into longer trajectories when they have overlapping diagnoses. The found trajectories are then clustered. From the clusters, diagnoses can be found which are key in the disease progression. Those key diagnoses could be used to predict future disease progression of patients. 
+
+
+
+
+
 
 \section{Conclusion}
 
-We conclude that EHRs contain important information of a patients medical history and current state. When a large amount of EHRs is available, empirical results can be found in the form of patterns. Those pattern can be used to predict and improve medical outcomes on a personal level. \\
-The methods we describe vary from simple to very complex. But there is still room for improvement, especially in the field of advanced machine learning algorithms. The results of the Danish paper can be used to have a first validation of our approach. \\
+EHRs contain important information of a patients medical history and current state. When a large amount of EHRs is available, relevant results can be found in the form of patterns. Those pattern can be used to predict and improve medical outcomes on a personal level. \\
+The methods we describe vary from simple to very complex. But there is still room for improvement, especially in the field of advanced machine learning algorithms. The results of the Danish paper can be used to have a first validation of our approach, namely a generalized Word2vec approach. \\
 
-In the next chapter we explain the needed background knowledge to understand our approach on finding patterns in EHRs. After introducing you to those concepts, we also explain our approach, namely a generalized Word2vec approach.
+In the next chapter we explain the required background knowledge to understand our approach on finding patterns in EHRs. After introducing you to those concepts, we also explain our approach, namely a generalized Word2vec approach.
 
 
 %%% Local Variables: 

@@ -67,6 +67,9 @@ public class Knn1 {
 		       }
 		       if(line.contains("clusterK")) {
 		    	   clusterK = Integer.parseInt(line.split(": ")[1]);
+		    	   
+
+		    	   System.out.println(clusterK);
 		       }
 		       if(line.contains("newLabels")) {
 		    	   newLabels = Integer.parseInt(line.split(": ")[1]);
@@ -121,10 +124,15 @@ public class Knn1 {
             return true;
 
         Knn1 rhs = (Knn1) o;
-        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
-        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        if(this.batchSize == rhs.batchSize && 
+        		this.epoch == rhs.epoch && 
+        		this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate && 
+        		this.minWordFreq == rhs.minWordFreq &&
         		this.vectorLength == rhs.vectorLength && 
-        		this.windowSize == rhs.windowSize) {
+        		//this.clusterK == rhs.clusterK &&
+        		this.windowSize == rhs.windowSize
+        		) {
         	
         	return true;
         }
@@ -144,6 +152,8 @@ public class Knn1 {
             append(minWordFreq).
             append(vectorLength).
             append(windowSize).
+            //append(clusterK).
+            append(k).
             toHashCode();
     }
 	

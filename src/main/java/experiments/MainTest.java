@@ -13,7 +13,7 @@ public class MainTest {
 
 	public static void main(String[] args) throws Exception {
 
-		logger.info("Started Main Test Version 2.0");
+		logger.info("Started Main Test Version 2.1");
 
 		
 		//File file1 = new File(Constants.INPUT_CSV_TEST);

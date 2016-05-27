@@ -104,10 +104,15 @@ public class Deepwalk2 {
             return true;
 
         Deepwalk2 rhs = (Deepwalk2) o;
-        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
-        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
-        		this.vectorLength == rhs.vectorLength && this.walkLength == rhs.walkLength && 
-        		this.windowSize == rhs.windowSize) {
+        if(		this.batchSize == rhs.batchSize && 
+        		this.epoch == rhs.epoch && 
+        		this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate &&
+        		this.minWordFreq == rhs.minWordFreq &&
+        		this.vectorLength == rhs.vectorLength && 
+        		//this.walkLength == rhs.walkLength && 
+        		this.windowSize == rhs.windowSize
+        		) {
         	
         	return true;
         }
@@ -126,8 +131,9 @@ public class Deepwalk2 {
             append(learningRate).
             append(minWordFreq).
             append(vectorLength).
-            append(walkLength).
+            //append(walkLength).
             append(windowSize).
+            append(k).
             toHashCode();
     }
 

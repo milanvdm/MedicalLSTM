@@ -154,7 +154,7 @@ public class SimpleGeneralizer implements Generalizer {
 	}
 
 	private void readMatches() throws IOException, InterruptedException {
-		CsvIterator iter = new CsvIterator(new File(MAPPING_PATH));
+		CsvIterator iter = new CsvIterator(new File(MAPPING_PATH), "~");
 
 		matches = new HashMap<String, String>();
 

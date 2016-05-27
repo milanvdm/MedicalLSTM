@@ -71,7 +71,7 @@ public class Knn2 {
 				if(line.contains("CLUSTERTEST 2")) {
 					clusterTest = true;
 				}
-				if(clusterTest) {
+				else if(clusterTest) {
 					k = Integer.parseInt(line.split(": ")[1]);
 					clusterTest = false;
 				}
@@ -110,10 +110,15 @@ public class Knn2 {
             return true;
 
         Knn2 rhs = (Knn2) o;
-        if(this.batchSize == rhs.batchSize && this.epoch == rhs.epoch && //this.k == rhs.k && 
-        		this.learningRate == rhs.learningRate && this.minWordFreq == rhs.minWordFreq &&
+        if(this.batchSize == rhs.batchSize && 
+        		this.epoch == rhs.epoch && 
+        		this.k == rhs.k && 
+        		this.learningRate == rhs.learningRate &&
+        		this.minWordFreq == rhs.minWordFreq &&
+        		//this.clusterK == rhs.clusterK &&
         		this.vectorLength == rhs.vectorLength && 
-        		this.windowSize == rhs.windowSize) {
+        		this.windowSize == rhs.windowSize
+        		) {
         	
         	return true;
         }
@@ -132,7 +137,9 @@ public class Knn2 {
             append(learningRate).
             append(minWordFreq).
             append(vectorLength).
+            //append(clusterK).
             append(windowSize).
+            append(k).
             toHashCode();
     }
 	
