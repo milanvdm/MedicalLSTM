@@ -236,7 +236,7 @@ Given a sequence of words, we define their context based on n-grams \cite{w2vNgr
 	\label{fig:ngram}
 \end{figure} 
 
-For the Skip-gram model, we define the context of a word $w_t$ as $w_{t+j}$ with $j$ between $-c$ and $c$. A larger $c$ results in more specific contexts for training examples and thus can lead to a higher accuracy if there is enough data to back this up. Because if there are not enough cases handling those specific contexts, the correlation between the word and his context is less significant.
+For the Skip-gram model, we define the context of a word $w_t$ as $w_{t+j}$ with $j$ between $-c$ and $c$. A larger $c$ typically results in more specific contexts for training examples and thus can lead to a higher accuracy if there is enough data to back this up. Because if there are not enough cases handling those specific contexts, the correlation between the word and his context is less statistically significant.
 
 
 \subsubsection{Parameterization}

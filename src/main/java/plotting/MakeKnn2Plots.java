@@ -141,7 +141,7 @@ public class MakeKnn2Plots {
 							"minWordFreq = " + minWordFreq + "\n" +
 							"clusterK = " + k,// + "\n" +
 							//"k = " + clusterK,
-					null, "Cluster match", 
+					null, "Matching Percentage", 
 					averageDS,PlotOrientation.VERTICAL, 
 					true, true, false);
 

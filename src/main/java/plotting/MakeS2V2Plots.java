@@ -136,7 +136,7 @@ public class MakeS2V2Plots {
 							"learningRate = " + learningRate + "\n" +
 							"minWordFreq = " + minWordFreq + "\n" +
 							"clusterK = " + k,
-							null, "Cluster match", 
+							null, "Matching Percentage", 
 							averageDS,PlotOrientation.VERTICAL, 
 							true, true, false);
 

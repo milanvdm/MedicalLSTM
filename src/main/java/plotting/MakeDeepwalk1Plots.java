@@ -143,7 +143,7 @@ public class MakeDeepwalk1Plots {
 					"minWordFreq = " + minWordFreq + "\n" +
 					"clusterK = " + k,// + "\n" +
 					//"walkLength = " + walkLength,
-					null, "Cluster match", 
+					null, "Matching Percentage", 
 					averageDS,PlotOrientation.VERTICAL, 
 					true, true, false);
 
