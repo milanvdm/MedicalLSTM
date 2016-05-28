@@ -5,14 +5,12 @@
 \label{cha:futureWork}
 
 \section{Introduction}
-In this chapter 
-
-Normalization
-Distributed
-RNN
+In this chapter we discuss some possible improvements or further research which are possible to add to the current approaches. \\
+In section \ref{sec:generalization} we discuss a possible improvement on how we handled generalization of the medical data. In section \ref{sec:distributed}, we introduce a optimization which can be applied on our Word2Vec approaches by utilizing data distribution. In section \ref{sec:PatientClassification}, we explain a specific neural network which can use the found patterns by the Word2Vec approaches to predict or classify patients' disease trajectories.
 
 
 \section{Generalization}
+\label{sec:generalization}
 
 In our Word2Vec approaches, we applied generalization on the medical states to reduce the amount of infrequent states. This was needed to retrieve more general n-grams. For this generalization, we divided some attributes into specific intervals. \\
 
@@ -20,6 +18,7 @@ Instead of dividing some attributes into specific intervals, we could apply norm
 
 
 \section{Distributed Word2Vec}
+\label{sec:distributed}
 
 Word2vec can be made distributed as the underlying idea is quite simplistic, it counts occurrences of n-grams. Counting occurrences based on labels, is a well known problem and is often solved by MapReduce algorithms \cite{mapreduce:article}. 
 
@@ -182,10 +181,11 @@ In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done bet
 
 
 \section{Conclusion}
-The final section of the chapter gives an overview of the important results
-of this chapter. This implies that the introductory chapter and the
-concluding chapter don't need a conclusion.
 
+Before this chapter, we already mentioned some possible roads to explore like a better disease code mapping strategy or extensive parameter tuning. \\
+
+In this chapter we talked shortly about two possible improvements, a better generalization approach and a better use of data distribution to speed up to process. \\
+We mainly focused on LSTM neural networks and explained why they should be suitable to predict or classify disease trajectories. They are able to handle the Curse of Dimensionality, long time dependencies, and take the time aspect of medical data into account. Our Word2Vec approaches can be used in combination with this kind of neural network. The prediction/classification accuracy of the LSMT neural network makes it possible to validate the working of our approaches by testing if the accuracy increases with the use of our Word2Vec approaches. \\
 
 
 %%% Local Variables: 

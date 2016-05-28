@@ -112,7 +112,7 @@ In figure \ref{fig:networkArch}, we see a four-layer network. As mentioned on th
 
 		\subsubsection{Training a network}
 		
-To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights. When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label. Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous inputs could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen examples but that the current examples is labeled correctly. \\
+To train a neural network, we input an example with a known label. The network will calculate a certain output based on the current weights (forward pass). When this output is incorrect, it should be possible to adjust the weights with as effect that the network now has as output the correct label (backward pass). Note that the change in weights, should only effect the output by a small bit (see figure \ref{fig:smallChange}). The reason for this is that otherwise all the previous inputs could now be labeled incorrectly. So, the concept of training a neural network means, adjusting the weights in a way that the behavior of the network doesn't change completely on the previous seen examples but that the current examples is labeled correctly. \\
 
 \begin{figure}[!htb]
 	\centering
