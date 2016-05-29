@@ -721,7 +721,7 @@
     \fi
   \fi}
 \newenvironment{preface}[1][\@author]%
- {\chapter\prefacename
+ {\chapter*\prefacename
   \def\kulemt@preface@{#1}}%
  {\par
   \ifx\kulemt@preface@\@empty\else

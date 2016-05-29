@@ -40,17 +40,20 @@ public class CountLinesCsv {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		int totalCount = 0;
+		int sequenceCount = 0;
 
-		File file = new File("conditions_sorted.csv");
+		File file = new File(Constants.INPUT_CSV_SORTED_TEST);
 
 		MedicalSequenceIterator<StateImpl> medIter = new MedicalSequenceIterator<StateImpl>(file, false);
 
 		while(medIter.hasMoreSequences()) {
 
 			Sequence<StateImpl> sequence = medIter.nextSequence();
+			sequenceCount++;
 
 			totalCount = totalCount + sequence.getElements().size();
 
+			/*
 			for(StateImpl state: sequence.getElements()) {
 				String label = state.getLabel();
 
@@ -61,9 +64,13 @@ public class CountLinesCsv {
 					statsGeneralized.put(label, 1);
 				}
 			}
+			*/
 
 		}
-
+		
+		System.out.println((double) totalCount / (double) sequenceCount);
+		
+ /*
 		statsGeneralized = sortByComparator(statsGeneralized, false);
 
 		FileWriter writer = new FileWriter("vocab_general.txt"); 
@@ -110,6 +117,8 @@ public class CountLinesCsv {
 
 		writer.flush();
 		writer.close();
+		
+		*/
 
 	}
 

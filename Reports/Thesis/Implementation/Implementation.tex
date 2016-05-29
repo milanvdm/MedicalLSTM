@@ -217,11 +217,48 @@ Both in experiment $1$ and experiment $2$, we found that the window size had no 
 	\label{fig:s2v_vl_2}
 \end{figure}
 
-We expected ... Steps Brunak paper (4) .... But it is not ....  
+We expected the window size to have more impact as a higher size makes more specific contexts. And more specific contexts, tend to make better contexts. A reason for this could be that we don't have enough data to justify more specific contexts. Also, because our sequence lengths have an average length of around $19$, a window size of $5$ is not that much different than a size of $10$ as in many cases it will cut of the size at the start or end of the sequence. The Danish paper uses sequences of length $4$, so this could also imply that a window size of $5$ is already enough to cover the relationships the Danish paper found and therefore a higher size will not have an impact on the matching percentage. 
 
 \subsubsection*{Learning Rate}
 
+Both in experiment $1$ and experiment $2$, we found that the learning rate had no substantial influence on the matching percentage. See figure \ref{fig:s2v_vl_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_vl_2} for experiment $2$. Similar results are achieved with all the other parameter settings. \\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V1_vl.jpeg}
+	\caption{Mapping percentage with the learning rate parameter of generalized Word2Vec approach in experiment 1.}
+	\label{fig:s2v_vl_1}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V2_vl.jpeg}
+	\caption{Mapping percentage with the learning rate parameter of generalized Word2Vec approach in experiment 2.}
+	\label{fig:s2v_vl_2}
+\end{figure}
+
+Learning rate is a parameter which is hard to tune. This explains the amount of literature around learning rate and the implementation of automatic tuning algorithms for learning rate. Therefore our results do not provide any possible conclusion as we only tested $2$ different learning rates. \\
+Although it is also possible that we chose our learning rate high enough in both cases and because of the learning decay, they both achieved the same results.
+
 \subsubsection*{Minimum Word Frequency}
+
+Both in experiment $1$ and experiment $2$, we found that the minimum word frequency had no substantial influence on the matching percentage. See figure \ref{fig:s2v_vl_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_vl_2} for experiment $2$. Similar results are achieved with all the other parameter settings. \\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V1_vl.jpeg}
+	\caption{Mapping percentage with the minimum word frequency parameter of generalized Word2Vec approach in experiment 1.}
+	\label{fig:s2v_vl_1}
+\end{figure}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V2_vl.jpeg}
+	\caption{Mapping percentage with the minimum word frequency parameter of generalized Word2Vec approach in experiment 2.}
+	\label{fig:s2v_vl_2}
+\end{figure}
+
+
 
 \subsubsection*{ClusterK}
 
@@ -260,7 +297,9 @@ We expected ... Steps Brunak paper (4) .... But it is not ....
 
 \subsubsection*{ClusterK}
 
-\subsubsection*{K}
+\subsubsection*{Walklength}
+
+Brunak 4
 
 
 \subsection{Model Comparison}
