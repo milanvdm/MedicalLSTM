@@ -97,7 +97,7 @@ public class MakeS2V2Plots {
 				vectorLength = toPlot.vectorLength;
 
 				double average = toPlot.totalAverage;
-				double parameter = toPlot.vectorLength; 
+				double parameter = toPlot.k; 
 				double min = toPlot.getMin();
 				double max = toPlot.getMax();
 
@@ -131,12 +131,12 @@ public class MakeS2V2Plots {
 
 
 			JFreeChart barChart = ChartFactory.createBarChart(
-							//"vectorlength = " + vectorLength + "\n" +
+							"vectorlength = " + vectorLength + "\n" +
 							"windowSize = " + windowSize + "\n" +
 							"learningRate = " + learningRate + "\n" +
-							"minWordFreq = " + minWordFreq + "\n" +
-							"clusterK = " + k,
-							null, "Matching Percentage", 
+							"minWordFreq = " + minWordFreq,// + "\n" +
+							//"clusterK = " + k,
+							"ClusterK", "Matching Percentage", 
 							averageDS,PlotOrientation.VERTICAL, 
 							true, true, false);
 
@@ -178,7 +178,7 @@ public class MakeS2V2Plots {
 			LegendItemCollection legendItemsOld = plot.getLegendItems();
 			final LegendItemCollection legendItemsNew = new LegendItemCollection();
 			for(int i = 0; i< legendItemsOld.getItemCount(); i++){
-				if(!(i >= 2)){
+				if(!(i >= 3)){
 					legendItemsNew.add(legendItemsOld.get(i));
 				}
 			}
@@ -187,7 +187,7 @@ public class MakeS2V2Plots {
 
 			int width = 640; /* Width of the image */
 			int height = 480; /* Height of the image */ 
-			File BarChart = new File( "Plots/vl/S2V2/S2V2 - " + name + ".jpeg" ); 
+			File BarChart = new File( "Plots/clusterK/S2V2/S2V2 - " + name + ".jpeg" ); 
 			BarChart.getParentFile().mkdirs();
 			ChartUtilities.saveChartAsJPEG( BarChart , barChart , width , height );
 

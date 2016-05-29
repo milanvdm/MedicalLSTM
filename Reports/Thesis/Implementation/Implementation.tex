@@ -90,7 +90,7 @@ In figure \ref{fig:mappingStats}, we show the statistics of this mapping process
 	\label{fig:mappingStats}
 \end{figure}
 
-We have an average of $63$ \% of the words from the description that matches between MedDRA and ICD 10 descriptions. We also see that around $85$ \% of all the disease code mappings have a match of atleast $33$ \%. We assume this is already a good mapping as medical terms are quite specific and if $33$ \% matches, the upper hierarchy will be a good enough match. For the codes which have a zero percent match, the Damerau-Levenshtein algorithm \cite{edit:article} is applied. The algorithm calculates the edit distance between two strings using character insertion, character deletion, character replacement, and adjacent character swaps. The description with the lowest edit distance, is then chosen as best match. \\
+We have an average of $63$\% of the words from the description that matches between MedDRA and ICD 10 descriptions. We also see that around $85$\% of all the disease code mappings have a match of atleast $33$\%. We assume this is already a good mapping as medical terms are quite specific and if $33$\% matches, the upper hierarchy will be a good enough match. For the codes which have a zero percent match, the Damerau-Levenshtein algorithm \cite{edit:article} is applied. The algorithm calculates the edit distance between two strings using character insertion, character deletion, character replacement, and adjacent character swaps. The description with the lowest edit distance, is then chosen as best match. \\
 Another option would have been to remove those codes from our dataset. As an EHR contains more information than only the disease code, a lot of other information would have been lost. This however is not tested and is a possibility for future work. \\
 
 \section{Results}
@@ -118,7 +118,7 @@ The first one is as follows (we later call this experiment $1$):
 
 \end{itemize}
 
-The second one is as follows (we later call this experiment $2$):
+\noindent The second one is as follows (we later call this experiment $2$):
 
 \begin{itemize}
 
@@ -258,44 +258,79 @@ Both in experiment $1$ and experiment $2$, we found that the minimum word freque
 	\label{fig:s2v_vl_2}
 \end{figure}
 
-
+We expected the minimum word frequency to have a better accuracy with a higher value as we would be sure they have enough instances to be learned from. Because we applied generalization, $99.82$\% of the instances are above the minimum word frequency of $10$ to $69.90$\% before generalization. We therefore expect the minimum word frequency to have lost its influence. A future direction to explore is to ignore the generalization and solely work with minimum word frequency.
 
 \subsubsection*{ClusterK}
 
+See figure \ref{fig:s2v_vl_1} for the influence in the matching percentage of experiment $1$ by the parameter clusterK. Similar results are achieved with all the other parameter settings. \\
 
-\subsubsection*{Conclusion}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V1_vl.jpeg}
+	\caption{Mapping percentage with the clusterK parameter of generalized Word2Vec approach in experiment 1.}
+	\label{fig:s2v_vl_1}
+\end{figure}
 
+\noindent We see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. \\
 
+\noindent See figure \ref{fig:s2v_vl_1} for the influence in the matching percentage of experiment $2$ by the parameter clusterK. Similar results are achieved with all the other parameter settings. \\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{S2V1_vl.jpeg}
+	\caption{Mapping percentage with the clusterK parameter of generalized Word2Vec approach in experiment 1.}
+	\label{fig:s2v_vl_1}
+\end{figure}
+
+\noindent We see that most matches with the Danish clusters are found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
 
 \subsection{K-Nearest Neighbors Word2Vec}
 
 \subsubsection*{Vectorlength}
 
-
+Similar as generalized word2vec
 
 \subsubsection*{Window Size}
 
+Similar as generalized word2vec
+
 \subsubsection*{Learning Rate}
 
+Similar as generalized word2vec
+
 \subsubsection*{Minimum Word Frequency}
+
+Similar as generalized word2vec
 
 \subsubsection*{ClusterK}
 
 \subsubsection*{K}
 
+TODO
+
 \subsection{DeepWalk}
+
+TODO
 
 \subsubsection*{Vectorlength}
 
-
+Similar as generalized word2vec
 
 \subsubsection*{Window Size}
 
+Similar as generalized word2vec
+
 \subsubsection*{Learning Rate}
+
+Similar as generalized word2vec
 
 \subsubsection*{Minimum Word Frequency}
 
+Similar as generalized word2vec
+
 \subsubsection*{ClusterK}
+
+TODO
 
 \subsubsection*{Walklength}
 
@@ -304,6 +339,7 @@ Brunak 4
 
 \subsection{Model Comparison}
 
+TODO
 
 \section{Conclusion}
 

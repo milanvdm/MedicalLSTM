@@ -106,7 +106,7 @@ public class Deepwalk2 {
         Deepwalk2 rhs = (Deepwalk2) o;
         if(		this.batchSize == rhs.batchSize && 
         		this.epoch == rhs.epoch && 
-        		this.k == rhs.k && 
+        		//this.k == rhs.k && 
         		this.learningRate == rhs.learningRate &&
         		this.minWordFreq == rhs.minWordFreq &&
         		this.vectorLength == rhs.vectorLength && 

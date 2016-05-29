@@ -113,10 +113,10 @@ public class S2V1 {
         S2V1 rhs = (S2V1) o;
         if(this.batchSize == rhs.batchSize &&
         		this.epoch == rhs.epoch &&
-        		this.k == rhs.k && 
+        		//this.k == rhs.k && 
         		this.learningRate == rhs.learningRate &&
         		this.minWordFreq == rhs.minWordFreq &&
-        		//this.vectorLength == rhs.vectorLength && 
+        		this.vectorLength == rhs.vectorLength && 
         		this.windowSize == rhs.windowSize
         		) {
         	
@@ -136,9 +136,9 @@ public class S2V1 {
             append(epoch).
             append(learningRate).
             append(minWordFreq).
-            //append(vectorLength).
+            append(vectorLength).
             append(windowSize).
-            append(k).
+            //append(k).
             toHashCode();
     }
 	
