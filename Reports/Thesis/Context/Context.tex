@@ -1,12 +1,12 @@
 \graphicspath{ {Context/Images/} }
 
 
-\chapter{Introduction to Electronic Health Record Analytics}
+\chapter{Electronic Health Record Analytics}
 \label{cha:context}
 
 \section{Introduction}
 
-In section \ref{sec:ehr} we explain what electronic health records are and how these are represented. In section \ref{sec:ehra}, we explain how the electronic health records can be used to retrieve useful medical information. We also explain different approaches to retrieve this information from the health records. Those approaches range from querying databases to more advanced machine learning techniques. After stating the general context we are working in and what we want to improve, we state the outline of information in the thesis in section \ref{sec:outline}.
+In section \ref{sec:ehr} we explain what electronic health records are and how these are represented. In section \ref{sec:ehra}, we explain how the electronic health records can be used to retrieve useful medical information. We also explain different approaches to retrieve this information from the health records. Those approaches range from querying databases to more advanced machine learning techniques.
 
 
 \section{Electronic Health Records}
@@ -93,17 +93,6 @@ The dataset which is used to apply the data analysis on, consist of EHRs collect
 They start with finding pairs of patients' diagnoses which have a strong temporal correlation between them. After finding the correlated pairs, a test for directionality is applied. From this, only the pairs with a high enough indication for a direction are kept, ie which often appear one after the other within a certain time span. \\
 
 The directed pairs are then connected into longer trajectories when they have overlapping diagnoses. The found trajectories are then clustered. From the clusters, diagnoses can be found which are key in the disease progression. Those key diagnoses could be used to predict future disease progression of patients. 
-
-
-
-\section{Outline}
-\label{sec:outline}
-
-In this chapter, we introduced you to the field of Electronic Health Record Analytics and some current research directions. We state this is an active research field with a lot of directions left to explore. \\
-In chapter \ref{cha:background}, we start with introducing some terminology and general background knowledge needed to introduce our approach in the field of Electronic Health Record Analytics. Then we explain our own approach, namely generalized Word2Vec approaches, and how those can be applied on medical data. \\
-In chapter \ref{cha:implementation}, we show the methods we used to implement our own approaches. This allows us to execute experiments and validate our approaches. \\
-In chapter \ref{cha:conclusion}, we talk about the conclusions we can take from this thesis and sum up the results we achieved. \\
-The last chapter, namely chapter \ref{cha:futureWork}, we explore some possible improvements on our approaches and some future directions left to explore.
 
 
 \section{Conclusion}

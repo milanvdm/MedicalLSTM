@@ -1,0 +1,15 @@
+\chapter{Introduction}
+\label{cha:introduction}
+
+This thesis finds itself in the context of the new research area of Electronic Health Record Analytics. In this area a large amount of medical data is available which can be used to find patterns between several diagnoses. At the moment several research groups are working on utilizing EHRs to find medical patterns using several methods like querying, statistics, data mining, and artificial intelligence approaches. Those patterns can be used to improve the accuracy of prediction or classification methods which have as goal to improve personal medical care, drug discovery, disease progression, or reduce medical costs. \\
+
+Based on the analogy between sentences of words and sequences of medical events, we introduce generalized Word2Vec. This generalized Word2Vec makes it possible to be applied on medical data. \\
+To make sure the generalized Word2Vec methods can be applied to large-scale medical data, we apply the generalization concept also on DeepWalk. DeepWalk makes it possible to generate a smaller dataset from the original dataset and then apply a Word2Vec approach on this smaller dataset. \\
+Besides the exploration on generalizing Word2Vec approaches, we also improve Word2Vec by tackling one of its shortcomings. This shortcoming of Word2Vec is that it is unable to handle unseen instances once it has built his lookup table. We combine a k-nearest neighbors method with Word2Vec and make an estimation of the correlation to other diagnoses for the unseen instance. \\
+
+We compare our results from our Word2Vec methods applied on the OSIM2 dataset to the results of the currently largest study on EHRs. To make it possible to apply our methods on the OSIM2 dataset, we had to categorize our features and make a disease code mapping between two standards namely MedDRA and ICD10. 
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "thesis"
+%%% End: 

@@ -2,7 +2,7 @@
 
 \setup{title={Learning a Diseases Embedding using Generalized Word2Vec Approaches.  },
   author={Milan van der Meer},
-  promotor={Prof.\,dr.\ R. Wuyts},
+  promotor={Prof.\,dr.\ R. Wuyts\and Alexander Vapirev},
   assessor={Prof. dr. ir. H. Blockeel\and R. van Lon },
   assistant={Dr. E. D'Hondt}}
 % The following \setup may be removed entirely if no filing card is wanted
@@ -29,6 +29,9 @@
 \usepackage{enumitem}
 \usepackage[normalem]{ulem}
 \useunder{\uline}{\ul}{}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
 
 % Finally the hyperref package is used for pdf files.
 % This can be commented out for printed versions.
@@ -84,6 +87,7 @@ On a  more personal note, I want to thank the people who stood by my side. My pa
     WHO  & World Health Organization \\
     MedDRA & Medical Dictionary for Regulatory Activities \\
     THIN & The Health Improvement Network \\
+    ML & Machine Learning \\
     CBOW & Continuous Bag-of-Words \\
     knn & k-Nearest Neighbors \\
     kd & k-dimensional \\
@@ -101,6 +105,7 @@ On a  more personal note, I want to thank the people who stood by my side. My pa
 % Now comes the main text
 \mainmatter
 
+\include{introduction}
 \include{Context/Context}
 \include{Background/Background}
 \include{Implementation/Implementation}
