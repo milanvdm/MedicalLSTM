@@ -61,7 +61,6 @@ Because we are working with high dimensional data and a each dimension has a wid
 
 \begin{table}[!htb]
 \centering
-\label{tab:catOsim}
 \begin{tabular}{lll}
 \hline
 Attribute                                    & Requirement                      & Category \\ \hline
@@ -81,6 +80,7 @@ Attribute                                    & Requirement                      
 \end{tabular}
 
 \caption{Different categories for OSIM2 attributes.}
+\label{tab:catOsim}
 \end{table}
 
 It is easy to generalize concepts such as time intervals and demographics, for example we can say that people between the age $0$ and $10$ belong to category A. This becomes complex for disease diagnoses as it requires a lot of knowledge to categorize those. We come back to disease coding in section \ref{sec:mapping}. \\
@@ -90,7 +90,6 @@ To see the effect of our categorizations, see table \ref{tab:general}. You can s
 \begin{table}[!htb]
 \centering
 
-\label{tab:general}
 \begin{tabular}{lll}
 \hline
 \textbf{Before Categorization}                                                    &                             &                     \\ \hline
@@ -107,6 +106,7 @@ To see the effect of our categorizations, see table \ref{tab:general}. You can s
 \end{tabular}
 
 \caption{Three most common vectors in our dataset before and after categorization.}
+\label{tab:general}
 \end{table}
 
 
@@ -187,11 +187,11 @@ For each method, we calculate the average $p_{match}$ over all elements in the l
 The effectiveness of a neural network such as the one used to learn disease embeddings, depends on parameter tuning. Parameter tuning is a difficult problem and complex methods have been proposed to solve this \cite{tuning:article}. Therefore we explored $504$ different settings. Note that this is not an extensive parameter tuning setup, but an overview on the effect and logic behind some parameters. An extensive parameter tuning setup is possible as future work. \\
 
 In table \ref{tab:parameters}, you can see an overview of the different parameters for each approach. Every time, all possible combinations of the mentioned parameters have been tested. \\
+To our knowledge, there is only one study about the tuning of Word2Vec parameters \cite{w2vTuning:article}. In this study they start with picking some values for the parameters and do an extensive study on which value performs best. We take a similar approach by choosing some values and see their effects. Another iteration should be executed to tune our Word2Vec approaches better by taking our findings into account from our results described in section \ref{sec:expResults}. This is a possible road to explore in future work. \\
 
 \begin{table}[!htb]
 \centering
 
-\label{tab:parameters}
 \begin{tabular}{llll}
 \hline
 Parameter                                    & Generalized Word2Vec  & Knn Word2Vec          & DeepWalk              \\ \hline
@@ -207,6 +207,7 @@ Parameter                                    & Generalized Word2Vec  & Knn Word2
 \end{tabular}
 
 \caption{Parameters which are tested for the different approaches}
+\label{tab:parameters}
 \end{table}
 
 \noindent\textbf{Vectorlength} fixes the dimensions of the new vector space to which the EHR events are projected to. A larger size is more expressive but a smaller size decreases the complexity of the vocabulary after training. Each dimension can be seen as a representation of an unknown linear relation to some context-disease pairs \cite{vl:article}. \\
@@ -214,98 +215,101 @@ Parameter                                    & Generalized Word2Vec  & Knn Word2
 \textbf{Epoch} is the number of times you go over all the training examples and use them to train your neural network by updating the weights. \\
 \textbf{Window size} is the size of the n-gram we use to create contexts. A window size is an estimation of the relevant context for a word. This means that the window size depends on the used corpus \cite{w2vOriginal:article} \cite{windowSize:article}. \\
 \textbf{Learning rate} decides how the weights are adjusted during backpropagation. A large value makes the neural network learn faster but may also cause the network not to learn at all. A small value on the other hand can cause a slow convergence or overfitting \cite{lr:article}. \\
-Note that in our implementation, we use an adaptive gradient descent algorithm \cite{adagrad:article}. Informally, it increases the learning rate for sparse features and therefore is able to take predictive but rarely seen features into account.  \\
+Note that in our implementation, we use an adaptive gradient (AdaGrad) descent algorithm \cite{adagrad:article}. Informally, it increases the learning rate for sparse features and therefore is able to take predictive but rarely seen features into account.  \\
 \textbf{Minimum Word Frequency} removes instances from the training set below a certain minimum value. A low frequency causes the inclusion of instances which only have a few contexts for which relations can be learned from. A higher frequency could improve the accuracy for a Word2Vec model but also throw away information. Note that the influence of this parameter is not well researched. \\
 \textbf{ClusterK} is the parameter which creates Word2Vec clusters as described in the previous section. A higher clusterK causes the Word2Vec cluster to be larger and a lower value the other way around. \\
 \textbf{K} is a specific parameter for the knn Word2Vec approach. It decides on how many nearest neighbors the new vector representation is based on. For more explanation see section \ref{sec:knnWord2Vec}. \\
 \textbf{Walklength} is a specific parameter for DeepWalk. It decides how long the generated sequence will be. For more explanation see section \ref{sec:deepwalk}.
 
 \section{Results}
+\label{sec:expResults}
+
+Here we discuss the results from our two experiments on the generalized Word2Vec approaches. We compare the Word2Vec clusters with the Danish cluster as described in section \ref{sec:clusterExp}. \\
+We check the influence of a parameter on the matching percentage by inspecting each parameter setting. From all these parameter settings, we deduce a general trend on the influence of the studied parameter. \\
+After checking the individual parameters, we take the parameter setting with the highest average matching percentage for each approach and compare the different approaches. \\
+
+The bars in the figures of this section each show a parameter value and the black stripes both represent the minimum and the maximum value of the matching percentage. The height of each bar represents the matching percentage.
 
 \subsection{Generalized Word2Vec}
 
-Here we discuss the results from our two experiments on the generalized Word2Vec approach. We trained a Word2Vec model on the complete OSIM2 dataset. From this model, we compare the Word2Vec clusters with the Danish cluster as described in section \ref{sec:clusterExp}. For each parameter, we fix the other parameters and check their influence on the matching percentage. After checking the individual parameters, we take the parameters setting with the best matching percentage and interpret those results.
+We use the complete OSIM2 dataset to make our Word2Vec model and make Word2Vec clusters from all instances in the lookup table. \\
+Both in experiment $1$ and experiment $2$, we found that the vectorlength, window size, learning rate, and minimum word frequency have no substantial influence on the matching percentage. 
 
 \subsubsection{Vectorlength}
 
-Both in experiment $1$ and experiment $2$, we found that the vectorlength had no substantial influence on the matching percentage. See figure \ref{fig:s2v_vl_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_vl_2} for experiment $2$. The two bars in the figures each show a parameter value and the black stripes both represent the minimum and the maximum value of the matching percentage. Similar results are achieved with all the other parameter settings. \\
+For the influence of the vectorlengths, see figure \ref{fig:s2v_vl} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{S2V1_vl.jpeg}
-	\caption{Mapping percentage with the vectorlength parameter of generalized Word2Vec approach in experiment 1.}
-	\label{fig:s2v_vl_1}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{S2V1_vl.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{S2V2_vl.jpeg}
+	\end{subfigure}
+	\caption{Mapping percentage for different vectorlengths of the generalized Word2Vec 		approach in both experiments.}
+	\label{fig:s2v_vl}
 \end{figure}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{S2V2_vl.jpeg}
-	\caption{Mapping percentage with the vectorlength parameter of generalized Word2Vec approach in experiment 2.}
-	\label{fig:s2v_vl_2}
-\end{figure}
-
-We conclude that a vectorlength of $50$ is already expressive enough to differentiate between different diseases. Only sometimes the vectorlength of $100$ gives a small gain in matching percentage which can be explained by the increase of expressiveness of the new vector space.
+We conclude that a vectorlength of $50$ is expressive enough to differentiate between different diseases of the OSIM2 dataset as it gives the same results as a vectorlength of $100$. Only sometimes the vectorlength of $100$ gives a small gain in matching percentage which can be explained by the increase of expressiveness of the new vector space.
 
 \subsubsection{Window Size}
 
-Both in experiment $1$ and experiment $2$, we found that the window size had no substantial influence on the matching percentage. See figure \ref{fig:s2v_ws_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_ws_2} for experiment $2$. Similar results are achieved with all the other parameter settings. \\
+For the influence of the window sizes, see figure \ref{fig:s2v_vl} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{S2V1_ws.jpeg}
-	\caption{Mapping percentage with the window size parameter of generalized Word2Vec approach in experiment 1.}
-	\label{fig:s2v_ws_1}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{S2V1_ws.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{S2V2_ws.jpeg}
+	\end{subfigure}
+	\caption{Mapping percentage for different window sizes of the generalized Word2Vec 		approach in both experiments.}
+	\label{fig:s2v_ws}
 \end{figure}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{S2V2_ws.jpeg}
-	\caption{Mapping percentage with the window size parameter of generalized Word2Vec approach in experiment 2.}
-	\label{fig:s2v_ws_2}
-\end{figure}
-
-We expected the window size to have more impact as a higher size makes more specific contexts. And more specific contexts, tend to make better contexts. A reason for this could be that we don't have enough data to justify more specific contexts. Also, because our sequence lengths have an average length of around $19$, a window size of $5$ is not that much different than a size of $10$ as in many cases it will cut of the size at the start or end of the sequence. The Danish paper uses sequences of length $4$, so this could also imply that a window size of $5$ is already enough to cover the relationships the Danish paper found and therefore a higher size will not have an impact on the matching percentage. 
+We expected the window size to have more impact as a higher size makes more specific contexts and therefore we expected a better model. A reason for this negative result can be that we do not have enough data to justify more specific contexts or we did not find a good window size to approximate the relevant contexts for our dataset. \\
+Also, because our sequence lengths have an average length of around $19$, a window size of $5$ is not that much different than a size of $10$ as in many cases it will cut of the size at the start or end of the sequence. The Danish paper uses sequences of length $4$, so this could also imply that a window size of $5$ is already enough to cover the relationships the Danish paper found and therefore a higher size will not have an impact on the matching percentage. \\
+The Danish paper sets a $5$ year 'window size' as they assume no dependencies are possible between disease outside this time frame. To achieve a similar effect with the window size of Word2Vec, a varying window size should be used. To our knowledge, a varying window size is only tested in \cite{w2vTuning:article} but no clear implementation is given. 
 
 \subsubsection{Learning Rate}
 
-Both in experiment $1$ and experiment $2$, we found that the learning rate had no substantial influence on the matching percentage. See figure \ref{fig:s2v_lr_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_lr_2} for experiment $2$. Similar results are achieved with all the other parameter settings. \\
+For the influence of the learning rates, see figure \ref{fig:s2v_lr} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{S2V1_lr.jpeg}
-	\caption{Mapping percentage with the learning rate parameter of generalized Word2Vec approach in experiment 1.}
-	\label{fig:s2v_lr_1}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{S2V1_lr.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{S2V2_lr.jpeg}
+	\end{subfigure}
+	\caption{Mapping percentage for different learning rates of the generalized Word2Vec 		approach in both experiments.}
+	\label{fig:s2v_lr}
 \end{figure}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{S2V2_lr.jpeg}
-	\caption{Mapping percentage with the learning rate parameter of generalized Word2Vec approach in experiment 2.}
-	\label{fig:s2v_lr_2}
-\end{figure}
-
-Learning rate is a parameter which is hard to tune. This explains the amount of literature around learning rate and the implementation of automatic tuning algorithms for learning rate. Therefore our results do not provide any possible conclusion as we only tested $2$ different learning rates. \\
-Although it is also possible that we chose our learning rate high enough in both cases and because of the learning decay, they both achieved the same results.
+Learning rate is a parameter which is hard to tune \cite{peskyLr:article}. This explains the amount of literature around learning rate and the implementation of automatic tuning algorithms for learning rate \cite{peskyLr:article} \cite{adagrad:article} \cite{lrHard:article}. Therefore our results do not provide any final conclusion as we only tested $2$ different learning rates which is not extensive enough for a difficult parameter as the learning rate. \\
+Although it is also possible that we chose our learning rate similar enough in both cases and because of AdaGrad (see section \ref{sec:parameters}, they both achieved the same results.
 
 \subsubsection{Minimum Word Frequency}
 
-Both in experiment $1$ and experiment $2$, we found that the minimum word frequency had no substantial influence on the matching percentage. See figure \ref{fig:s2v_wf_1} for the matching percentage of experiment $1$ and figure \ref{fig:s2v_wf_2} for experiment $2$. Similar results are achieved with all the other parameter settings. \\
+For the influence of the minimum word frequencies, see figure \ref{fig:s2v_wf} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{S2V1_wf.jpeg}
-	\caption{Mapping percentage with the minimum word frequency parameter of generalized Word2Vec approach in experiment 1.}
-	\label{fig:s2v_wf_1}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{S2V1_wf.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{S2V2_wf.jpeg}
+	\end{subfigure}
+	\caption{Mapping percentage for different minimum word frequencies of the generalized Word2Vec approach in both experiments.}
+	\label{fig:s2v_wf}
 \end{figure}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{S2V2_wf.jpeg}
-	\caption{Mapping percentage with the minimum word frequency parameter of generalized Word2Vec approach in experiment 2.}
-	\label{fig:s2v_wf_2}
-\end{figure}
-
-We expected the minimum word frequency to have a better accuracy with a higher value as we would be sure they have enough instances to be learned from. Because we applied generalization, $99.82$\% of the instances are above the minimum word frequency of $10$ to $69.90$\% before generalization. We therefore expect the minimum word frequency to have lost its influence. A future direction to explore is to ignore the generalization and solely work with minimum word frequency.
+We expected the minimum word frequency to result in a better accuracy for a higher value. Otherwise, some instances will only have a few occurrences which would make it hard to learn from. \\
+However, because we applied generalization, $99.82$\% of the instances are above the minimum word frequency of $10$ with respect to $69.90$\% before generalization. We therefore expect the minimum word frequency to have lost its influence. A future direction to explore is to ignore the generalization and solely work with minimum word frequency.
 
 \subsubsection{ClusterK}
 
@@ -314,44 +318,29 @@ See figure \ref{fig:s2v_clusterK_1} for the influence in the matching percentage
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.6\textwidth]{S2V1_clusterK.jpeg}
-	\caption{Mapping percentage with the clusterK parameter of generalized Word2Vec approach in experiment 1.}
+	\caption{Mapping percentage for different clusterKs of the generalized Word2Vec approach in experiment $1$.}
 	\label{fig:s2v_clusterK_1}
 \end{figure}
 
-\noindent We see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. \\
+\noindent We see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
 
 \noindent See figure \ref{fig:s2v_clusterK_2} for the influence in the matching percentage of experiment $2$ by the parameter clusterK. Similar results are achieved with all the other parameter settings. \\
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.6\textwidth]{S2V2_clusterK.jpeg}
-	\caption{Mapping percentage with the clusterK parameter of generalized Word2Vec approach in experiment 2.}
+	\caption{Mapping percentage for different clusterKs of the generalized Word2Vec approach in experiment $2$.}
 	\label{fig:s2v_clusterK_2}
 \end{figure}
 
-\noindent We see that most matches with the Danish clusters are found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
+\noindent We see that most matches with the Danish clusters are already found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
 
 \subsection{K-Nearest Neighbors Word2Vec}
 
-\subsubsection*{Vectorlength}
 
-Similar as generalized word2vec
+\subsubsection{ClusterK}
 
-\subsubsection*{Window Size}
-
-Similar as generalized word2vec
-
-\subsubsection*{Learning Rate}
-
-Similar as generalized word2vec
-
-\subsubsection*{Minimum Word Frequency}
-
-Similar as generalized word2vec
-
-\subsubsection*{ClusterK}
-
-\subsubsection*{K}
+\subsubsection{K}
 
 TODO
 
@@ -359,27 +348,12 @@ TODO
 
 TODO
 
-\subsubsection*{Vectorlength}
 
-Similar as generalized word2vec
-
-\subsubsection*{Window Size}
-
-Similar as generalized word2vec
-
-\subsubsection*{Learning Rate}
-
-Similar as generalized word2vec
-
-\subsubsection*{Minimum Word Frequency}
-
-Similar as generalized word2vec
-
-\subsubsection*{ClusterK}
+\subsubsection{ClusterK}
 
 TODO
 
-\subsubsection*{Walklength}
+\subsubsection{Walklength}
 
 Brunak 4
 
