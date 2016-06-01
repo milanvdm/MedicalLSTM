@@ -333,6 +333,7 @@ Others have explored other analogies with for example protein sequences (BioVec)
 
 
 \subsection{K-Nearest Neighbors Word2Vec}
+\label{sec:knnWord2Vec}
 
 A problem with embeddings established for a certain dataset is that because Word2Vec builds a lookup table, there is the possibility that a certain instance is not present in the lookup table and therefore no representation can be found for this instance. \\ 
 Since we are working in the context of a generalized Word2Vec approach, where instances are represented by complex objects like vectors $m$, the possibility of this happening increases. For example, an EHR event can be a multi-dimensional vector where each feature has a broad range of values. Compared to a word, which is a one-dimensional vector with as range all words in a dictionary, an EHR event has more possible combinations. \\

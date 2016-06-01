@@ -218,7 +218,7 @@
 }
 
 @Article{adagrad:article,
-  Title                    = {Adaptive Subgradient Methods for Online Learning and Stochastic Optimization},
+  Title                    = {{Adaptive Subgradient Methods for Online Learning and Stochastic Optimization}},
   Author                   = {Duchi, John and Hazan, Elad and Singer, Yoram},
   Year                     = {2011},
   ISSN                     = {1532-4435},
