@@ -4,17 +4,19 @@
 \chapter{Future Work}
 \label{cha:futureWork}
 
-\section{Introduction}
-In this chapter we discuss some possible improvements or further research which are possible to add to the current approaches. \\
-In section \ref{sec:generalization} we discuss a possible improvement on how we handled generalization of the medical data. In section \ref{sec:distributed}, we introduce a optimization which can be applied on our Word2Vec approaches by utilizing data distribution. In section \ref{sec:PatientClassification}, we explain a specific neural network which can use the found patterns by the Word2Vec approaches to predict or classify patients' disease trajectories.
+In this chapter we discuss some possible improvements or further research which are possible to add to our approaches. \\
+In section \ref{sec:categorization} we discuss a possible improvement on how we handled categorization of the medical data which we discusses in section \ref{sec:categorizationImpl}. In section \ref{sec:distributed}, we introduce a optimization for our Word2Vec approaches by utilizing data distribution. In section \ref{sec:PatientClassification}, we explain a specific neural network which can use the found patterns by the Word2Vec approaches to predict or classify patients' disease trajectories. \\
 
 
-\section{Generalization}
-\label{sec:generalization}
+ADD META ABOUT EXPERIMENTS
 
-In our Word2Vec approaches, we applied generalization on the medical states to reduce the amount of infrequent states. This was needed to retrieve more general n-grams. For this generalization, we divided some attributes into specific intervals. \\
 
-Instead of dividing some attributes into specific intervals, we could apply normalization to it. Based on the distribution of the data, we can make more sensible intervals and assign them to the attributes.
+\section{Categorization}
+\label{sec:categorization}
+
+In our Word2Vec approaches, we applied categorization on the medical states to reduce the amount of infrequent states. This was needed to retrieve more general n-grams. For this categorization, we divided attributes like age into specific intervals. \\
+
+Instead of dividing attributes into specific intervals, we could apply normalization to those attributes. Based on the distribution of the data, we can make more sensible categories and assign them to the attributes accordingly.
 
 
 \section{Distributed Word2Vec}
@@ -26,14 +28,14 @@ Word2vec can be made distributed as the underlying idea is quite simplistic, it 
 \section{Patient Classification}
 \label{sec:PatientClassification}
 
-As mentioned in section \ref{sec:word2vec}, a trained 2-layer neural network can be placed before another neural network and function as a lookup table. In this section, we discuss a possible neural network which allows us to further investigate the effectiveness of our Word2Vec approach to better classify patients. More concrete: we should check if a better accuracy is acquired with the lookup table in front of the neural network or without. 
+As mentioned in section \ref{sec:word2vec}, a trained 2-layer neural network can be placed before another neural network and the former functions as a lookup table. In this section, we discuss the latter neural network which allows us to further investigate the effectiveness of our Word2Vec approach to better classify or predict patients. More concrete: we could check if a better accuracy is acquired with the lookup table in front of the prediction/classification neural network or without. 
 
 \subsection{Problem Definition}
 \label{sec:problem}
 
-The medical history of a patient is seen as a time series with as datapoints EHRs. Based on the time series, we want to classify it into different disease trajectories. A patient who is classified into a specific disease trajectory, can be treated more specifically as we would have a better view what the next stages of the trajectory could be. \\
+The medical history of a patient is seen as a time series with as datapoints EHR events. Based on the time series, we want to classify it into different disease trajectories. A patient who is classified into a specific disease trajectory, can be treated more specifically as we would have a better view what the next stages of the trajectory could be. \\
 
-The medical data of multiple patients is a $3$ dimensional tensor, see figure \ref{fig:rnnData}. This data structure is the input structure for a neural network.
+The medical data of multiple patients is a $3$ dimensional tensor (multi-dimensional matrix), see figure \ref{fig:rnnData}. This data structure is the input structure for a neural network.
 
 \begin{figure}[!htb]
 	\centering
@@ -53,18 +55,18 @@ Medical data has a high dimensionality. A lot of parameters need to be taken int
 
 Here we describe our approaches for the problems mentioned in the previous section. \\
 We solve the vanishing gradient problem with a special form of recurrent neural network, see section \ref{sec:lstm}. \\
-By applying our Word2Vec approach, the input is projected on another vector space using a lookup table. This vector space causes normalization. The standardization is also done in our Word2Vec approach. \\
+By applying our Word2Vec approach, the input is projected on another vector space and results into a lookup table. The standardization and normalization is already done by our Word2Vec approaches. \\
 As we mentioned, the Curse of Dimensionality causes the need for more data. The neural network in section \ref{sec:rnn} often handles high dimensional data \cite{nn1:article} \cite{nn2:article} \cite{nn3:article} \cite{nn4:article}. In a sense, because it keeps track of the time aspect of the data, it uses the data more thoroughly and thus handles the high dimensionality better. \\
 
-A lot of these problems are covered in an extensive work of Graves et al \cite{gravesLstm:thesis} about using advanced neural networks to label sequences.
+A lot of these problems are covered in an extensive work of Graves \cite{gravesLstm:thesis} which covers the use of advanced neural networks to label sequences.
 
 \subsubsection{Padding and Masking}
 The transformation of irregular intervals into a regular ones, is done with padding and masking. \\
 
-If we do not use any masking and padding, our data can only be of equal length sequences and at each time step a classification label. Our data on the other hand, consists of several different length sequences and only has one label for each sequence, namely the classification of the whole sequence. \\
+If we do not use any masking and padding, our data can only be of equal length sequences and at each time step a classification label. Our data on the other hand, consists of several different length sequences and only has one label for each sequence, namely the classification label of the whole sequence. \\
 
 The method of padding is simple. It adds empty events (ex. zeros) to the shorter sequences until all sequences are of equal length for both input and output. \\
-Using padding, changes the data quite drastically and would cause problems during the training because of that. For this problem we use the method of masking. With masking, we have two additional arrays which contain the information about whether an input or output is padding or not. See figure \ref{fig:masking}, picture $2$ shows how the masking is done for a many to one case (which is the case that corresponds to labeling a complete sequence). 
+Padding changes the data quite drastically and this would cause problems during the training because the network does not know which elements are padding and which are not padding. For this problem we use the method of masking. With masking, we use two additional arrays which contain the information about whether an input or output is padding or not. See figure \ref{fig:masking}, the second figure shows how masking is done for a many to one case (which is the case that corresponds to labeling a complete sequence). 
 
 \begin{figure}[!htb]
 	\centering
@@ -77,10 +79,9 @@ Using padding, changes the data quite drastically and would cause problems durin
 \subsection{Neural Network}
 \label{sec:nn}
 
-We still have to solve $2$ problems mentioned in section \ref{sec:problem}. \\
 In this section we explain in more detail why Long-Short Term Memory (LSTM) \cite{lstmOrginin:article} networks handle the vanishing problem and long-term dependencies. \\
 
-First we shortly repeat the structure of a neural network in figure \ref{fig:nnStructure}. We see the input $x$, different layers with their perceptrons, $\sigma$ as the activation function, and $y$ as output. 
+First we shortly repeat the structure of a neural network in figure \ref{fig:nnStructure}. We see the input $x$, different layers with their neurons, $\sigma$ as the activation function, and $y$ as output. 
 
 \begin{figure}[!htb]
 	\centering
@@ -92,7 +93,7 @@ First we shortly repeat the structure of a neural network in figure \ref{fig:nnS
 \subsubsection{Recurrent Neural Network}
 \label{sec:rnn}
 
-A standard neural network does not have any persistence. They will classify their input but when they get a stream of inputs (ex. speech), they will classify each word independently of each other and without any regards of the previous words. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about. \\
+A standard neural network does not have any persistence. They will classify their input but when they get a stream of inputs (ex. speech, video, \ldots), they will classify each word independently of each other and without any regards of the previous inputs. A recurrent neural network (RNN) addresses this problem by introducing networks with loops \cite{rnnOrigin:article}. This way, the output of a previous input has effect on the next input. In figure \ref{fig:rnnLoops}, we transform those loops into multiple copies of the same network which makes it easier to reason about. \\
 
 \begin{figure}[!htb]
 	\centering
@@ -109,7 +110,7 @@ The problem with RNNs is mainly that they have trouble learning long-term depend
 
 A LSMT network is a specific RNN which is capable of learning long-term dependencies \cite{lstmDep:thesis}. We will explain the difference with a standard RNN and why a LSTM can learn these long-term dependencies. \\
 
-A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure like a single $tanh$ layer, see figure \ref{fig:rnnTanh}. \\
+A recurrent network is, as we said, a chain of connected neural networks. Those networks can have a simple structure like a single $tanh$ layer, see figure \ref{fig:rnnTanh}. Representing a complete RNN as one layer which has neurons with activation function $tanh$, makes it easy to reason about. \\
 
 \begin{figure}[!htb]
 	\centering
@@ -127,7 +128,7 @@ It is important to see the difference with a LSTM. The repeating network does no
 	\label{fig:LSTMChain}
 \end{figure} 
 
-The main idea behind LSTM is that each repeated network has its own cell state. It functions as a  memory which can be updated with each new input. On figure \ref{fig:LSTMConveyor}, you can see the cell state $C$ through time. It can be compared with a conveyor belt which interacts with the input at certain gates. This way the state is updated throughout several inputs and this way a LSTM can keep track of long-term dependencies. \\
+The main idea behind LSTM is that each repeated network has its own cell state. It functions as a memory which can be updated with each new input. On figure \ref{fig:LSTMConveyor}, you can see the cell state $C$ through time. It can be compared with a conveyor belt which interacts with the input at certain gates. This way the state is updated throughout several inputs and this way a LSTM can keep track of long-term dependencies. \\
 
 \begin{figure}[!htb]
 	\centering
@@ -177,14 +178,14 @@ Finally, we need to output $h_t$ to the next network. This is based on the input
 
 \subsubsection{Variants Long Short Term Memory}
 
-In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variants of LSTM networks. It was concluded that the forget gate and the activation function are the most important. Other variants do not have a large influence and mainly add a lot of extra complexity.
+In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, research is done between different variants of LSTM networks. It was concluded that the forget gate and the activation function are the most important parts. Other variants do not have a large influence and mainly add extra complexity.
 
 
 \section{Conclusion}
 
 Before this chapter, we already mentioned some possible roads to explore like a better disease code mapping strategy or extensive parameter tuning. \\
 
-In this chapter we talked shortly about two possible improvements, a better generalization approach and a better use of data distribution to speed up to process. \\
+In this chapter we talked shortly about two possible improvements, a better categorization approach and a better use of data distribution to speed up the process. \\
 We mainly focused on LSTM neural networks and explained why they should be suitable to predict or classify disease trajectories. They are able to handle the Curse of Dimensionality, long time dependencies, and take the time aspect of medical data into account. Our Word2Vec approaches can be used in combination with this kind of neural network. The prediction/classification accuracy of the LSMT neural network makes it possible to validate the working of our approaches by testing if the accuracy increases with the use of our Word2Vec approaches. \\
 
 

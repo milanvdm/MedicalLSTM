@@ -348,13 +348,42 @@ In short: we look for the knn of the $v_{unknown}$ from all the known vectors in
 
 Deepwalk starts from graph-structured data and is therefore not directly applicable to EHR data. One advantages of Deepwalk that it provides a method which can control a fixed amount of sequences. When the EHR dataset becomes very large, it would take a considerable amount of time to train a Word2Vec model. \\
 
-Therefore it would be interesting to transform the EHR data into a weighted graph structure. This transformation can be done by going over each sequence $s^p$. 
-
-PSEUDOCODE! 
-
- The weights are based on the frequency of diagnoses following each other in all the sequences. \\
+Therefore it would be interesting to transform the EHR data into a weighted graph structure. The weights are based on the frequency of diagnoses following each other in all the sequences. \\
 After the graph transformation, the amount of weighted random walks can be limited to create a smaller set of sequences based on the original dataset. Those sequences can be used to train a Word2Vec model faster as there is fewer data. The same logic from the previous two sections is applicable to generalize DeepWalk from words to more abstract objects.
 
+\subsubsection{Graph Transformation}
+
+In algorithm \ref{alg:graphTrans}, we explain the graph transformation. \\
+To execute the graph transformation, we start by looping over each sequence from $\{s^p\}$. For each sequence we keep track of the previous seen element and the current element. From those $2$ elements we make $2$ vertices connected by an edge in line 6. \\
+We add this edge to the current graph in line 7:
+
+\begin{itemize}
+
+\item If the edge between those two vertices already exists in the graph, we increase the weight of the existing edge by one.
+
+\item If the edge does not exist in the current graph, but one of the vertices does exist, we add a new edge between the existing vertex and the newly added vertex. The weight of this new edge equals to one.
+
+\item If the edge does not exist and the two vertices also do not exist in the graph, we add them all to the graph.
+
+\end{itemize}
+
+\begin{algorithm}
+\label{alg:graphTrans}
+\caption{Graph Transformation}
+\begin{algorithmic}[1]
+
+\State \textit{output: } Graph
+\ForAll{Sequence in Sequences} 
+	\ForAll{Element in Sequence} 
+		\State PreviousElement
+		\State CurrentElement
+		\State Edge = MakeEdge(PreviousElement, CurrentElement)
+		\State Graph.addEdge(Edge)
+	\EndFor
+\EndFor
+
+\end{algorithmic}
+\end{algorithm}
 
 \section{Conclusion}
 In this chapter we discusses general machine learning concepts and focused on Word2Vec. We conclude that Word2Vec is used to find good representation of words based on their context. It also causes that similar words will be close to each other in this new representation. \\

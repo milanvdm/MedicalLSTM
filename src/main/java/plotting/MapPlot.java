@@ -34,8 +34,8 @@ public class MapPlot {
 		
 
 		JFreeChart barChart = ChartFactory.createBarChart(
-				"MAPPING STATISTICS",
-				"Percentage of words that match", "Percentage of codes", 
+				"",
+				"Fraction of words that match", "Percentage of OSIM codes", 
 				dataset,PlotOrientation.VERTICAL, 
 				true, true, false);
 

@@ -34,6 +34,7 @@ public class MinWordFreq {
 				totalInstances = totalInstances + freq;
 			}
 			
+			System.out.println(totalInstances);
 			System.out.println((double) instancesAbove10 / (double) totalInstances);
 		}
 
