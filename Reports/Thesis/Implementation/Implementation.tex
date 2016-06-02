@@ -12,7 +12,7 @@ In this chapter we explain how we are going to build a model of our proposed met
 Using the above mentioned dataset, we train a model using our generalized Word2Vec, knn Word2Vec, and generalized DeepWalk. For each approach, we apply a categorization of the data to enable more general EHR events during training. We also go into more detail about the parameter setting for each of our approaches. \\
 
 After building the model, we setup two different experiments by generating clusters based on our model. The reason behind the clusters is that we can compare those clusters with the clusters found in the Danish paper. \\
-For each experiment, we check the influence of each parameter. We then take the parameter setting which produces the highest average matching percentage between the Word2Vec clusters and the Danish clusters for each approach. With those parameter we compare the different models to each other. \\
+For each experiment, we check the influence of each parameter. We then take the parameter setting which produces the highest average matching percentage between the Word2Vec clusters and the Danish clusters for each approach. With those parameters we compare the different models to each other. \\
 
 The structure of this chapter is as follows. In section \ref{sec:osim2DS} we start with describing our dataset. We explain why we chose a certain software library in section \ref{sec:softwareEco}. In section \ref{sec:convertionClusters}, we explain each step of our model building such as categorization, disease code mapping, cluster generation, and parameter settings. We describe our results in section \ref{sec:expResults}. We explain in detail each experiment on our different Word2Vec approaches and finally compare the different approaches with each other.
 
@@ -63,7 +63,7 @@ As described in section \ref{sec:gw2v}, we use generalized Word2Vec approaches t
 \subsection{Categorization of Features}
 \label{sec:categorizationImpl}
 
-Because we are working with high dimensional data and a each dimension has a wide range of possible values, most instances of OSIM2 are unique. To find patterns which are more generally applicable, we generalize our data by projecting values for some attributes into categories. See table \ref{tab:catOsim}. \\
+Because we are working with high dimensional data and each dimension has a wide range of possible values, most instances of OSIM2 are unique. To find patterns which are more generally applicable, we generalize our data by projecting values for some attributes into categories. See table \ref{tab:catOsim}. \\
 
 \begin{table}[!htb]
 \centering
@@ -123,7 +123,7 @@ In the section we discuss the method to categorize the disease codes in the OSIM
 
 The OSIM2 dataset uses MedDRA disease codes for the diagnoses, see section \ref{sec:diseaseCodes}. We mentioned that MedDRA does not have an easy to use hierarchy. With a hierarchy, it would be trivial to categorize a disease code to its highest hierarchy. \\
 To solve this, we map MedDRA disease codes to ICD-10 disease codes. The reasoning behind this is that ICD-10 provides a clear and easy to use hierarchy. Next to this, ICD-10 disease codes also make it possible to compare our results with \cite{Brunak:article}. \\
-We would have liked to use the method described in \cite{icd10Mapping:article} to map the codes but therefore the disease mapping made by UMLS between ICD-10 and MedDRA is needed. This however is not publicly available. \\
+We would have liked to use the method described in \cite{icd10Mapping:article} to map the codes but for this the disease mapping made by UMLS between ICD-10 and MedDRA is needed. This however is not publicly available. \\
 
 The mapping is based on the description of each disease code. Both MedDRA and ICD-10 have a short medical description of each code. Each description is first filtered from stop words. Afterwards, the MedDRA code is matched to the ICD-10 code based on the matching words in both descriptions. The matching is defined as the ICD-10 code with the highest percentage of words matching. \\
 
@@ -195,7 +195,7 @@ In a sense, experiment $2$ looks at how well the relations are for all the disea
 The effectiveness of a neural network such as the one used to learn disease embeddings, depends on parameter tuning. Parameter tuning is a difficult problem and complex methods have been proposed to solve this \cite{tuning:article}. Therefore we explored $504$ different settings. Note that this is not an extensive parameter tuning setup, but an overview on the effect and logic behind some parameters. An extensive parameter tuning setup is possible as future work. \\
 
 In table \ref{tab:parameters}, you can see an overview of the different parameters for each approach. Every time, all possible combinations of the mentioned parameters have been tested. \\
-To our knowledge, there is only one study about the tuning of Word2Vec parameters \cite{w2vTuning:article}. In this study they start with picking some values for the parameters and do an extensive study on which value performs best. We take a similar approach by choosing some values and see their effects. Another iteration should be executed to tune our Word2Vec approaches better by taking our findings into account from our results described in section \ref{sec:expResults}. This is a possible road to explore in future work. \\
+To our knowledge, there is only one study about the tuning of Word2Vec parameters \cite{w2vTuning:article}. In this study they start with picking some values for the parameters and do an extensive study on which value performs best. We take a similar approach by choosing some values and look at their effects. Another iteration should be executed to tune our Word2Vec approaches better by taking our findings into account from our results described in section \ref{sec:expResults}. This is a possible road to explore in future work. \\
 
 \begin{table}[!htb]
 \centering

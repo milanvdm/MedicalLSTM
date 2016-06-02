@@ -11,7 +11,7 @@ An EHR of a patient can be seen as a time series, namely a sequence of EHR event
 To enable this, we use several prepocessing methods. One of these methods is a newly proposed disease code mapping between two standards namely MedDRA and ICD-10. This mapping is used to categorize diagnoses and to make our validation process possible.\\ 
 We also categorize our EHR events into more general events. For example, a bruise on your right leg and a bruise on your left leg should both be categorized under a bruises event. \\
 
-We introduce generalized Word2Vec. This generalized Word2Vec makes it possible apply Word2Vec on medical data. \\
+We introduce generalized Word2Vec. This generalized Word2Vec makes it possible to apply Word2Vec on medical data. \\
 To make these approaches possible for large-scale medical datasets, we apply the generalization concept on DeepWalk. DeepWalk makes it possible to generate a smaller dataset from the original dataset and then apply a Word2Vec approach on this smaller dataset for performance reasons. \\
 Besides the exploration on generalizing Word2Vec approaches, we also improve Word2Vec by tackling one of its shortcomings. This shortcoming of Word2Vec is that it is unable to handle unseen instances once it has built his model. We combine a k-nearest neighbors method with Word2Vec and make an estimation of the correlation to other diagnoses for the unseen instance. \\
 
