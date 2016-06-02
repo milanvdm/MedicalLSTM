@@ -68,8 +68,6 @@ public class Knn1 {
 		       if(line.contains("clusterK")) {
 		    	   clusterK = Integer.parseInt(line.split(": ")[1]);
 		    	   
-
-		    	   System.out.println(clusterK);
 		       }
 		       if(line.contains("newLabels")) {
 		    	   newLabels = Integer.parseInt(line.split(": ")[1]);

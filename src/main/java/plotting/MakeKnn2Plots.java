@@ -30,7 +30,7 @@ public class MakeKnn2Plots {
 
 		List<Knn2> Knn2List = new ArrayList<Knn2>();
 
-		String directory = "/media/milan/Data/Thesis/Results/Approaches";
+		String directory = "/media/milan/Data/Thesis/Results/Results";
 
 		File dir = new File(directory);
 		File[] directoryListing = dir.listFiles();
@@ -141,14 +141,14 @@ public class MakeKnn2Plots {
 							"minWordFreq = " + minWordFreq + "\n" +
 							"clusterK = " + k,// + "\n" +
 							//"k = " + clusterK,
-					null, "Matching Percentage", 
+					"k", "Matching Percentage", 
 					averageDS,PlotOrientation.VERTICAL, 
 					true, true, false);
 
 
 			CategoryPlot plot = barChart.getCategoryPlot();
 			plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			barChart.getLegend().setPosition(RectangleEdge.RIGHT);
+			barChart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
 
 			CategoryItemRenderer renderer2 = new LevelRenderer();
@@ -201,5 +201,13 @@ public class MakeKnn2Plots {
 
 		
 		System.out.println(best.totalAverage);
+		System.out.println(best.getMax());
+		
+		System.out.println("vectorlength: " + best.vectorLength);
+		System.out.println("windowsize: " + best.windowSize);
+		System.out.println("learningrate: " + best.learningRate);
+		System.out.println("minWorFreq: " + best.minWordFreq);
+		System.out.println("clusterK: " + best.k);
+		System.out.println("k: " + best.clusterK);
 	}
 }

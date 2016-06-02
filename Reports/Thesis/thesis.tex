@@ -2,13 +2,13 @@
 
 \setup{title={Learning a Diseases Embedding using Generalized Word2Vec Approaches.  },
   author={Milan van der Meer},
-  promotor={Prof.\,dr.\ R. Wuyts\and Alexander Vapirev},
+  promotor={Prof.\,dr.\ R. Wuyts\and A. Vapirev},
   assessor={Prof. dr. ir. H. Blockeel\and R. van Lon },
   assistant={Dr. E. D'Hondt}}
 % The following \setup may be removed entirely if no filing card is wanted
 \setup{filingcard,
   translatedtitle=,
-  udc=621.3,
+  udc=681.3,
   shortabstract={Here comes a very short abstract, containing no more than 500
     words. \LaTeX\ commands can be used here. Blank lines (or the command
     \texttt{\string\pa r}) are not allowed!
@@ -35,6 +35,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage[justification=centering]{caption}
+\usepackage[final]{pdfpages}
+
 % Finally the hyperref package is used for pdf files.
 % This can be commented out for printed versions.
 \usepackage[pdfusetitle,colorlinks,plainpages=false]{hyperref}
@@ -114,12 +116,16 @@ On a  more personal note, I want to thank the people who stood by my side. My pa
 \include{conclusion}
 \include{FutureWork/FutureWork}
 
+
 % If you have appendices:
-%\appendixpage*          % if wanted
-%\appendix
-%\include{app-A}
-% ... and so on until
-%\include{app-n}
+\appendixpage*          % if wanted
+\appendix
+
+\phantomsection\addcontentsline{toc}{chapter}{A\hspace{3 mm}Paper}
+\includepdf[pages=-]{poster.pdf}
+
+\phantomsection\addcontentsline{toc}{chapter}{B\hspace{3 mm}Poster}
+\includepdf[pages=-]{poster.pdf}
 
 %test \cite{WHO_ICD}
 

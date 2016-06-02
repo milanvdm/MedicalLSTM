@@ -4,13 +4,12 @@
 \chapter{Future Work}
 \label{cha:futureWork}
 
-Before this chapter, we already mentioned some possible roads to explore like a better disease code mapping strategy or extensive parameter tuning. \\
+In this thesis we explained our generalized Word2Vec approaches which we use to find disease relations in EHRs. We tested the influence of the chosen parameters on the matching percentage between the clusters found in the Danish paper and our own clusters. In the previous chapters, we already mentioned some possible roads to explore like a better disease code mapping strategy or extensive parameter tuning. \\
 
-In this chapter we discuss possible improvements and further research which can be added to the current approaches. \\
-In section \ref{sec:categorization} we discuss an improvement on how we handled categorization of medical data which we discusses in section \ref{sec:categorizationImpl}. In section \ref{sec:distributed}, we introduce a optimization for our Word2Vec approaches by utilizing data distribution. In section \ref{sec:PatientClassification}, we explain a specific neural network which can use the found patterns by the Word2Vec approaches to predict or classify patients' disease trajectories. \\
+In this chapter we discuss possible improvements and further research which can be added to the current approaches. As mentioned in section \ref{sec:word2vec}, we can use our Word2Vec method to improve the accuracy of a predictive/classification neural network. In this chapter, we mainly discuss the predictive/classification neural network which allows us to further investigate the effectiveness of our Word2Vec approach. \\
+The usage of a predictive/classification neural network in combination with our Word2Vec approaches, would make it possible to more thoroughly investigate the effects of our methods. \\
 
-
-ADD META ABOUT EXPERIMENTS
+The structure of this chapter is as follows. In section \ref{sec:categorization} we discuss an improvement on how we handled categorization of medical data which we discusses in section \ref{sec:categorizationImpl}. In section \ref{sec:distributed}, we introduce a optimization for our Word2Vec approaches by utilizing data distribution. In section \ref{sec:PatientClassification}, we explain a specific neural network which can use the found patterns by the Word2Vec approaches to predict or classify patients' disease trajectories.
 
 
 \section{Categorization}
@@ -88,7 +87,7 @@ First we briefly repeat the structure of a neural network in figure \ref{fig:nnS
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.7\textwidth]{nnStructure.png}
+	\includegraphics[width=0.6\textwidth]{nnStructure.png}
 	\caption{General structure of a neural network \cite{IMECJaak}}
 	\label{fig:nnStructure}
 \end{figure} 
@@ -186,8 +185,8 @@ In "LSTM: A Search Space Odyssey" \cite{lstmSpace:article}, different variants o
 
 \section{Conclusion}
 
-In this chapter we talked shortly about two possible improvements, a better categorization approach and a better use of data distribution to speed up the process. \\
-We mainly focused on LSTM neural networks and explained why they should be suitable to predict or classify disease trajectories. They are able to handle the Curse of Dimensionality, long time dependencies, and take the temporal aspect of medical data into account. Our Word2Vec approaches can be used in combination with this kind of neural network. The prediction/classification accuracy of the LSMT neural network makes it possible to validate the working of our approaches by testing if the accuracy increases with the use of generalized Word2Vec approaches. \\
+In this chapter we talked about improvements such as a better categorization approach and the use of data distribution. \\
+We mainly focused on LSTM neural networks and explained why they should be suitable to predict or classify disease trajectories. They are able to handle the Curse of Dimensionality, long time dependencies, and take the temporal aspect of medical data into account. Our Word2Vec approaches can be used in combination with this kind of neural network. The prediction/classification accuracy of the LSMT neural network makes it possible to validate the working of our approaches by testing if the accuracy increases with the use of generalized Word2Vec approaches. 
 
 
 %%% Local Variables: 

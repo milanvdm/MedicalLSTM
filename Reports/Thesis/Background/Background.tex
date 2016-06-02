@@ -5,11 +5,13 @@
 \label{cha:background}
 
 \section{Introduction}
-In this chapter we introduce important concepts which are needed to understand our approach. These concepts can be used to solve problems described in chapter \ref{cha:context}. \\
 
-We start with explaining some background knowledge in section \ref{sec:bk} such as time series and machine learning. We focus on basic concepts from machine learning and then focus more on neural networks. The main part to understand our approach is the introduction of Word2vec in section \ref{sec:word2vec}. This is then used to introduce Deepwalk as an extension on Word2Vec in section \ref{sec:deepwalk}. \\
+In the previous chapter we introduced the field of electronic health record analytics and how this can be used to find new patterns in medical data. We discussed several methods such as querying, statistics, data mining, and artificial intelligence approaches. The methods we mentioned vary from simple to very complex. In the field of machine learning algorithms, a limited amount of research is done on EHRs, mainly using out-of-the box tools. Thus, the focus point of this thesis is: applying advanced machine learning algorithms to find patterns in EHRs. \\
 
-After introducing those concepts, we explain our generalized Word2Vec approaches in section \ref{sec:gw2v}.
+In this chapter we introduce the field of time series as an analogy with medical data. Then we move on to machine learning concepts such as kd trees and neural networks. Both which are used in our approach to find patterns in time series. Then we explain the most important concept, namely Word2Vec. Later in this chapter we extend Word2Vec so we are able to apply it on medical data. \\
+Note that in this chapter we give a first idea of the workings of our approaches. For a more detailed explanation on how our approaches are applied on medical data, we refer to chapter \ref{cha:implementation}. \\
+
+The structure of this chapter is as follows. We start by explaining some background knowledge in section \ref{sec:bk}, such as time series and machine learning. We focus on basic concepts from machine learning and move on to neural networks. Crucial to understand our approach is the introduction of Word2vec in section \ref{sec:word2vec}. Then we introduce Deepwalk as an extension to Word2Vec in section \ref{sec:deepwalk}. Finally, we explain our own generalized Word2Vec approaches in section \ref{sec:gw2v}.
 
 
 \section{Background Knowledge}
@@ -338,7 +340,7 @@ Others have explored other analogies with for example protein sequences (BioVec)
 A problem with embeddings established for a certain dataset is that because Word2Vec builds a lookup table, there is the possibility that a certain instance is not present in the lookup table and therefore no representation can be found for this instance. \\ 
 Since we are working in the context of a generalized Word2Vec approach, where instances are represented by complex objects like vectors $m$, the possibility of this happening increases. For example, an EHR event can be a multi-dimensional vector where each feature has a broad range of values. Compared to a word, which is a one-dimensional vector with as range all words in a dictionary, an EHR event has more possible combinations. \\
 
-Therefore we introduce a k-Nearest Word2Vec approach whereby we extend our generalized Word2Vec approach with a knn feature (see section \ref{sec:knn}). To our knowledge, this has not been done before. \\
+Therefore we introduce a k-Nearest Word2Vec approach whereby we extend our generalized Word2Vec approach with a knn feature (see section \ref{sec:knn}). To our knowledge, this has not been done before. We use a kd tree method to find the knn, see section \ref{sec:kdtree}. \\
 
 After the training of a Word2Vec model, we have learned a lookup table which maps a known vector $v_{old}$ to his new vector representation $v_{new}$. When a not-yet-seen vector $v_{unknown}$ needs to be mapped to his $v_{new}$, a normal Word2Vec is not capable of this. \\
 In our approach, we find the k-nearest neighbors of the $v_{unknown}$ from the representations $v_{old}$ in the lookup table. We then take the new representations of the knn, and combine them using a weighted average to estimate the new representation $v_{new}$ for $v_{unknown}$. This way our approach is capable of finding a representation for complete new instances. \\
