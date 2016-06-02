@@ -346,6 +346,7 @@ In our approach, we find the k-nearest neighbors of the $v_{unknown}$ from the r
 In short: we look for the knn of the $v_{unknown}$ from all the known vectors in the lookup table in their original representation $v_{old}$. Based on the found knn, we take a weighted average of the representations $v_{new}$. This weighted average is the $v_{new}$ for the $v_{unknown}$.
 
 \subsection{Generalized Deepwalk}
+\label{sec:genDW}
 
 Deepwalk starts from graph-structured data and is therefore not directly applicable to EHR data. One advantages of Deepwalk that it provides a method which can control a fixed amount of sequences. When the EHR dataset becomes very large, it would take a considerable amount of time to train a Word2Vec model. \\
 

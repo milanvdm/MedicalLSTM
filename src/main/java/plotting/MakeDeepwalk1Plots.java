@@ -143,14 +143,14 @@ public class MakeDeepwalk1Plots {
 					"minWordFreq = " + minWordFreq + "\n" +
 					"clusterK = " + k,// + "\n" +
 					//"walkLength = " + walkLength,
-					"WalkLength", "Matching Percentage", 
+					"Walklength", "Matching Percentage", 
 					averageDS,PlotOrientation.VERTICAL, 
 					true, true, false);
 
 
 			CategoryPlot plot = barChart.getCategoryPlot();
 			plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			barChart.getLegend().setPosition(RectangleEdge.RIGHT);
+			barChart.getLegend().setPosition(RectangleEdge.BOTTOM);
 
 
 			CategoryItemRenderer renderer2 = new LevelRenderer();
@@ -200,9 +200,17 @@ public class MakeDeepwalk1Plots {
 			
 			name++;
 		}
-
-		
 		System.out.println(best.getTotalAverage());
+		System.out.println(best.getMax());
+		
+		System.out.println("vectorlength: " + best.vectorLength);
+		System.out.println("windowsize: " + best.windowSize);
+		System.out.println("learningrate: " + best.learningRate);
+		System.out.println("minWorFreq: " + best.minWordFreq);
+		System.out.println("clusterK: " + best.k);
+		System.out.println("walklength: " + best.walkLength);
+		
+		
 
 	}
 }

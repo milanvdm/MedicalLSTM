@@ -178,7 +178,9 @@ The first experiment goes as follows:
 
 \end{itemize}
 
-For each method, we calculate the average $p_{match}$ over all elements in the lookup table and keep track of the maximum and minimum value for $p_{match}$.
+For each method, we calculate the average $p_{match}$ over all elements in the lookup table and keep track of the maximum and minimum value for $p_{match}$. \\
+
+In a sense, experiment $2$ looks at how well the relations lookup table are for all the diseases in the Danish clusters and not only the diseases which are in the lookup table of the Word2Vec model as done in experiment $1$.
 
 
 \subsection{Parameters}
@@ -231,6 +233,7 @@ After checking the individual parameters, we take the parameter setting with the
 The bars in the figures of this section each show a parameter value and the black stripes both represent the minimum and the maximum value of the matching percentage. The height of each bar represents the matching percentage.
 
 \subsection{Generalized Word2Vec}
+\label{sec:genWordExp}
 
 We use the complete OSIM2 dataset to make our Word2Vec model and make Word2Vec clusters from all instances in the lookup table. \\
 Both in experiment $1$ and experiment $2$, we found that the vectorlength, window size, learning rate, and minimum word frequency have no substantial influence on the matching percentage. 
@@ -247,7 +250,7 @@ For the influence of the vectorlengths, see figure \ref{fig:s2v_vl} for the matc
 	\begin{subfigure}[b]{.49\textwidth}
 		\includegraphics[width=\textwidth]{S2V2_vl.jpeg}
 	\end{subfigure}
-	\caption{Mapping percentage for different vectorlengths of the generalized Word2Vec 		approach in both experiments.}
+	\caption{Matching percentage for different vectorlengths of the generalized Word2Vec 		approach in both experiments.}
 	\label{fig:s2v_vl}
 \end{figure}
 
@@ -265,7 +268,7 @@ For the influence of the window sizes, see figure \ref{fig:s2v_vl} for the match
 	\begin{subfigure}[b]{.49\textwidth}
 		\includegraphics[width=\textwidth]{S2V2_ws.jpeg}
 	\end{subfigure}
-	\caption{Mapping percentage for different window sizes of the generalized Word2Vec 		approach in both experiments.}
+	\caption{Matching percentage for different window sizes of the generalized Word2Vec 		approach in both experiments.}
 	\label{fig:s2v_ws}
 \end{figure}
 
@@ -285,7 +288,7 @@ For the influence of the learning rates, see figure \ref{fig:s2v_lr} for the mat
 	\begin{subfigure}[b]{.49\textwidth}
 		\includegraphics[width=\textwidth]{S2V2_lr.jpeg}
 	\end{subfigure}
-	\caption{Mapping percentage for different learning rates of the generalized Word2Vec 		approach in both experiments.}
+	\caption{Matching percentage for different learning rates of the generalized Word2Vec 		approach in both experiments.}
 	\label{fig:s2v_lr}
 \end{figure}
 
@@ -304,7 +307,7 @@ For the influence of the minimum word frequencies, see figure \ref{fig:s2v_wf} f
 	\begin{subfigure}[b]{.49\textwidth}
 		\includegraphics[width=\textwidth]{S2V2_wf.jpeg}
 	\end{subfigure}
-	\caption{Mapping percentage for different minimum word frequencies of the generalized Word2Vec approach in both experiments.}
+	\caption{Matching percentage for different minimum word frequencies of the generalized Word2Vec approach in both experiments.}
 	\label{fig:s2v_wf}
 \end{figure}
 
@@ -313,30 +316,29 @@ However, because we applied generalization, $99.82$\% of the instances are above
 
 \subsubsection{ClusterK}
 
-See figure \ref{fig:s2v_clusterK_1} for the influence in the matching percentage of experiment $1$ by the parameter clusterK. Similar results are achieved with all the other parameter settings. \\
+For the influence of the clusterKs, see figure \ref{fig:s2v_wf} for the matching percentage of experiment $1$. \\
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.6\textwidth]{S2V1_clusterK.jpeg}
-	\caption{Mapping percentage for different clusterKs of the generalized Word2Vec approach in experiment $1$.}
+	\caption{Matching percentage for different clusterKs of the generalized Word2Vec approach in experiment $1$.}
 	\label{fig:s2v_clusterK_1}
 \end{figure}
 
 \noindent We see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
 
-\noindent See figure \ref{fig:s2v_clusterK_2} for the influence in the matching percentage of experiment $2$ by the parameter clusterK. Similar results are achieved with all the other parameter settings. \\
+\noindent For the influence of the clusterKs, see figure \ref{fig:s2v_wf} for the matching percentage of experiment $2$.\\
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.6\textwidth]{S2V2_clusterK.jpeg}
-	\caption{Mapping percentage for different clusterKs of the generalized Word2Vec approach in experiment $2$.}
+	\caption{Matching percentage for different clusterKs of the generalized Word2Vec approach in experiment $2$.}
 	\label{fig:s2v_clusterK_2}
 \end{figure}
 
 \noindent We see that most matches with the Danish clusters are already found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
 
 \subsection{K-Nearest Neighbors Word2Vec}
-
 
 \subsubsection{ClusterK}
 
@@ -346,16 +348,80 @@ TODO
 
 \subsection{DeepWalk}
 
-TODO
+We use the complete OSIM2 dataset to make our graph-structured data which is described in section \ref{sec:genDW}. From the graph, we generate data until we have $50$\% of the size of the complete OSIM2 dataset. On this smaller subset we train our Word2Vec model and make Word2Vec clusters from all instances in the lookup table. \\
+Both in experiment $1$ and experiment $2$, we found that the vectorlength, window size, and learning rate have no substantial influence on the matching percentage. For more explanation about those parameters, we refer to section \ref{sec:genWordExp}.
 
+\subsubsection{Minimum Word Frequency}
+
+For the influence of the minimum word frequencies, see figure \ref{fig:dw_wf} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Deepwalk1_wf.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Deepwalk2_wf.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different minimum word frequencies of the DeepWalk approach in both experiments.}
+	\label{fig:dw_wf}
+\end{figure}
+
+In the left figure we see that a higher window size results in a higher matching percentage. We assume because of the random walks, it is possible that certain vertices are not generated often enough to find relevant relationships to other vertices. By filtering those, we get more relevant relationships for the more frequent vertices as the noise of the infrequent vertices is removed. \\
+
+In the right figure, we see the opposite. As mentioned, we assume that we get more relevant relationships for the more frequent vertices. This means that for some diseases we find a good relationships and for others none as they are filtered by the minimum word frequency. Therefore we see the matching percentage go down in experiment $2$. \\
+In a future work this phenomenon should be tested more thoroughly. \\
+
+This effect was already described in the last paragraph of section \ref{sec:clusterExp}.
 
 \subsubsection{ClusterK}
 
-TODO
+For the influence of the clusterKs, see figure \ref{fig:dw_clusterK_1} for the matching percentage of experiment $1$. \\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Deepwalk1_clusterK.jpeg}
+	\caption{Matching percentage for different clusterKs of the DeepWalk approach in experiment $1$.}
+	\label{fig:dw_clusterK_1}
+\end{figure}
+
+\noindent We see a trend that with a lower clusterK there is a slightly higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters, especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. In the case of the maximums, the matching percentage decreases significantly the higher clusterK is. \\
+This shows that our method is not completely random. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
+
+\noindent For the influence of the clusterKs, see figure \ref{fig:dw_clusterK_2} for the matching percentage of experiment $2$.\\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.6\textwidth]{Deepwalk2_clusterK.jpeg}
+	\caption{Matching percentage for different clusterKs of the DeepWalk approach in experiment $2$.}
+	\label{fig:dw_clusterK_2}
+\end{figure}
+
+\noindent On the figure above, we see that for a lower clusterK, a lower matching percentage is found. Similar to what is described for DeepWalk experiment $2$ on the minimum word frequency, we conclude that for certain diseases their relevant relations are not found. \\
+If we look to the maximum values, we can make the same conclusion as the generalized Word2Vec experiment on clusterK.
 
 \subsubsection{Walklength}
 
-Brunak 4
+For the influence of the walklengths, see figure \ref{fig:dw_wl} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Deepwalk1_wl.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Deepwalk2_wl.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different walklengths of the DeepWalk approach in both experiments.}
+	\label{fig:dw_wl}
+\end{figure}
+
+In the left figure we see that a walklength of $5$ results in a higher matching percentage, especially in the case of the maximums. We assume because of the walklengths value of $5$ is closest to the used sequence length of $4$ in the Danish paper. \\
+
+In the right figure, we can make the comparison with the generalized Word2Vec approach for a walklength value of $15$ as this approximates the average sequence length of $19$ in the complete OSIM2 dataset. We indeed find that the matching values found with DeepWalk are similar to those found with the generalized Word2Vec. \\
+However, we only find one possible explanation why the matching percentage increases with the walklength. We assume that longer sequences make more instances and make it possible to find more relevant relations to multiple diseases similar to what we discusses in DeepWalk experiment $2$ on the minimum word frequency. \\
+
+Note that a walklength which is almost equal to the chosen window sizes, explains why the window size has no influence on the outcome of DeepWalk. Due to their similar values, the context is the complete sequence for all values of the window size.
 
 
 \subsection{Model Comparison}
