@@ -1,9 +1,6 @@
 \documentclass[journal]{IEEETemplate/IEEEtran}
 
-
-\usepackage[english]{babel}
-
-
+\usepackage[dutch]{babel}
 
 % *** CITATION PACKAGES ***
 %
@@ -281,67 +278,10 @@ It is not possible to conclude if the preprocessing works because the sequence l
 
 
 
-\begin{thebibliography}{9}
 
-\bibitem{1}
-  Henikoff, S. and Henikoff, J. G. (1997), Embedding strategies for effective use of information from multiple sequence alignments. Protein Science, 6: 698–705. doi:10.1002/pro.5560060319
-  
-\bibitem{2}
-	Gabriela Hristescu and Martin Farach-Colton, Cluster-preserving embedding of proteins
-	
-\bibitem{3}
-Dekang Lin. 1996. On the structural complexity of natural language sentences. In Proceedings of the 16th conference on Computational linguistics - Volume 2 (COLING '96), Vol. 2. Association for Computational Linguistics, Stroudsburg, PA, USA, 729-733. DOI=http://dx.doi.org/10.3115/993268.993295
-
-\bibitem{4}
-Yoav Goldberg and Omer Levy, word2vec Explained:deriving Mikolov et al.'s negative-sampling word-embedding method
-
-\bibitem{5}
-Razan Paul and Abu Sayed Md. Latiful Hoque, Clustering medical data to predict the likelihood of diseases
-
-\bibitem{6} 
-P. Kalyani, Approaches to Partition Medical Data using Clustering Algorithms
-
-\bibitem{7}
-Pedro Domingos, A Few Useful Things to Know about Machine Learning
-
-\bibitem{8}
-Varun Kunmar et al., Outlier Mining in Medical Databases: An Application of Data Mining
-in Health Care Management to Detect Abnormal Values Presented In
-Medical Databases 
-
-\bibitem{9}
-Razvan Pascanu et al., On the difficulty of training recurrent neural networks
-
-\bibitem{10}
-Andrew Gelman and Jennifer Hill, Data Analysis using Regression and Multilevel/Hierarchical Models
-
-
-\bibitem{11}
-Eamonn Keogh and Abdullah Mueen, Curse of Dimensionality 
-
-\bibitem{12}
-Alex Graves, Supervised Sequence Labeling with Recurrent Neural Networks
-
-\bibitem{13a}
-Tomas Mikolov et al., Efficient Estimation of Word Representations in Vector Space
-
-\bibitem{13}
-Tomas Mikolov et al., Distributed Representations of Words and Phrases
-and their Compositionality
-
-\bibitem{13b}
-Freidman, J. H.; Bentley, J. L.; Finkel, R. A. (1977). "An Algorithm for Finding Best Matches in Logarithmic Expected Time". ACM Transactions on Mathematical Software 3 (3): 209. doi:10.1145/355744.355745.
-
-\bibitem{13c}
-http://biocomp.cnb.csic.es/~coss/Docencia/ADAM/Notes/ClusteringSlides.pdf
-
-\bibitem{14}
-N. Karthikeyani Visalakshi and K. Thangavel, Impact of Normalization in Distributed K-Means Clustering
-
-\bibitem{15} 
-http://www.faqs.org/faqs/ai-faq/neural-nets/part2/
-
-\end{thebibliography}
+\nocite{*}
+\bibliographystyle{abbrv}
+\bibliography{references}
 
 
 

@@ -186,7 +186,7 @@ The first experiment goes as follows:
 
 For each method, we calculate the average $p_{match}$ over all elements in the lookup table and keep track of the maximum and minimum value for $p_{match}$. \\
 
-In a sense, experiment $2$ looks at how well the relations lookup table are for all the diseases in the Danish clusters and not only the diseases which are in the lookup table of the Word2Vec model as done in experiment $1$.
+In a sense, experiment $2$ looks at how well the relations are for all the diseases in the Danish clusters and not only the diseases which are in the lookup table of the Word2Vec model as done in experiment $1$.
 
 
 \subsection{Parameters}
@@ -450,6 +450,8 @@ Note that a walklength which is almost equal to the chosen window sizes, explain
 
 \subsection{Model Comparison}
 
+In this section we compare our $3$ approaches based on the average and maximum matching percentage. For each approach, we take the parameter setting which gives the best average matching percentage. Each parameter setting can be found in table \ref{tab:approaches}. We start with comparing the different parameters between the approaches. We then compare the matching percentages between the approaches. 
+
 \begin{table}[!htb]
 \centering
 \begin{tabular}{ccccccc}
@@ -461,19 +463,50 @@ Parameter                                   & \multicolumn{2}{c}{Generalized Wor
 \multicolumn{1}{l|}{Learning Rate}          & 0.025        & \multicolumn{1}{c|}{0.025}        & 0.025        & \multicolumn{1}{c|}{0.025}        & 0.025         & 0.025        \\
 \multicolumn{1}{l|}{Minimum Word Freq} & 10           & \multicolumn{1}{c|}{5}            & 5            & \multicolumn{1}{c|}{5}            & 10            & 5            \\
 \multicolumn{1}{l|}{ClusterK}               & 100          & \multicolumn{1}{c|}{5000}         & 100          & \multicolumn{1}{c|}{5000}         & 100           & 5000         \\
-\multicolumn{1}{l|}{K}                      & /            & \multicolumn{1}{c|}{/}            & 100          & \multicolumn{1}{c|}{100}          & /             & /            \\ \hline
-\multicolumn{1}{l|}{Walklength}             & /            & \multicolumn{1}{c|}{/}            & /            & \multicolumn{1}{c|}{/}            & 5             & 15           \\
+\multicolumn{1}{l|}{K}                      & /            & \multicolumn{1}{c|}{/}            & 100          & \multicolumn{1}{c|}{100}          & /             & /            \\ 
+\multicolumn{1}{l|}{Walklength}             & /            & \multicolumn{1}{c|}{/}            & /            & \multicolumn{1}{c|}{/}            & 5             & 15           \\ \hline
 \multicolumn{1}{l|}{Average Matching \%}    & 29           & \multicolumn{1}{c|}{62}           & 33           & \multicolumn{1}{c|}{61}           & 27            & 61           \\
 \multicolumn{1}{l|}{Maximum Matching \%}    & 56           & \multicolumn{1}{c|}{69}           & 69           & \multicolumn{1}{c|}{69}           & 61            & 69          
 \end{tabular}
 
-\caption{My caption}
-\label{my-label}
+\caption{Best found parameter settings for each approach.}
+\label{tab:approaches}
 \end{table}
+
+\subsubsection{Parameters}
+
+We notice that for each experiment, the parameters are similar regardless of the applied method. We conclude that a parameter setting which works well for one of the methods, also works well for one of the other methods. \\
+
+We discussed the influence of the parameters in the previous sections. In the best parameters settings, we see that our conclusions are valid. \\
+One of the conclusions is that a lower clusterK causes a higher matching percentage. Note that the value of clusterK for experiment $2$ is always $5000$. Because experiment $2$ already sees one occurrence of a disease in a Word2Vec cluster as a match, a higher number of elements causes the matching percentage to increase. However, as we mentioned before, a large portion of those matches are found in the clusterK with a value of $100$. \\
+Another conclusion is that a high value for the k in the knn Word2Vec causes a higher matching percentage. The same goes for the walklength values in DeepWalk. \\ 
+We also see that parameters which do not have a high influence, vary more between the different experiments and approaches. \\
+
+We conclude that the values found for each parameter are as we expected. The similarity of the parameter settings between the different approaches, shows that the knn and DeepWalk extensions of the generalized Word2Vec are plausible and do not cause a complete new set of problems.
+
+\subsubsection{Matching Percentages}
+
+Each approach has a similar matching percentage for both experiments. We already discussed the possible explanation about the differences between experiment $1$ and $2$. However, we note that for both experiments most matches are found in the smaller Word2Vec clusters. This indicates that there is indeed a similarity between the Word2Vec clusters and the Danish clusters and is not simply based on randomness. \\
+
+If we look to the maximum matching percentage, the values are all similar over all the experiments and approaches. From this we conclude that both our knn Word2Vec and DeepWalk have the same performance as the basic generalized Word2Vec. This means that we can handle unseen EHR events and train our model on $50$\% of the dataset size using DeepWalk without losing accuracy. \\
+
+It is still difficult to quantify how well a match of around $60$\% is but we assume this is good enough to show the potential of our approaches. Especially since we use several estimations such as the disease code mapping, different datasets, and categorization. 
 
 \section{Conclusion}
 
+In this chapter we explained how we built a model of our proposed methods. We introduced the OSIM2 dataset on which we trained a model using our generalized Word2Vec, knn Word2Vec, and generalized DeepWalk. \\
+We explained our categorization approach using fixed intervals and disease code mapping. With this categorization of the data we enabled more general EHR events during training. We explained the different parameters for each of our approaches and discussed why we chose their corresponding values. \\
 
+After building the model, we executed two different experiments by generating clusters based on our model. The reason behind the clusters is that we could compare those clusters with the clusters found in the Danish paper. In a sense, experiment $2$ looks at how well the relations are for all the diseases in the Danish clusters and not only the diseases which are in the lookup table of the Word2Vec model as done in experiment $1$. We quantify this comparison using a matching percentage. \\
+
+We checked the influence of a parameter on the matching percentage by inspecting each parameter setting. From all these parameter settings, we deduced general trends. \\
+After checking the individual parameters, we took the parameter setting with the highest average matching percentage for each approach and compared the different approaches. \\
+
+We found it is difficult to quantify how well a match is of around $60$\% but we concluded this is good enough to show the potential of our approaches. \\
+
+We concluded that both our knn Word2Vec and DeepWalk have the same performance as the basic generalized Word2Vec. This means that we can handle unseen EHR events and train our model on $50$\% of the dataset size using DeepWalk without losing accuracy. \\
+
+Within the limitations of our validation method, we conclude that our models do match the Danish results well depending on the experiment. Especially since we use several estimations such as the disease code mapping, different datasets, and categorization. 
 
 
 
