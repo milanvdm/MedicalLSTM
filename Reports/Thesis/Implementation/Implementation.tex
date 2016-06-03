@@ -6,9 +6,9 @@
 
 \section{Introduction}
 
-In the previous chapter, we introduced our $3$ generalized Word2Vec methods and gave a first idea on their workings. We however did not go into detail about the exact implementation and how they perform compared to other methods.  \\
+In the previous chapter, we introduced our $3$ generalized Word2Vec methods and gave a first idea on their workings. However, we did not go into detail about the exact implementation and how they perform compared to other methods.  \\
 
-In this chapter we explain how we are going to build a model of our proposed methods. To be able to build our model, we first explain the dataset which we are going to use and how we handle problems such as categorization and disease code mapping. \\
+In this chapter we explain how we are going to build a model of our proposed methods. To be able to build our model, we first explain the dataset which we are going to use and how we deal with problems such as categorization and disease code mapping. \\
 Using the above mentioned dataset, we train a model using our generalized Word2Vec, knn Word2Vec, and generalized DeepWalk. For each approach, we apply a categorization of the data to enable more general EHR events during training. We also go into more detail about the parameter setting for each of our approaches. \\
 
 After building the model, we setup two different experiments by generating clusters based on our model. The reason behind the clusters is that we can compare those clusters with the clusters found in the Danish paper. \\
@@ -263,8 +263,8 @@ We conclude that a vectorlength of $50$ is expressive enough to differentiate be
 
 \subsubsection{Window Size}
 
-For the influence of the window sizes, see figure \ref{fig:s2v_vl} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
-We expected the window size to have more impact as a higher size makes more specific contexts and therefore we expected a better model. A reason for this negative result can be that we do not have enough data to justify more specific contexts or we did not find a good window size to approximate the relevant contexts for our dataset. \\
+For the influence of the window sizes, see figure \ref{fig:s2v_ws} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+We expected the window size to have more impact as a higher size makes more specific contexts and therefore result in a better model. A reason for this negative result can be that we do not have enough data to justify more specific contexts or we did not find a good window size to approximate the relevant contexts for our dataset. \\
 Also, because our sequence lengths have an average length of around $19$, a window size of $5$ is not that much different than a size of $10$ as in many cases it will cut of the size at the start or end of the sequence. The Danish paper uses sequences of length $4$, so this could also imply that a window size of $5$ is already enough to cover the relationships the Danish paper found and therefore a higher size will not have an impact on the matching percentage. \\
 The Danish paper sets a $5$ year 'window size' as they assume no dependencies are possible between disease outside this time frame. To achieve a similar effect with the window size of Word2Vec, a varying window size should be used. To our knowledge, a varying window size is only tested in \cite{w2vTuning:article} but no clear implementation is given. 
 
@@ -286,7 +286,7 @@ The Danish paper sets a $5$ year 'window size' as they assume no dependencies ar
 
 For the influence of the learning rates, see figure \ref{fig:s2v_lr} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 Learning rate is a parameter which is hard to tune \cite{peskyLr:article}. This explains the amount of literature around learning rate and the implementation of automatic tuning algorithms for learning rate \cite{peskyLr:article} \cite{adagrad:article} \cite{lrHard:article}. Therefore our results do not provide any final conclusion as we only tested $2$ different learning rates which is not extensive enough for a difficult parameter as the learning rate. \\
-Although it is also possible that we chose our learning rate similar enough in both cases and because of AdaGrad (see section \ref{sec:parameters}, they both achieved the same results.
+Although it is also possible that we chose our learning rate similar enough in both cases and because of AdaGrad (see section \ref{sec:parameters}), they both achieved the same results.
 
 \begin{figure}[!htb]
 	\centering
@@ -324,49 +324,85 @@ However, because we applied generalization, $99.82$\% of the instances are above
 
 \subsubsection{ClusterK}
 
-For the influence of the clusterKs, see figure \ref{fig:s2v_wf} for the matching percentage of experiment $1$. \\
-We see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
+For the influence of the clusterKs, see figure \ref{fig:s2v_clusterK} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+
+In the left figure we see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our method is not completely random especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
+In the right figure we see that most matches with the Danish clusters are already found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{S2V1_clusterK.jpeg}
-	\caption{Matching percentage for different clusterKs of the generalized Word2Vec approach in experiment $1$.}
-	\label{fig:s2v_clusterK_1}
-\end{figure}
-
-
-
-\noindent For the influence of the clusterKs, see figure \ref{fig:s2v_wf} for the matching percentage of experiment $2$.\\
-We see that most matches with the Danish clusters are already found in the smaller Word2Vec clusters. This corresponds with the results from experiment $1$.
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{S2V2_clusterK.jpeg}
-	\caption{Matching percentage for different clusterKs of the generalized Word2Vec approach in experiment $2$.}
-	\label{fig:s2v_clusterK_2}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{S2V1_clusterK.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{S2V2_clusterK.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different clusterKs of the generalized Word2Vec 	approach in both experiments.}
+	\label{fig:s2v_clusterK}
 \end{figure}
 
 
 \subsection{K-Nearest Neighbors Word2Vec}
 
-We use $80$\% of the OSIM2 dataset to make our Word2Vec model. Afterwards, we use the other $20$ to find EHR events which are not yet in the current lookup table. We find an average of around $35 000$ new instances. These new instances are added to the lookup table using the method described in section \ref{sec:knnWord2Vec}. We make Word2Vec clusters from all the new instances which are added to the lookup table. \\
-Both in experiment $1$ and experiment $2$, we found that the minimum word frequency and learning rate have no substantial influence on the matching percentage. For more explanation about those parameters, we refer to section \ref{sec:genWordExp}. \\
+We use $80$\% of the OSIM2 dataset to make our Word2Vec model. Afterwards, we use the other $20$\% to find EHR events which are not yet in the current lookup table. We find an average of around $35 \ 000$ new instances. These new instances are added to the lookup table using the method described in section \ref{sec:knnWord2Vec}. We make Word2Vec clusters from all the new instances which are added to the lookup table. \\
+Both in experiment $1$ and experiment $2$ we found that the window size, minimum word frequency and learning rate have no substantial influence on the matching percentage. For more explanation about those parameters, we refer to section \ref{sec:genWordExp}. \\
 
 \subsubsection{Vectorlength}
 
+For the influence of the vectorlengths, see figure \ref{fig:knn_vl} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+We expected that a vectorlength of $100$ would give better results. The reasoning behind this is that we take a weighted average. Due to the weighted average, the increased expressiveness of vectorlength $100$ could be valuable. In experiment $1$, we indeed see this effect occurring. However in experiment $2$, we see the opposite effect although the maximum matching percentages differ less compared to experiment $1$. We therefore conclude that their is indeed an indication that a vectorlength of $100$ would increase the matching percentage but not enough data is available to make a more definitive conclusion.
 
-
-\subsubsection{Window Size}
-
-RANDOM
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Knn1_vl.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Knn2_vl.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different vectorlengths of the knn Word2Vec 	approach in both experiments.}
+	\label{fig:knn_vl}
+\end{figure}
 
 \subsubsection{ClusterK}
 
+For the influence of the clusterKs, see figure \ref{fig:knn_clusterK} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
 
+In the left figure we see a trend that with a lower clusterK there is a higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters. This shows that our knn method is a good estimation for the smaller clusters around the unseen instances. This is probably due to the fact it is also based on the $k$ value which is small compared to a clusterK of value $5000$. \\
+
+In the right figure we see that a higher value of clusterK has a large influence on the average matching percentage of experiment $2$. Due to the good results of experiment $1$ for smaller clusters, we conclude that the smaller Word2Vec clusters do not contain many different diseases and therefore have a low matching percentage for experiment $2$. \\
+This means that our knn method does not find relationships between many disease but only a few. A reason for this could be the used weighted average method which decreases the weights the further a neighbor is from the unseen instance. When a relationship exists between the unseen instance and a distant neighbor, this relationship is only taken into account by a small portion due to these decreasing weights.
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Knn1_clusterK.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Knn2_clusterK.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different clusterKs of the knn Word2Vec 	approach in both experiments.}
+	\label{fig:knn_clusterK}
+\end{figure}
 
 \subsubsection{K}
 
+For the influence of the $k$s, see figure \ref{fig:knn_k} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+We expected that a value of $100$ for $k$ would give better results. The reasoning behind this is that we take a weighted average based on more neighboring EHR events. Because we already concluded that a clusterK of $100$ performs well, we could assume that a $k$ with value $100$ is a good estimation. However, it is difficult to make those assumptions as finding an optimal $k$ is a complex problem \cite{knnDifficult:article}. \\  
 
+We find that a value of $k$ does not have a large influence on the matching percentage. Therefore we advise taking a smaller value for $k$ for our dataset as this increases performance. It is also difficult to find a general trend for experiment $2$ due to the large influence of clusterK on the matching percentage.
+
+\begin{figure}[!htb]
+	\centering
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Knn1_k.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Knn2_k.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different $k$s of the knn Word2Vec approach in both experiments.}
+	\label{fig:knn_k}
+\end{figure}
 
 \subsection{DeepWalk}
 
@@ -400,27 +436,24 @@ This effect was already described in the last paragraph of section \ref{sec:clus
 
 \subsubsection{ClusterK}
 
-For the influence of the clusterKs, see figure \ref{fig:dw_clusterK_1} for the matching percentage of experiment $1$. \\
-We see a trend that with a lower clusterK there is a slightly higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters, especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. In the case of the maximums, the matching percentage decreases significantly the higher clusterK is. \\
+For the influence of the clusterKs, see figure \ref{fig:dw_clusterK} for the matching percentage of experiment $1$ (left) and experiment $2$ (right). \\
+
+In the left figure we see a trend that with a lower clusterK there is a slightly higher matching percentage. This means that in the smaller clusters, there is a higher density of instances which correspond to the Danish clusters, especially in the case of some disease codes as a maximum matching percentage of $55$\% is found. In the case of the maximums, the matching percentage decreases significantly the higher clusterK is. \\
 This shows that our method is not completely random. Especially since we used several estimations such as the disease code mapping, different datasets, and categorization. \\
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.6\textwidth]{Deepwalk1_clusterK.jpeg}
-	\caption{Matching percentage for different clusterKs of the DeepWalk approach in experiment $1$.}
-	\label{fig:dw_clusterK_1}
-\end{figure}
-
-
-\noindent For the influence of the clusterKs, see figure \ref{fig:dw_clusterK_2} for the matching percentage of experiment $2$.\\
-On the figure above, we see that for a lower clusterK, a lower matching percentage is found. Similar to what is described for DeepWalk experiment $2$ on the minimum word frequency, we conclude that for certain diseases their relevant relations are not found. \\
+In the right figure we see that for a lower clusterK, a lower matching percentage is found. Similar to what is described for DeepWalk experiment $2$ on the minimum word frequency, we conclude that for certain diseases their relevant relations are not found. \\
 If we look to the maximum values, we can make the same conclusion as the generalized Word2Vec experiment on clusterK.
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.6\textwidth]{Deepwalk2_clusterK.jpeg}
-	\caption{Matching percentage for different clusterKs of the DeepWalk approach in experiment $2$.}
-	\label{fig:dw_clusterK_2}
+	\begin{subfigure}[b]{.49\textwidth}\
+		\includegraphics[width=\textwidth]{Deepwalk1_clusterK.jpeg}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\textwidth}
+		\includegraphics[width=\textwidth]{Deepwalk2_clusterK.jpeg}
+	\end{subfigure}
+	\caption{Matching percentage for different clusterKs of the DeepWalk 	approach in both experiments.}
+	\label{fig:dw_clusterK}
 \end{figure}
 
 
@@ -479,8 +512,10 @@ We notice that for each experiment, the parameters are similar regardless of the
 
 We discussed the influence of the parameters in the previous sections. In the best parameters settings, we see that our conclusions are valid. \\
 One of the conclusions is that a lower clusterK causes a higher matching percentage. Note that the value of clusterK for experiment $2$ is always $5000$. Because experiment $2$ already sees one occurrence of a disease in a Word2Vec cluster as a match, a higher number of elements causes the matching percentage to increase. However, as we mentioned before, a large portion of those matches are found in the clusterK with a value of $100$. \\
-Another conclusion is that a high value for the k in the knn Word2Vec causes a higher matching percentage. The same goes for the walklength values in DeepWalk. \\ 
-We also see that parameters which do not have a high influence, vary more between the different experiments and approaches. \\
+Another conclusion is the one about walklength values in DeepWalk. \\
+
+However, we concluded that a high value for the $k$ in the knn Word2Vec causes not much difference in the matching percentage. We see that for both experiments the highest average matching percentage is achieved with a $k$ value of $100$. We assume this is randomness because the different $k$ values did not have much influence on the matching percentage. \\ 
+We see that parameters which do not have a high influence, vary more between the different experiments and approaches. \\
 
 We conclude that the values found for each parameter are as we expected. The similarity of the parameter settings between the different approaches, shows that the knn and DeepWalk extensions of the generalized Word2Vec are plausible and do not cause a complete new set of problems.
 
@@ -502,11 +537,11 @@ After building the model, we executed two different experiments by generating cl
 We checked the influence of a parameter on the matching percentage by inspecting each parameter setting. From all these parameter settings, we deduced general trends. \\
 After checking the individual parameters, we took the parameter setting with the highest average matching percentage for each approach and compared the different approaches. \\
 
-We found it is difficult to quantify how well a match is of around $60$\% but we concluded this is good enough to show the potential of our approaches. \\
+We found it difficult to quantify how well a match is of around $60$\% but we concluded this is good enough to show the potential of our approaches. \\
 
 We concluded that both our knn Word2Vec and DeepWalk have the same performance as the basic generalized Word2Vec. This means that we can handle unseen EHR events and train our model on $50$\% of the dataset size using DeepWalk without losing accuracy. \\
 
-Within the limitations of our validation method, we conclude that our models do match the Danish results well depending on the experiment. Especially since we use several estimations such as the disease code mapping, different datasets, and categorization. 
+Within the limitations of our validation method, we conclude that our models do match the Danish results well. Especially since we use several estimations such as the disease code mapping, different datasets, and categorization. 
 
 
 

@@ -6,7 +6,7 @@ Our research sought to explore the usage of new machine learning approaches to f
 
 We introduced a new way on how to apply Word2Vec methods by explaining the link between sentences of words and sequence of medical records. We call this approach a generalized Word2Vec approach and it can be applied on medical data to find the correlations between different diagnoses. \\
 To make sure the generalized Word2Vec methods can be applied to large-scale medical data, we applied the generalization concept also on DeepWalk. DeepWalk makes it possible to generate a smaller dataset from the original dataset and then apply a Word2Vec approach on this smaller dataset. \\
-Besides the exploration on generalizing Word2Vec approaches, we also improved Word2Vec by tackling on of its shortcomings. This shortcoming of Word2Vec is that it is unable to handle unseen instances once it has built his lookup table. We combine a k-nearest neighbors method with Word2Vec and make an estimation of the correlation to other diagnoses for the unseen instance. \\
+Besides the exploration on generalizing Word2Vec approaches, we also improved Word2Vec by tackling one of its shortcomings. This shortcoming of Word2Vec is that it is unable to handle unseen instances once it has built his lookup table. We combine a k-nearest neighbors method with Word2Vec and make an estimation of the correlation to other diagnoses for the unseen instance. \\
 
 We explained how we built a model of our proposed methods. We introduced the OSIM2 dataset on which we trained a model using our generalized Word2Vec, knn Word2Vec, and generalized DeepWalk. \\
 We explained our categorization approach using fixed intervals and disease code mapping. With this categorization of the data we enabled more general EHR events during training. We also explained the different parameters for each of our approaches and discussed why we chose their corresponding values. \\
@@ -20,7 +20,7 @@ The results from both experiments are that each approach has a maximum matching 
 We conclude that both our knn Word2Vec and DeepWalk have the same performance as the basic generalized Word2Vec. This means that we can handle unseen EHR events and train our model on $50$\% of the dataset size using DeepWalk without losing accuracy. \\
 Within the limitations of our validation method, we conclude that our models do match the Danish results well depending on the experiment. Especially since we use several estimations such as the disease code mapping, different datasets, and categorization. \\ 
 
-For more information about another possible experiment which also combines the Word2Vec approaches with prediction or classification methods, we refer to the next chapter. In this chapter we also talk about some possible improvements and future directions to explore.
+For more information about another possible experiment which also combines the Word2Vec approaches with prediction or classification methods, we refer to the next chapter. In this chapter we also discuss some possible improvements and future directions to explore.
 
 %%% Local Variables: 
 %%% mode: latex

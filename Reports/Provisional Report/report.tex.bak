@@ -1,10 +1,10 @@
-\documentclass[journal]{IEEETemplate/IEEEtran}
+\documentclass[11pt, final, journal, twoside, a4paper]{IEEEtran}
 
-\usepackage[dutch]{babel}
+
 
 % *** CITATION PACKAGES ***
 %
-\usepackage{cite}
+%\usepackage{cite}
 
 
 % *** MATH PACKAGES ***
@@ -30,10 +30,14 @@
 %
 \usepackage{url}
 \usepackage[pdftex]{graphicx}
+\usepackage{cite}
 
+\usepackage[dutch]{babel}
 
 
 \begin{document}
+
+\graphicspath{ {Figures/} }
 %
 % paper title
 % Titles are generally capitalized except for words such as a, an, and, as,
@@ -41,7 +45,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Neural Sequence Embedding generalization with Density-Based Clustering}
+\title{Een Ziekte Inbedding leren met het gebruik van Veralgemeende Word2Vec Methoden}
 %
 %
 % author names and IEEE memberships
@@ -60,7 +64,7 @@
 
 % The paper headers
 \markboth{}%
-{Neural Sequence Embedding generalization with Density-Based Clustering}
+{\textbf{Een Ziekte Inbedding leren met het gebruik van Veralgemeende Word2Vec Methoden}}
 % The only time the second header will appear is for the odd numbered pages
 % after the title page when using the twoside option.
 % 
@@ -77,12 +81,18 @@
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-Large medical databases give the opportunity to build models for predicting the disease progression of a patient. To build the model, preprocessing of the data is necessary. We introduce a method based on word2vec applied on complex states. Before applying word2vec, it is possible to apply DBSCAN clustering to receive more general results without ignoring medical outliers. It is too early to draw a conclusion on the effects of those methods.
+In de medische wereld is er een stijgend gebruik van Electronic Health Records (EHRs). Hierdoor is er meer medische data beschikbaar en is er de mogelijkheid om nieuwe verbanden te vinden. Deze verbanden kunnen onderhanden gebruikt worden om de werking van medicaties te testen, kosten te bepalen van bepaalde ziektebeelden, en het vinden van nieuwe relaties tussen verschillende ziekten. \\
+In dit nieuwe vakgebied van EHR analytics, is er een beperkt gebruik van recent machine learning technieken. Het doel van dit paper: het gebruiken van recente machine learning technieken om verbanden te vinden in EHRs.\\
+
+Om dit te kunnen doen, maken we het verband tussen zinnen van woorden en sequenties van EHR events. Met de analogie introduceren wij veralgemeende Word2Vec methoden. Deze breiden we uit met DeepWalk voor performantie redenen aangezien dit ons toelaat om kleinere datasets te genereren. Vervolgens lossen we een Word2Vec probleem op namelijk het niet kunnen verwerken van ongeziene instanties. Hiervoor gebruiken we een k-nearest neighbors methode in combinatie met Word2Vec. \\
+
+We testen $504$ verschillende parameter settings om onze modellen te bouwen. Deze modellen worden vervolgens getest en vergeleken met een paper over Deense EHRs. We vinden dat er een $60$\% match is tussen onze modellen en de Deense modellen. Hieruit concluderen we dat onze methodes belovend zijn zeker aangezien we verschillende benadering gebruiken die niet in de Deense EHRs aanwezig zijn. We concluderen ook dat doordat alle modellen hetzelfde scoren, de voorgestelde uitbreidingen op Word2Vec performant zijn.
+
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-Embedding, clustering, LSTM
+Inbedding, clustering, Word2Vec, EHR analytics
 \end{IEEEkeywords}
 
 
@@ -102,104 +112,135 @@ Embedding, clustering, LSTM
 
 
 
-\section{Motivation}
+\section{Electronic Health Records Analytics}
 
-\IEEEPARstart{O}{ne} of the prerequisites for precision medication is predicting the disease progression of a patient. Often medical datasets are researched with a limited amount of data or with simple machine learning techniques. This paper introduces the first part of a larger work in which advanced machine learning techniques are applied on a large-scale medical dataset. This paper focuses on the preprocessing of the data before it is fed into a Neural Network. \\
-In medical data there is a large amount of attributes which causes a large amount of possible events. Because of this, most events are unique. To get a more general model, those distinct events should be generalized. One of the problems with medical data is that outliers in the data need special attention because those could potentially be valuable. In short, there is a need for a method which generalizes the data but still gives special attention to outliers. \\
-As mentioned before, we have a lot of different attributes which causes our data to be sparse. We could try to represent the data in a more dense space. We can use the sequences of a patients states to find relations between the states. The relations can be represented in the denser space by putting the states related to each other close in the new space. Using this representation, Neural Networks can be trained better. \\
-Because the states are very distinct, the probability that a completely new state needs to be predicted by the found model is quite high. Our final method should be able to handle this.
+\IEEEPARstart{I}{n} de medische wereld is er een stijgend gebruik van medische hulp systemen. Deze systemen maken het mogelijk om medische data op een eenvoudige manier op te slaan. Voorbeelden hiervan zijn, dokters bezoeken, hospitalisatie, labo resultaten, en anderen, zie figuur \ref{fig:matrixPatient}. Deze gegevens worden samen opgeslagen in een Electronic Health Record (EHR) \cite{EHRworld:article}. \\
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=2.5in]{matrixPatient.png}
+	\caption{Example of an EHR transformed into a matrix structure \cite{EHRrecommender:article}}
+	\label{fig:matrixPatient}
+\end{figure}
+
+Door deze stijging in beschikbare medische gegevens, zijn er verschillende partijen zoals dokters, hospitalen, en overheden met interesse om nieuwe verbanden te vinden hierin. Deze verbanden kunnen onderhanden gebruikt worden om de werking van medicaties te testen, kosten te bepalen van bepaalde ziektebeelden, en het vinden van nieuwe relaties tussen verschillende ziekten. \\
+Omdat er vele problemen zijn rond EHRs zoals privacy, grote hoeveelheden data, complexe structuren, en verschillende gebruikte ziekte coden (bv. MedDRA \cite{MedDRA:online} of ICD-10 \cite{MedDRA:online}) , zijn er recent verschillende onderzoeksgroepen gevormd die zich focusen op de analyse van EHRs. Deze groepen gebruiken van eenvoudige methoden tot zeer complexe methoden zoals querying, statistische analyses, data mining, en machine learning algoritmes \cite{EHRbigdata:slides} \cite{EHRquery:journal} \cite{EHRrecommender:article} \cite{EHRmining:article}. \\
+
+Voor dit artikel is een wel bepaald onderzoek zeer relevant namelijk het tot nu toe grootste EHR onderzoek \cite{Brunak:article}. Dit onderzoek is gedaan met behulp van een Deense dataset waarop men verschillende ziekte cluster zoekt met behulp van data mining methoden. Als resultaat hebben ze dus een overzicht van verschillende disease trajectory clusters, zie figuur \ref{fig:clusterGraphDanish}.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=2.5in]{clusterGraphDanish.png}
+	\caption{Cerebrovascular disease trajectory cluster for the Danish population \cite{Brunak:article}}
+	\label{fig:clusterGraphDanish}
+\end{figure}
  
-\hfill December 30, 2015
+\hfill June 3, 2016
 
 
 
-\section{Previous Research}
-Embedding is a well researched topic in the area of protein sequences\cite{1,2} and natural language processing\cite{3,4}. Embedding applied on medical data is as far as our knowledge goes, not done before. The area where complex sequences are embedded is also limited. \\
-Clustering is a popular method in the medical field\cite{5,6}. But the combination with our embedding method isn't done before as far as our knowledge goes. \\
+\section{Veralgemeende Word2Vec Methoden}
+In deze sectie leggen we de analogie tussen zinnen van woorden en sequenties van EHR events. Door deze analogie, kunnen we de link leggen tussen Word2Vec \cite{w2vOriginal:article} en medische data.
+
+\subsection{Data representatie}
+
+De medische geschiedenis van een patient kan gezien worden als een tijdserie van EHR events. We noteren een EHR event als een vector $m^p_t$, met $p$ een patienten nummer en $t$ een tijdstip. Dit betekent dat elke patient een sequentie heeft van vectors, namelijk $s^p = m^p_t, m^p_{t+1}, m^p_{t+3}, \ldots$ Een vector kan waarden bevatten zoals bloeddruk, leeftijd, diagnose, en anderen (zie figuur \ref{fig:matrixPatient}).
+
+\subsection{Veralgemeende Word2Vec}
+
+Word2Vec wordt typisch toegepast op grote tekst corpusen. Met deze methode kan een inbedding worden gevonden waar woorden worden geprojecteerd naar een nieuwe vector ruimte. In deze vector ruimte worden de relaties tussen de woorden weergegeven door afstand tussen elkaar. \\
+
+Een medische dataset kan worden beschouwd als een grote tekst corpus. Het bevat verschillende patienten (of zinnen) die elke een sequentie van EHR events hebben (of woorden). Met deze analogie, kunnen we Word2Vec toepassen op medische data. Op deze manier leren we een inbedding voor verschillende EHR events. \\
+Andere soorten vergelijkingen zijn alreeds gemaakt zoals met protein sequenties \cite{protvec:article}.
+
+\subsection{Knn Word2Vec}
+
+Vervolgend lossen we een Word2Vec probleem op namelijk het kunnen verwerken van ongeziene instanties. Hiervoor gebruiken we een k-nearest neighbors methode \cite{knn:article} in combinatie met Word2Vec. \\
+
+Deze knn methode kan toegepast worden omdat we aan het werken zijn met EHR events. Op basis van de EHR events die zich in de lookup table van het getrainde Word2Vec model bevinden, kunnen we de knn vinden voor een ongeziene EHR event. Op basis van deze knn EHR events, nemen we het gewogen gemiddelde van hun representaties in de nieuwe vector ruimte. Dit gewogen gemiddelde is de nieuwe vector representatie voor het ongeziene EHR event.
+
+\subsection{Veralgemeende DeepWalk}
+
+DeepWalk \cite{deepwalkMain:article} begint van een grafen-structuur en is daardoor niet direct toepasbaar op EHR data. Een voordeel van DeepWalk is dat het een methode aanbiedt om op basis van de originele dataset een kleinere dataset te maken. Dit doet het aan de hand van gewogen random walks. Met deze kleinere dataset, kunnen we een Word2Vec model sneller trainen. \\
+
+Om deze random walks uit te kunnen voeren, moeten we eerst onze EHR data omzetten naar een grafen structuur. Dit doen we aan de hand van de sequenties in de originele dataset. Elke sequentie kan worden omgezet naar een directed graaf. Overeenkomstige vertices worden dan verbonden met elkaar en de gewichten worden aangepast van de edges op basis van de frequentie dat dezelfde vertices elkaar opvolgen.
 
 
-\section{Problem Definition}
-In this section we describe our problem and each of the subproblems. We describe more general problems which occur in large datasets and some more specific problems related to the prediction method. \\
+\section{Resultaten}
 
-The medical history of a patient is a time series with each medical status a data point in time. The main goal is to predict a label for each time series. For example: patient will be cured. To achieve this goal, we need to preprocess the data before we apply a prediction method onto it. \\
-A high dimensional numerical vector represents a medical status where a value can express for example the blood pressure of a patient. Between data points, there can be long time periods and also irregular intervals. The numerical values of the vectors need to be standardized. Typical for large datasets, are missing values which have to be taken into account. \\
 
-\subsubsection{Time Series}
-Each patient is an independent time series. But in the time series, several independent disease periods can occur. In medical data, there are a large amount of unique events because of the high dimensional data points. Each possible combination of the vector space represents an unique event. Machine learning techniques are harder to apply when there are a large amount of different events\cite{7}, especially when rare events are possibly important which is the case in medical data\cite{8}. \\
-\subsubsection{Long Time Periods}
-\label{sec:LongTimePeriods}
-Between the events are a long range of dependencies possible. When machine learning techniques try to model those dependencies, a decay or blow up of events can happen, this is called the vanishing gradient problem\cite{9}. \\
-\subsubsection{Irregular Intervals}
-\label{sec:IrregularIntervals}
-Irregular intervals are a form of missing data. Our method has to handle the irregular intervals or transform them accordingly to regular intervals\cite{10}. \\
-\subsubsection{High Dimensionality}
-\label{sec:HighDimensionality}
-A well known problem is the Curse of Dimensionality\cite{11}. It causes the data to be sparse and implies the need for more data. Also the effects and importance of attributes is unclear because of the large amount of attributes. \\
-\subsubsection{Sequence Labeling}
-Our prediction method should handle all above mentioned problems and be able to build a model to label a given sequence. The label is an indicator on what the outcome will be of the patients disease trajectory. The labeling process gives the prediction of the disease trajectory. \\
-Sequence labeling can be done with Recurrent Neural Networks (RNN). A RNN which handles problems like \ref{sec:LongTimePeriods}, \ref{sec:IrregularIntervals}, and \ref{sec:HighDimensionality} is Long Short Term Memory (LSTM)\cite{12}. \\
-\subsubsection{Embedding} 
-Because of the sparse structure of the data, it would be ideal to transform the data to a more compact presentation. This process is called embedding\cite{13a}. Embedding also tries to find relations between the original data and represent those relations by projecting the related data points closely in the projection space. The embedding can be used to feed into a LSTM network. \\
+\subsection{Parameters}
 
-The method described in \ref{sec:Methods} tries to handle the preprocessing needed for the LSTM network.
 
-\section{Methods}
-\label{sec:Methods}
-We first describe our approach on the problems as irregular intervals and normalization. Secondly, we describe our method to make the embedding matrix. Lastly, we introduce a method to generalize our events to get a more general embedding matrix but still keep outliers.
+De performantie van een neuraal netwerk hangt sterk af van de gekozen waarden voor de parameters. Het tunen van deze parameters is een moeilijk probleem en complexe methoden zijn alreeds voorgesteld om dit op lossen \cite{tuning:article}. We kozen $504$ verschillende parameter settings om onze modellen te trainen. Merk dat dit geen paper is over parameter tuning en daardoor het gebruik van de bovengenoemde methode mogelijk is in later werk. \\
+In tabel \ref{tab:parameters}, zie je een overzicht van alle gekozen parameters. Alle mogelijke combinaties van deze parameters zijn getest. \\
 
-\subsection{Preprocessing}
-The irregular intervals are mainly ignored as they don't effect the preprocessing. The events get a new attribute to directly specify the length of the interval between the current event and the previous event. This way the time difference is added explicitly to the data. The normalization is done for the purpose of clustering because we don't want to make any assumption on the importance of any attribute\cite{14}. The embedding is done without normalization but it could be applied also\cite{15}. For the normalization we make the data Gaussian with zero mean and unit variance.
-
-\subsection{Embedding}
-Embedding is done based on the word2vec approach\cite{13}. It is a two-layer neural network which encodes words in vectors. They use a skip-gram model to predict a context when a word is given. The model will make the representation space less sparse and also locate words related to each other closely in this new space.
-
-\begin{figure}[H]
+\begin{table*}[!htb]
 \centering
-\includegraphics[width=2.5in]{../Figures/skipGram.pdf}
-\caption{Skip-Gram model}
-\label{fig:skipgram}
-\end{figure}
 
-The same can be applied on more complex states than words. We first order all our sequences chronology and put them into one text file. Each sequence is separated by some label so there are no relations found between the start and the end of two different sequences. We apply the word2vec method on this text file. 
+\begin{tabular}{llll}
+\hline
+Parameter                                    & Generalized Word2Vec  & Knn Word2Vec          & DeepWalk              \\ \hline
+\multicolumn{1}{l|}{Vectorlength}            & {[}50, 100{]}         & {[}50, 100{]}         & {[}50, 100{]}         \\
+\multicolumn{1}{l|}{Batch Size}              & 500                   & 500                   & 500                   \\
+\multicolumn{1}{l|}{Epoch}                   & 1                     & 1                     & 1                     \\
+\multicolumn{1}{l|}{Window Size}             & {[}5, 10, 15{]}       & {[}5, 10, 15{]}       & {[}5, 10, 15{]}       \\
+\multicolumn{1}{l|}{Learning Rate}           & {[}0.025, 0.1{]}      & {[}0.025, 0.1{]}      & {[}0.025, 0.1{]}      \\
+\multicolumn{1}{l|}{Minimum Word Freq} & {[}5, 10{]}           & {[}5, 10{]}           & {[}5, 10{]}           \\
+\multicolumn{1}{l|}{ClusterK}                & {[}100, 1000, 5000{]} & {[}100, 1000, 5000{]} & {[}100, 1000, 5000{]} \\
+\multicolumn{1}{l|}{K}                       & /                     & {[}10, 50, 100{]}     & /                     \\
+\multicolumn{1}{l|}{Walklength}              & /                     & /                     & {[}5, 10, 15{]}      
+\end{tabular}
 
-\begin{figure}[H]
+\caption{De geteste parameters voor elke veralgemeende Word2Vec methode.}
+\label{tab:parameters}
+\end{table*}
+
+Tot onze kennis, is er maar een enkele studie die zich toespitst op het tunen van Word2Vec parameters \cite{w2vTuning:article}. In deze studie nemen ze enkele random waarden en kijken vervolgens wat hun effecten zijn. Wij voeren een gelijkaardige methode uit door ook random waarden te nemen en kijken wat hun effecten zijn.
+
+\subsection{Vergelijking Methoden}
+
+We vergelijken onze $3$ methoden met elkaar op basis van de gemiddelde en maximum matching percentage. Voor elke methode gebruiken we de parameter setting die de hoogste waarde geeft voor de gemiddelde matching percentage. Deze settings kan je terugvinden in tabel \ref{tab:approaches}. \\
+
+\begin{table*}[!htb]
 \centering
-\includegraphics[width=2.5in]{../Figures/visualisation.png}
-\caption{A result from the word2vec using the sequences as labels.}
-\label{fig:word2vec}
-\end{figure}
+\begin{tabular}{ccccccc}
+\hline
+Parameter                                   & \multicolumn{2}{c}{Generalized Word2Vec}         & \multicolumn{2}{c}{Knn Word2Vec}                 & \multicolumn{2}{c}{DeepWalk} \\ \hline
+\multicolumn{1}{l|}{}                       & Exp 1 & \multicolumn{1}{c|}{Exp 2} & Exp 1 & \multicolumn{1}{c|}{Exp 2} & Exp 1  & Exp 2 \\ \hline
+\multicolumn{1}{l|}{Vectorlength}           & 100          & \multicolumn{1}{c|}{50}           & 100          & \multicolumn{1}{c|}{50}           & 50            & 100          \\
+\multicolumn{1}{l|}{Window Size}            & 15           & \multicolumn{1}{c|}{15}           & 5            & \multicolumn{1}{c|}{5}            & 5             & 10           \\
+\multicolumn{1}{l|}{Learning Rate}          & 0.025        & \multicolumn{1}{c|}{0.025}        & 0.025        & \multicolumn{1}{c|}{0.025}        & 0.025         & 0.025        \\
+\multicolumn{1}{l|}{Minimum Word Freq} & 10           & \multicolumn{1}{c|}{5}            & 5            & \multicolumn{1}{c|}{5}            & 10            & 5            \\
+\multicolumn{1}{l|}{ClusterK}               & 100          & \multicolumn{1}{c|}{5000}         & 100          & \multicolumn{1}{c|}{5000}         & 100           & 5000         \\
+\multicolumn{1}{l|}{K}                      & /            & \multicolumn{1}{c|}{/}            & 100          & \multicolumn{1}{c|}{100}          & /             & /            \\ 
+\multicolumn{1}{l|}{Walklength}             & /            & \multicolumn{1}{c|}{/}            & /            & \multicolumn{1}{c|}{/}            & 5             & 15           \\ \hline
+\multicolumn{1}{l|}{Average Matching \%}    & 29           & \multicolumn{1}{c|}{62}           & 33           & \multicolumn{1}{c|}{61}           & 27            & 61           \\
+\multicolumn{1}{l|}{Maximum Matching \%}    & 56           & \multicolumn{1}{c|}{69}           & 69           & \multicolumn{1}{c|}{69}           & 61            & 69          
+\end{tabular}
 
-\subsection{DBSCAN}
-In the previous section, we described how to make our data less spars and find relations between words in sequences. \\
-Because we have mostly unique events due to the high dimensionality, we clustered the data before we applied the word2vec strategy. \\
-We applied the DBSCAN clustering method. It is a density based clustering method which finds core samples when a certain amount of other samples are in their vicinity. When samples are not part of a cluster, they are normally treated as noise in DBSCAN. 
+\caption{Best gevonden parameter setting voor elke methode.}
+\label{tab:approaches}
+\end{table*}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=2.5in]{../Figures/dbscan.pdf}
-\caption{How a core sample is found based on his vicinity.}
-\label{fig:word2vec}
-\end{figure}
+Elke methode heeft methode heeft een gelijkaardige matching percentage, zeker als je kijkt naar het maximum matching percentage. We concluderen dat beide onze knn Word2Vec en DeepWalk dezelfde performantie hebben dan de basis veralgemeende Word2Vec. Dit betekent dat we nu ongeziene EHR events aankunnen met behulp van onze knn Word2Vec en ook dat we kleinere dataset kunnen gebruiken met behulp van DeepWalk zonder performantie te verliezen. \\
 
-After we found the clusters, we can approximate each status with their closest core sample. To find the closest core sample, we make a k-d tree\cite{13b}. When the status is seen as noise by DBSCAN, we keep the same status because in medical data outliers are important. \\
-To initialize DBSCAN we need to chose two parameters: eps and minSamples. MinSamples is chosen accordingly on how much you want to generalize the data. The higher minSamples, the harder it is to get core samples. Eps is chosen based on the method explained in \cite{13c}.    
+Het blijft moeilijk om te quantificeren hoe goed een match percentage van $60$\% is. Maar we maken de assumptie dat dit goed genoeg is om het potentieel van onze methoden aan te tonen. Zeker indien we rekening houden met de gebruikte benaderings methoden zoals de code mapping, verschillende datasets, en de categorizatie.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=2.5in]{../Figures/eps.png}
-\caption{The knick in the figure is how eps is chosen.}
-\label{fig:word2vec}
-\end{figure}
+\section{Conclusie}
 
-\section{Experiments}
-The effect of the preprocessing can only be validated when the sequence labeling method is worked out. \\
-Some possible experiments to validate the clustering are to find common cold diagnoses and see if they match with the cold season. Same can be done for other season related diseases. \\
-To test the embedding, we could try to find diagnoses which are closely related to each other. These should be closely to each other in the embedding space.
+In dit paper legde we het nieuwe vakgebied rond EHR analytics uit en waarom het interessant is om verbanden tussen vershillende ziekten te vinden hierin. Onderzoekgroepen gebruiken hiervoor allerhande methoden maar een beperkt aantal machine learning methoden worden gebruikt. \\
 
-\section{Future Work}
-Until now we described and implemented a method to generalize our dataset and find connections between events. Those results can be used to feed into the LSTM network to label the sequences. With the learned model and the embedding matrix, we can also handle unseen events by looking for the k-nearest neighbors of this unseen event and base our results on the findings of those neighbors. The above improvements will be implemented before the summer of 2016.
+Daardoor stelden wij onze veralgemeende Word2Vec methoden voor zodat Word2Vec kan worden toegepast op medische data. Deze breiden we uit met DeepWalk voor performantie redenen aangezien dit ons toelaat om kleinere datasets te genereren. Vervolgend lossen we een Word2Vec probleem op namelijk het kunnen verwerken van ongeziene instanties. Hiervoor gebruiken we een k-nearest neighbors methode in combinatie met Word2Vec. \\
 
+We hebben $504$ verschillende parameter settings getest om onze modellen te bouwen. Van deze parameter settings nemen wij diegene die voor elke model de hoogste gemiddelde matching percentage geven tussen de Word2Vec clusters en de Deense clusters. \\
 
+We vinden dat er een $60$\% match is tussen onze clusters en de Deense clusters. Hieruit concluderen we dat onze methodes belovend zijn zeker aangezien we verschillende benadering gebruiken die niet in de Deense EHRs aanwezig zijn. \\
+We concluderen ook dat doordat alle modellen hetzelfde scoren, de voorgestelde uitbreidingen op Word2Vec performant zijn.
+
+\section{Toekomstig Werk}
+
+Een Word2Vec model kan gebruikt worden in combinatie met een neuraal netwerk. Dit neuraal netwerk maakt gebruik van denieuwe vector representie om zijn voorspellingen te verbeteren. In de toekomst, zou het interessant zijn om ziektes van patienten te kunnen voorspellen hiermee en vervolgens te testen of het gebruik van onze Word2Vec methoden deze voorspellingen accurater maken. 
 
 
 % An example of a double column floating figure using two subfigures.
@@ -272,16 +313,156 @@ Until now we described and implemented a method to generalize our dataset and fi
 
 
 
-\section{Conclusion}
-It is not possible to conclude if the preprocessing works because the sequence labeling method is not implemented yet. 
+
+% Can use something like this to put references on a page
+% by themselves when using endfloat and the captionsoff option.
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
 
 
 
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+%\bibliographystyle{IEEEtran}
+\begin{thebibliography}{10}
+
+\bibitem{MedDRA:online}
+{MedDRA}.
+\newblock \url{http://www.meddra.org/}.
+\newblock (Accessed on 05/03/2016).
+
+\bibitem{w2vNgram:online}
+{The Speech Recognition Wiki}.
+\newblock \url{http://recognize-speech.com/}.
+\newblock (Accessed on 05/16/2016).
 
 
-\nocite{*}
-\bibliographystyle{abbrv}
-\bibliography{references}
+\bibitem{WHO_ICD:online}
+{WHO | International Classification of Diseases (ICD)}.
+\newblock \url{http://www.who.int/classifications/icd/en/}.
+\newblock (Accessed on 04/27/2016).
+
+\bibitem{protvec:article}
+E.~Asgari and M.~R.~K. Mofrad.
+\newblock {Continuous Distributed Representation of Biological Sequences for
+  Deep Proteomics and Genomics}.
+\newblock {\em PLoS ONE}, 10(11):1--15, 11 2015.
+
+\bibitem{tuning:article}
+M.~Bashiri and A.~F. Geranmayeh.
+\newblock {Tuning the parameters of an artificial neural network using central
+  composite design and genetic algorithm}.
+\newblock {\em Scientia Iranica}, 18(6):1600 -- 1608, 2011.
+
+\bibitem{EHRmining:article}
+C.~Bennett and T.~Doub.
+\newblock {Data Mining and Electronic Health Records: Selecting Optimal
+  Clinical Treatments in Practice}.
+\newblock {\em CoRR}, abs/1112.1668, 2011.
+
+\bibitem{knn:article}
+T.~M. Cover.
+\newblock {Nearest neighbor pattern classification}.
+\newblock 1982.
+
+\bibitem{w2vReason1:online}
+{Google Brain Team}.
+\newblock {Vector Representations of Words}.
+\newblock
+  \url{https://www.tensorflow.org/versions/0.6.0/tutorials/word2vec/index.html}.
+\newblock (Accessed on 05/16/2016).
+
+\bibitem{w2vNgram:article}
+D.~Guthrie, B.~Allison, W.~Liu, L.~Guthrie, and Y.~Wilks.
+\newblock {A Closer Look at Skip-gram Modelling}.
+
+\bibitem{EHRquery:journal}
+A.~Hameurlain, J.~Kung, R.~Wagner, H.~Decker, L.~Lhotska, and S.~Link, editors.
+\newblock {\em {Transactions on Large-Scale Data- and Knowledge-Centered
+  Systems {IV} - Special Issue on Database Systems for Biomedical
+  Applications}}, volume 8980 of {\em Lecture Notes in Computer Science}.
+  Springer, 2011.
+
+\bibitem{Brunak:article}
+A.~B. Jensen, P.~L. Moseley, T.~I. Oprea, S.~G. Ellesoe, R.~Eriksson,
+  H.~Schmock, P.~B. Jensen, L.~J. Jensen, and S.~Brunak.
+\newblock {Temporal disease trajectories condensed from population-wide
+  registry data covering 6.2 million patients}.
+\newblock {\em Nat Commun}, 5, Jun 2014.
+\newblock Article.
+
+\bibitem{EHRbigdata:slides}
+C.~K.~R. Jimeng~Sun.
+\newblock {Big Data Analytics for Healthcare}.
+\newblock 2013.
+
+
+\bibitem{w2vTuning:article}
+O.~Levy, Y.~Goldberg, and I.~Dagan.
+\newblock {Improving Distributional Similarity with Lessons Learned from Word
+  Embeddings}.
+\newblock {\em {TACL}}, 3:211--225, 2015.
+
+\bibitem{w2vOriginal:article}
+T.~Mikolov, I.~Sutskever, K.~Chen, G.~Corrado, and J.~Dean.
+\newblock {Distributed Representations of Words and Phrases and their
+  Compositionality}.
+\newblock {\em CoRR}, abs/1310.4546, 2013.
+
+\bibitem{OSIM:online}
+{Observational Medical Outcomes Partnership}.
+\newblock {OSIM2 - Observational Medical Dataset Simulator Generation 2 |
+  Observational Medical Outcomes Partnership}.
+\newblock \url{http://omop.org/OSIM2}.
+\newblock (Accessed on 05/28/2016).
+
+\bibitem{w2vNN:online}
+C.~Olah.
+\newblock {Deep Learning, NLP, and Representations - colah's blog}.
+\newblock \url{http://colah.github.io/posts/2014-07-NLP-RNNs-Representations/}.
+\newblock (Accessed on 05/16/2016).
+
+\bibitem{deepwalkMain:article}
+B.~Perozzi, R.~Al{-}Rfou, and S.~Skiena.
+\newblock {DeepWalk: Online Learning of Social Representations}.
+\newblock {\em CoRR}, abs/1403.6652, 2014.
+
+\bibitem{w2vModels:article}
+X.~Rong.
+\newblock {word2vec Parameter Learning Explained}.
+\newblock {\em CoRR}, abs/1411.2738, 2014.
+
+
+
+\bibitem{EHRworld:article}
+C.~P. Stone.
+\newblock {A Glimpse at EHR Implementation Around the World: The Lessons the US
+  Can Learn}.
+\newblock 2014.
+
+\bibitem{EHRsimilarity:article}
+J.~Sun, F.~Wang, J.~Hu, and S.~Edabollahi.
+\newblock {Supervised Patient Similarity Measure of Heterogeneous Patient
+  Records}.
+\newblock {\em SIGKDD Explor. Newsl.}, 14(1):16--24, Dec. 2012.
+
+\bibitem{EHRrecommender:article}
+F.~Wang, N.~Lee, J.~Hu, J.~Sun, and S.~Ebadollahi.
+\newblock {Towards Heterogeneous Temporal Clinical Event Pattern Discovery: A
+  Convolutional Approach}.
+\newblock In {\em Proceedings of the 18th ACM SIGKDD International Conference
+  on Knowledge Discovery and Data Mining}, KDD '12, pages 453--461, New York,
+  NY, USA, 2012. ACM.
+
+\end{thebibliography}
 
 
 
